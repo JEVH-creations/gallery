@@ -1,0 +1,201 @@
+html {
+	text-align: center;
+	margin: 0px;
+	padding: 0px;
+	position: relative;
+	background-position: center center;
+}
+
+body {
+	text-align: center;	
+	margin: 0px;
+	padding: 0px;
+	color: #ffffff;
+	font-family: Verdana, sans-serif;
+	font-size: 12px;
+	position: relative;
+}
+
+div.DivBG  {
+	width: 100%;
+	height: 100%;
+	margin: 0px;
+	padding: 0px;
+	background-image:    url(Background.jpg);
+	background-color: black;
+	background-size:     cover;
+	background-repeat:   no-repeat;
+	background-position: center center; 
+	background-attachment: absolute;
+	position: fixed;
+}
+
+div.DivFooter  {
+	width: 100%;
+	height: auto;
+	position: absolute;
+	bottom: 0px;
+	line-height: 0.5;
+}
+
+div.DivLightbox  {
+	position: relative;
+	z-index : 1;
+}
+
+div.DivInfo  {
+	font-size: 20px;
+	text-align: center;
+	background-repeat : no-repeat;
+	background-position : center;
+	height : 10%;
+	width : 100%;
+	position : absolute;
+	top : 100px;
+	z-index : 1;
+}
+
+div.DivContent  {
+	font-size: 20px;
+	width : 100%;
+	height : 100%;
+	margin: 0px;
+	padding: 0px;
+	border: none;
+	position: relative;
+} 
+
+/* DROPDOWN STYLE CONTENT START */
+	/* Style The Dropdown Button */
+	.dropbtn {
+		background-color: transparent;
+		color: white;
+		padding: 16px;
+		border: none;
+		cursor: pointer;
+	}
+
+	/* The container <div> - needed to position the dropdown content */
+	.dropdown {
+		position: relative;
+		display: inline-block;
+		z-index : 2;
+	}
+
+	/* Dropdown Content (Hidden by Default) */
+	.dropdown-content {
+		display: none;
+		position: absolute;
+		width: 100%;
+		background-color: rgba(186, 22, 12, 0.7);
+		min-width: 160px;
+		box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+		z-index: 2;
+	}
+
+	/* Links inside the dropdown */
+	.dropdown-content a {
+		color: White;
+		padding: 12px 16px;
+		text-decoration: none;
+		display: block;
+		position: relative;
+		font-size: 14px;
+		font-weight: bold;
+	}
+
+	/* Change color of dropdown links on hover */
+	.dropdown-content a:hover {background-color: rgba(186, 22, 12, 1);
+	}
+
+	/* Show the dropdown menu on hover */
+	.dropdown:hover .dropdown-content {
+		display: block;
+	}
+
+	/* Change the background color of the dropdown button when the dropdown content is shown */
+	.dropdown:hover .dropbtn {
+		background-color: rgba(186, 22, 12, 0.7);
+	}
+/* DROPDOWN STYLE CONTENT END */
+
+/* MODAL IMAGE GALLERY START */
+
+.img {
+	max-width: 15%;
+	cursor: pointer;
+	transition: 0.3s;
+}
+
+.modal {
+	display: none; /* Hidden by default */
+	position: fixed; /* Stay in place */
+	z-index: 1; /* Sit on top */
+	padding-top: 100px; /* Location of the box */
+	left: 0;
+	top: 0;
+	width: 100%; /* Full width */
+	height: 100%; /* Full height */
+	overflow: auto; /* Enable scroll if needed */
+	background-color: rgb(0,0,0); /* Fallback color */
+	background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+}
+
+/* Modal Content (Image) */
+.modal-content {
+	margin: auto;
+	display: block;
+	width: 80%;
+	max-width: 700px;
+}
+
+/* Caption of Modal Image (Image Text) - Same Width as the Image */
+#caption {
+	margin: auto;
+	display: block;
+	width: 80%;
+	max-width: 700px;
+	text-align: center;
+	color: #ccc;
+	padding: 10px 0;
+	height: 150px;
+}
+
+/* Add Animation - Zoom in the Modal */
+.modal-content, #caption {
+	animation-name: zoom;
+	animation-duration: 0.3s;
+}
+
+@keyframes zoom {
+	from {transform:scale(0)}
+	to {transform:scale(1)}
+}
+
+/* The Close Button */
+.close {
+	position: absolute;
+	top: 15px;
+	right: 35px;
+	color: white;
+	background-color: rgba(186, 22, 12, 0.7);
+	font-size: 40px;
+	font-weight: bold;
+	transition: 0.3s;
+}
+
+.close:hover,
+.close:focus {
+	color: #bbb;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+/* 100% Image Width on Smaller Screens */
+@media only screen and (max-width: 700px){
+  .modal-content {
+    width: 100%;
+  }
+}
+
+/* MODAL IMAGE GALLERY END */
