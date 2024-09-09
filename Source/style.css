@@ -43,18 +43,6 @@ div.DivLightbox  {
 	z-index : 1;
 }
 
-div.DivInfo  {
-	font-size: 20px;
-	text-align: center;
-	background-repeat : no-repeat;
-	background-position : center;
-	height : 10%;
-	width : 100%;
-	position : absolute;
-	top : 100px;
-	z-index : 1;
-}
-
 div.DivContent  {
 	font-size: 20px;
 	width : 100%;
