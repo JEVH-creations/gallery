@@ -14,43 +14,32 @@ webFrame.style.width = "100%";
 webFrame.style.height = "calc(100% - 180px)";
 webFrame.style.border = "none";
 webFrame.style.overflowY = "auto"; // Enable iframe scrolling
-webFrame.style.minHeight = "80vh"; // Minimum height fallback
 
 // Make close button stay fixed during scrolling
 var closeBtn = document.getElementsByClassName("close")[0];
 closeBtn.style.position = "fixed";
 closeBtn.style.zIndex = "2"; // Ensure it stays above content
 
-// Handle dynamic content loading with improved PDF support
+// Handle dynamic content loading
 webFrame.onload = function() {
-    // First try with delay for PDF content
-    setTimeout(function() {
-        try {
-            // Try to get the PDF viewer's container height
-            var viewerContainer = webFrame.contentWindow.document.querySelector('.pdfViewer');
-            if (viewerContainer) {
-                webFrame.style.height = (viewerContainer.scrollHeight + 100) + "px";
-                return;
-            }
-            
-            // Fallback to document height
-            var body = webFrame.contentWindow.document.body;
-            var html = webFrame.contentWindow.document.documentElement;
-            
-            var height = Math.max(
-                body.scrollHeight,
-                body.offsetHeight,
-                html.clientHeight,
-                html.scrollHeight,
-                html.offsetHeight
-            );
-            
-            webFrame.style.height = height + "px";
-        } catch(e) {
-            // If we can't access the content, use viewport-based height
-            webFrame.style.height = window.innerHeight - 180 + "px";
-        }
-    }, 500); // 500ms delay
+    // Reset iframe height to content height
+    try {
+        var body = webFrame.contentWindow.document.body;
+        var html = webFrame.contentWindow.document.documentElement;
+        
+        var height = Math.max(
+            body.scrollHeight,
+            body.offsetHeight,
+            html.clientHeight,
+            html.scrollHeight,
+            html.offsetHeight
+        );
+        
+        webFrame.style.height = height + "px";
+    } catch(e) {
+        // Fallback to original height if cross-origin
+        webFrame.style.height = "calc(100% - 180px)";
+    }
 };
 
 // Window resize handler for responsive height
@@ -80,8 +69,6 @@ function resizeIframe() {
     }
 }
 
-window.addEventListener('resize', resizeIframe);
-
 // Image click handlers
 var imgs = document.getElementsByClassName("img");
 for(let img of imgs){
@@ -89,9 +76,6 @@ for(let img of imgs){
         webModal.style.display = "block";
         webFrame.src = this.getAttribute('data-href');
         webCaptionText.innerHTML = this.alt;
-        
-        // Set initial height based on viewport
-        webFrame.style.height = window.innerHeight - 180 + "px";
     }
 }
 
