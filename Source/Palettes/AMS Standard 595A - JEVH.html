@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- © JEVH, CodeDino & NeoSynth. 🎨 HTML Color Palette-Modular-Multipurpose-Responsive -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AMS Standard 595A</title>
+    <style>
+        :root {
+            --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 
+               Helvetica, Arial, sans-serif;
+            --font-mono: Consolas, 'Roboto Mono', 'Menlo', 'DejaVu Sans Mono', 
+               'Liberation Mono', monospace;
+            --bg-color: #f5f5f5;
+            --text-color: #222;
+            --card-bg: white;
+            --border-color: #ddd;
+            --hover-bg: #eee;
+            --footer-color: #666;
+            --category-bg: #e0e0e0;
+            --category-text: #333;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #121212;
+            --text-color: #e0e0e0;
+            --card-bg: #1e1e1e;
+            --border-color: #333;
+            --hover-bg: #2a2a2a;
+            --footer-color: #888;
+            --category-bg: #2a2a2a;
+            --category-text: #e0e0e0;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 10px;
+            padding: 0;
+            line-height: 1.5;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        .header {
+            font-family: var(--font-mono);
+            font-weight: 600; /* Semi-bold for better hierarchy */
+            letter-spacing: -0.02em; /* Tighten monospace slightly */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .header-controls {
+            display: flex;
+            gap: 10px;
+        }
+        
+        h1 {
+            margin: 20px 0;
+            font-weight: 500;
+            font-size: 1.8rem;
+        }
+        
+        .theme-toggle, .category-toggle {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 8px 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: var(--text-color);
+        }
+        
+        /* Grid layout for categories OFF (like original V1) */
+        .palette {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 16px;
+            margin-bottom: 40px;
+        }
+        
+        /* Category layout for categories ON (like V2) */
+        .palette.categories-on {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .category-group {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .category-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            align-items: flex-start;
+        }
+        
+        .category-label {
+            background-color: var(--category-bg);
+            color: var(--category-text);
+            font-weight: bold;
+            padding: 8px 16px;
+            border-radius: 8px;
+            margin-right: 16px;
+            min-width: 180px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .color-card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            width: 180px;
+        }
+        
+        /* For grid layout (categories OFF), make cards responsive */
+        .palette:not(.categories-on) .color-card {
+            width: auto;
+        }
+        
+        .color-swatch {
+            width: 100%;
+            height: 90px;
+            border-radius: 8px 8px 0 0;
+        }
+        
+        .color-info {
+            padding: 12px;
+        }
+        
+        .color-name {
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+        
+        .color-values {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        
+        .value-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+        }
+        
+        button {
+            background: none;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 3px 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+            color: var(--text-color);
+        }
+        
+        button:hover {
+            background: var(--hover-bg);
+        }
+        
+        .disclaimer {
+            text-align: center;
+            margin: 20px 0;
+            padding: 10px;
+            color: var(--footer-color);
+            font-size: 12px;
+            opacity: 0.7;
+            font-style: italic;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px 0;
+            color: var(--footer-color);
+            font-size: 14px;
+        }
+        
+        /* Hide category labels when categories are OFF */
+        .palette:not(.categories-on) .category-label {
+            display: none;
+        }
+        
+        /* Show all cards in grid when categories are OFF */
+        .palette:not(.categories-on) .category-group {
+            display: contents;
+        }
+        
+        .palette:not(.categories-on) .category-row {
+            display: contents;
+        }
+        
+        @media (max-width: 600px) {
+            .palette {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+            
+            .color-card {
+                width: 150px;
+            }
+            
+            .palette:not(.categories-on) .color-card {
+                width: auto;
+            }
+            
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .header-controls {
+                align-self: flex-end;
+            }
+            
+            .category-label {
+                min-width: 100%;
+                margin-right: 0;
+                margin-bottom: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>AMS Standard 595A</h1>
+        <div class="header-controls">
+            <button class="category-toggle" id="categoryToggle">
+                <span id="categoryIcon">☰</span> Hide Categories
+            </button>
+            <button class="theme-toggle" id="themeToggle">
+                <span id="themeIcon">☽</span> Dark Mode
+            </button>
+        </div>
+    </div>
+    
+    <div class="palette categories-on" id="palette-container">
+        <!-- Colors will be inserted here by JavaScript -->
+    </div>
+    
+    <div class="disclaimer">
+        Colors shown are approximate. Display and print variations may occur due to RGB/CMYK differences and device calibration.
+    </div>
+    
+    <footer>
+        © JEVH, CodeDino & NeoSynth.
+    </footer>
+    
+    <script>
+        // Theme toggle functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+        
+        // Category toggle functionality
+        const categoryToggle = document.getElementById('categoryToggle');
+        const categoryIcon = document.getElementById('categoryIcon');
+        const paletteContainer = document.getElementById('palette-container');
+        
+        // Set initial theme
+        const currentTheme = localStorage.getItem('theme') || 
+                             (prefersDarkScheme.matches ? 'dark' : 'light');
+        document.body.setAttribute('data-theme', currentTheme);
+        
+        // Set initial category state (default to categories ON)
+        const showCategories = localStorage.getItem('showCategories') !== 'false';
+        if (!showCategories) {
+            paletteContainer.classList.remove('categories-on');
+            categoryIcon.textContent = '☰';
+            categoryToggle.lastChild.textContent = ' Show Categories';
+        }
+        
+        // Update button text based on current theme
+        if (currentTheme === 'dark') {
+            themeIcon.textContent = '✦';
+            themeToggle.lastChild.textContent = ' Light Mode';
+        }
+        
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            document.body.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            themeIcon.textContent = newTheme === 'dark' ? '✦' : '☽';
+            themeToggle.lastChild.textContent = newTheme === 'dark' ? ' Light Mode' : ' Dark Mode';
+        });
+        
+        categoryToggle.addEventListener('click', () => {
+            const categoriesOn = paletteContainer.classList.contains('categories-on');
+            
+            if (categoriesOn) {
+                // Turn categories OFF - switch to grid layout
+                paletteContainer.classList.remove('categories-on');
+                categoryIcon.textContent = '☰';
+                categoryToggle.lastChild.textContent = ' Show Categories';
+                localStorage.setItem('showCategories', 'false');
+            } else {
+                // Turn categories ON - switch to category layout
+                paletteContainer.classList.add('categories-on');
+                categoryIcon.textContent = '▬';
+                categoryToggle.lastChild.textContent = ' Hide Categories';
+                localStorage.setItem('showCategories', 'true');
+            }
+        });
+
+        // Color data - modify this array to add/remove colors
+        const colors = [
+            // Source: https://www.e-paint.co.uk/ams-standard-595-colour-chart.asp
+            // Documented by JEVH, colors are for references only.
+
+            // --- 10032-17930 Gloss ---
+            { name: "10032 Brown", hex: "#48403F", cmyk: "0,14,12,72", category: "10032-17930 GLOSS" },
+            { name: "10045 Brown", hex: "#5F5453", cmyk: "0,11,11,63", category: "10032-17930 GLOSS" },
+            { name: "10049 Maroon 81352 / ANA 510", hex: "#544141", cmyk: "0,23,23,67", category: "10032-17930 GLOSS" },
+            { name: "10055 DoT Highway brown", hex: "#6C4D40", cmyk: "0,28,41,58", category: "10032-17930 GLOSS" },
+            { name: "10059 Brown", hex: "#5F504C", cmyk: "0,15,19,63", category: "10032-17930 GLOSS" },
+            { name: "10070 Brown", hex: "#5A4843", cmyk: "0,20,25,65", category: "10032-17930 GLOSS" },
+            { name: "10075 Brown", hex: "#625248", cmyk: "0,16,27,62", category: "10032-17930 GLOSS" },
+            { name: "10076 Coast guard deck red, Metallic red-brown", hex: "#794640", cmyk: "0,42,47,53", category: "10032-17930 GLOSS" },
+            { name: "10080 Seal brown, NASA safety brown", hex: "#625147", cmyk: "0,17,27,62", category: "10032-17930 GLOSS" },
+            { name: "10091 Dark oak", hex: "#7D4C3F", cmyk: "0,39,49,51", category: "10032-17930 GLOSS" },
+            { name: "10115 Brown", hex: "#9B684C", cmyk: "0,32,51,39", category: "10032-17930 GLOSS" },
+            { name: "10219 Brown", hex: "#937968", cmyk: "0,17,29,42", category: "10032-17930 GLOSS" },
+            { name: "10233 Cocoa brown, National Parks Service", hex: "#A1766B", cmyk: "0,27,34,37", category: "10032-17930 GLOSS" },
+            { name: "10260 Brown", hex: "#C4A46F", cmyk: "0,16,43,23", category: "10032-17930 GLOSS" },
+            { name: "10266 Middlestone", hex: "#A6865D", cmyk: "0,19,43,35", category: "10032-17930 GLOSS" },
+            { name: "10324 Brown", hex: "#AD9484", cmyk: "0,14,23,32", category: "10032-17930 GLOSS" },
+            { name: "10371 Buff, TT-E-489", hex: "#C29063", cmyk: "0,26,49,24", category: "10032-17930 GLOSS" },
+            { name: "11086 DoT Highway red", hex: "#914042", cmyk: "0,55,54,43", category: "10032-17930 GLOSS" },
+            { name: "11105 OSHA safety red / DoT Highway red", hex: "#9F3B40", cmyk: "0,63,60,38", category: "10032-17930 GLOSS" },
+            { name: "11120 OSHA safety red", hex: "#B04343", cmyk: "0,62,62,31", category: "10032-17930 GLOSS" },
+            { name: "11136 Insignia red / Carmine red", hex: "#914042", cmyk: "0,55,54,43", category: "10032-17930 GLOSS" },
+            { name: "11140 OSHA safety red", hex: "#9E3C3F", cmyk: "0,62,60,38", category: "10032-17930 GLOSS" },
+            { name: "11302 Red", hex: "#BB4D4A", cmyk: "0,59,60,27", category: "10032-17930 GLOSS" },
+            { name: "11310 Post office red", hex: "#B74441", cmyk: "0,63,64,28", category: "10032-17930 GLOSS" },
+            { name: "11328 Red", hex: "#B04E56", cmyk: "0,56,51,31", category: "10032-17930 GLOSS" },
+            { name: "11330 RCAF Snowbird red I-4147", hex: "#AC4044", cmyk: "0,63,60,33", category: "10032-17930 GLOSS" },
+            { name: "11350 Coast Guard buoy red", hex: "#AD3E43", cmyk: "0,64,61,32", category: "10032-17930 GLOSS" },
+            { name: "11400 Red", hex: "#C95246", cmyk: "0,59,65,21", category: "10032-17930 GLOSS" },
+            { name: "11630 Red", hex: "#DCB7B2", cmyk: "0,17,19,14", category: "10032-17930 GLOSS" },
+            { name: "11670 Peach", hex: "#EFCBB4", cmyk: "0,14,24,6", category: "10032-17930 GLOSS" },
+            { name: "12160 Orange-brown", hex: "#A96350", cmyk: "0,40,52,34", category: "10032-17930 GLOSS" },
+            { name: "12197 International orange / ANA 508", hex: "#C24F3C", cmyk: "0,59,69,24", category: "10032-17930 GLOSS" },
+            { name: "12199 Coast Guard red #40", hex: "#DB473C", cmyk: "0,67,73,14", category: "10032-17930 GLOSS" },
+            { name: "12215 Orange", hex: "#CA5E3E", cmyk: "0,54,69,21", category: "10032-17930 GLOSS" },
+            { name: "12243 DoT highway orange", hex: "#D26C3A", cmyk: "0,48,72,18", category: "10032-17930 GLOSS" },
+            { name: "12246 OSHA safety orange", hex: "#D35C3C", cmyk: "0,56,71,17", category: "10032-17930 GLOSS" },
+            { name: "12250 Coast Guard orange", hex: "#D24F39", cmyk: "0,62,73,18", category: "10032-17930 GLOSS" },
+            { name: "12300 OSHA safety orange", hex: "#DB7B31", cmyk: "0,44,77,14", category: "10032-17930 GLOSS" },
+            { name: "12473 Orange", hex: "#DE6F3B", cmyk: "0,50,73,13", category: "10032-17930 GLOSS" },
+            { name: "12648 Orange", hex: "#E3BF9C", cmyk: "0,16,31,11", category: "10032-17930 GLOSS" },
+            { name: "13275 Post Office yellow", hex: "#B8833A", cmyk: "0,27,68,28", category: "10032-17930 GLOSS" },
+            { name: "13415 School bus yellow", hex: "#E39632", cmyk: "0,34,78,11", category: "10032-17930 GLOSS" },
+            { name: "13432 Yellow", hex: "#E79631", cmyk: "0,34,78,9", category: "10032-17930 GLOSS" },
+            { name: "13507 DoT highway yellow", hex: "#F5A727", cmyk: "0,32,84,4", category: "10032-17930 GLOSS" },
+            { name: "13522 Yellow", hex: "#C4B69C", cmyk: "0,7,20,23", category: "10032-17930 GLOSS" },
+            { name: "13523 Yellow", hex: "#D3B886", cmyk: "0,12,36,17", category: "10032-17930 GLOSS" },
+            { name: "13531 Beige", hex: "#CBB8A0", cmyk: "0,9,20,20", category: "10032-17930 GLOSS" },
+            { name: "13538 DoT highway yellow / ANA 506", hex: "#ECA01D", cmyk: "0,32,88,7", category: "10032-17930 GLOSS" },
+            { name: "13578 Warm gray", hex: "#D4C2A0", cmyk: "0,8,24,17", category: "10032-17930 GLOSS" },
+            { name: "13591 OSHA safety yellow", hex: "#EBC235", cmyk: "0,17,77,8", category: "10032-17930 GLOSS" },
+            { name: "13594 Aircraft cream / ANA 507", hex: "#E7C183", cmyk: "0,14,43,9", category: "10032-17930 GLOSS" },
+            { name: "13596 Yellow", hex: "#DDBB81", cmyk: "0,14,42,13", category: "10032-17930 GLOSS" },
+            { name: "13613 Buff", hex: "#E4C7A1", cmyk: "0,11,29,11", category: "10032-17930 GLOSS" },
+            { name: "13618 Postal service cream", hex: "#E8C469", cmyk: "0,14,55,9", category: "10032-17930 GLOSS" },
+            { name: "13637 Yellow", hex: "#D7A43C", cmyk: "0,23,72,16", category: "10032-17930 GLOSS" },
+            { name: "13655 OSHA safety yellow / ANA 505", hex: "#F5B417", cmyk: "0,27,91,4", category: "10032-17930 GLOSS" },
+            { name: "13670 Yellow-green", hex: "#D2CD65", cmyk: "0,3,52,18", category: "10032-17930 GLOSS" },
+            { name: "13690 Park service cream", hex: "#E0CEAF", cmyk: "0,8,22,12", category: "10032-17930 GLOSS" },
+            { name: "13695 Ivory / Forest service", hex: "#EDC985", cmyk: "0,14,44,7", category: "10032-17930 GLOSS" },
+            { name: "13711 Yellow", hex: "#E7CEAA", cmyk: "0,10,26,9", category: "10032-17930 GLOSS" },
+            { name: "13740 DLA Orphean sand", hex: "#E6D7C3", cmyk: "0,6,15,10", category: "10032-17930 GLOSS" },
+            { name: "13814 Yellow", hex: "#DBDC9C", cmyk: "0,1,29,14", category: "10032-17930 GLOSS" },
+            { name: "14036 Green", hex: "#3F4A47", cmyk: "15,0,5,71", category: "10032-17930 GLOSS" },
+            { name: "14050 Army green / NATO green", hex: "#4D504B", cmyk: "5,0,6,69", category: "10032-17930 GLOSS" },
+            { name: "14052 Marine green #23", hex: "#4D4E48", cmyk: "4,2,8,69", category: "10032-17930 GLOSS" },
+            { name: "14056 Green", hex: "#474D4A", cmyk: "8,0,4,70", category: "10032-17930 GLOSS" },
+            { name: "14062 Deep green", hex: "#3D5948", cmyk: "32,0,18,65", category: "10032-17930 GLOSS" },
+            { name: "14064 Green", hex: "#52514A", cmyk: "3,2,9,68", category: "10032-17930 GLOSS" },
+            { name: "14066 DoT highway green", hex: "#2C5B4B", cmyk: "52,0,17,64", category: "10032-17930 GLOSS" },
+            { name: "14077 Green", hex: "#4E544F", cmyk: "8,0,6,67", category: "10032-17930 GLOSS" },
+            { name: "14079 Green", hex: "#55574C", cmyk: "4,1,13,66", category: "10032-17930 GLOSS" },
+            { name: "14081 Sikorsky green", hex: "#525448", cmyk: "4,2,14,67", category: "10032-17930 GLOSS" },
+            { name: "14084 Green", hex: "#484742", cmyk: "3,2,7,72", category: "10032-17930 GLOSS" },
+            { name: "14090 Green", hex: "#2B6E4F", cmyk: "61,0,30,57", category: "10032-17930 GLOSS" },
+            { name: "14097 Green", hex: "#616754", cmyk: "8,0,17,60", category: "10032-17930 GLOSS" },
+            { name: "14109 DoT highway green", hex: "#30614E", cmyk: "50,0,20,62", category: "10032-17930 GLOSS" },
+            { name: "14110 NASA safety medium green", hex: "#416C48", cmyk: "40,0,32,58", category: "10032-17930 GLOSS" },
+            { name: "14115 Green", hex: "#33765B", cmyk: "57,0,23,54", category: "10032-17930 GLOSS" },
+            { name: "14120 OSHA safety green", hex: "#087D5F", cmyk: "94,0,25,51", category: "10032-17930 GLOSS" },
+            { name: "14151 Green", hex: "#646342", cmyk: "2,4,35,60", category: "10032-17930 GLOSS" },
+            { name: "14158 Green", hex: "#6A7774", cmyk: "11,0,3,53", category: "10032-17930 GLOSS" },
+            { name: "14159 Green", hex: "#71796E", cmyk: "7,0,7,53", category: "10032-17930 GLOSS" },
+            { name: "14187 Oxygen tank green / ANA 503", hex: "#567C43", cmyk: "31,0,46,51", category: "10032-17930 GLOSS" },
+            { name: "14193 Coast Guard green", hex: "#2E9155", cmyk: "68,0,41,43", category: "10032-17930 GLOSS" },
+            { name: "14223 Green", hex: "#61876A", cmyk: "29,0,22,47", category: "10032-17930 GLOSS" },
+            { name: "14241 Green", hex: "#829E93", cmyk: "17,0,8,38", category: "10032-17930 GLOSS" },
+            { name: "14255 Green", hex: "#918764", cmyk: "0,6,31,43", category: "10032-17930 GLOSS" },
+            { name: "14257 Green", hex: "#8E8B69", cmyk: "0,2,26,44", category: "10032-17930 GLOSS" },
+            { name: "14260 OSHA safety green", hex: "#679B7D", cmyk: "34,0,21,39", category: "10032-17930 GLOSS" },
+            { name: "14272 Green", hex: "#76987D", cmyk: "23,0,19,40", category: "10032-17930 GLOSS" },
+            { name: "14277 Green", hex: "#879992", cmyk: "11,0,5,40", category: "10032-17930 GLOSS" },
+            { name: "14325 Green", hex: "#81A795", cmyk: "22,0,12,35", category: "10032-17930 GLOSS" },
+            { name: "14449 Green", hex: "#81A795", cmyk: "22,0,12,35", category: "10032-17930 GLOSS" },
+            { name: "14491 Green", hex: "#A6BBA7", cmyk: "9,0,9,27", category: "10032-17930 GLOSS" },
+            { name: "14516 Green", hex: "#AEC0AF", cmyk: "9,0,9,25", category: "10032-17930 GLOSS" },
+            { name: "14533 Green", hex: "#ABC093", cmyk: "11,0,21,25", category: "10032-17930 GLOSS" },
+            { name: "14664 Green", hex: "#BBD3B8", cmyk: "12,0,13,17", category: "10032-17930 GLOSS" },
+            { name: "14672 Army admin vehicles", hex: "#CBD3B6", cmyk: "4,0,13,17", category: "10032-17930 GLOSS" },
+            { name: "15042 Sea blue / Teal blue / ANA 623", hex: "#40474B", cmyk: "15,5,0,71", category: "10032-17930 GLOSS" },
+            { name: "15044 Dark blue / Insignia blue / ANA 502", hex: "#3F444D", cmyk: "18,11,0,70", category: "10032-17930 GLOSS" },
+            { name: "15045 Strata blue / Air Force blue / ANA 516", hex: "#3D4952", cmyk: "25,10,0,68", category: "10032-17930 GLOSS" },
+            { name: "15048 Post Office dark blue", hex: "#3D495C", cmyk: "33,20,0,64", category: "10032-17930 GLOSS" },
+            { name: "15050 Post office box", hex: "#3E4D62", cmyk: "37,21,0,62", category: "10032-17930 GLOSS" },
+            { name: "15051 RCAF Snowbird blue I-6256", hex: "#3B5375", cmyk: "49,29,0,54", category: "10032-17930 GLOSS" },
+            { name: "15052 Post office medium blue", hex: "#3B5274", cmyk: "49,30,0,55", category: "10032-17930 GLOSS" },
+            { name: "15055 Blue", hex: "#3E486A", cmyk: "42,33,0,58", category: "10032-17930 GLOSS" },
+            { name: "15056 Blue", hex: "#3F4874", cmyk: "46,38,0,55", category: "10032-17930 GLOSS" },
+            { name: "15065 DoT highway blue", hex: "#2E5F82", cmyk: "64,27,0,49", category: "10032-17930 GLOSS" },
+            { name: "15080 Handicap blue", hex: "#648292", cmyk: "30,10,0,43", category: "10032-17930 GLOSS" },
+            { name: "15090 DoT highway blue", hex: "#2E5D79", cmyk: "62,24,0,53", category: "10032-17930 GLOSS" },
+            { name: "15092 OSHA safety blue", hex: "#2C79A2", cmyk: "73,25,0,36", category: "10032-17930 GLOSS" },
+            { name: "15095 Post office light blue", hex: "#3C6BA6", cmyk: "64,36,0,35", category: "10032-17930 GLOSS" },
+            { name: "15102 OSHA safety blue / ANA 501", hex: "#3B698F", cmyk: "59,27,0,44", category: "10032-17930 GLOSS" },
+            { name: "15107 Blue", hex: "#648392", cmyk: "30,10,0,43", category: "10032-17930 GLOSS" },
+            { name: "15109 Blue", hex: "#547181", cmyk: "35,14,0,49", category: "10032-17930 GLOSS" },
+            { name: "15123 Bright blue", hex: "#496FA2", cmyk: "55,31,0,36", category: "10032-17930 GLOSS" },
+            { name: "15125 Blue", hex: "#10748A", cmyk: "88,17,0,46", category: "10032-17930 GLOSS" },
+            { name: "15177 Clear blue", hex: "#608095", cmyk: "36,15,0,42", category: "10032-17930 GLOSS" },
+            { name: "15180 Blue / 85285", hex: "#3875A7", cmyk: "67,30,0,35", category: "10032-17930 GLOSS" },
+            { name: "15182 Coast guard blue", hex: "#3286AC", cmyk: "71,22,0,33", category: "10032-17930 GLOSS" },
+            { name: "15187 Blue", hex: "#2F9BBE", cmyk: "75,19,0,25", category: "10032-17930 GLOSS" },
+            { name: "15193 Light blue", hex: "#5A898F", cmyk: "37,5,0,44", category: "10032-17930 GLOSS" },
+            { name: "15200 Blue", hex: "#5BB7CB", cmyk: "55,8,0,20", category: "10032-17930 GLOSS" },
+            { name: "15450 Blue", hex: "#90B8CC", cmyk: "29,9,0,20", category: "10032-17930 GLOSS" },
+            { name: "15526 Blue", hex: "#ACC0C4", cmyk: "12,2,0,23", category: "10032-17930 GLOSS" },
+            { name: "16076 Coast guard deck gray", hex: "#5C6067", cmyk: "11,7,0,60", category: "10032-17930 GLOSS" },
+            { name: "16081 Dark gray / ANA 513", hex: "#575A5A", cmyk: "2,0,0,65", category: "10032-17930 GLOSS" },
+            { name: "16099 Coast guard blue gray", hex: "#5B6266", cmyk: "10,4,0,60", category: "10032-17930 GLOSS" },
+            { name: "16160 Gray", hex: "#837259", cmyk: "0,13,32,49", category: "10032-17930 GLOSS" },
+            { name: "16165 Gray", hex: "#777467", cmyk: "0,3,13,53", category: "10032-17930 GLOSS" },
+            { name: "16187 Mechanic gray Navy Standard", hex: "#767E7F", cmyk: "7,0,1,50", category: "10032-17930 GLOSS" },
+            { name: "16250 Gray", hex: "#848B8A", cmyk: "5,0,1,45", category: "10032-17930 GLOSS" },
+            { name: "16251 Gray", hex: "#86898A", cmyk: "3,0,0,46", category: "10032-17930 GLOSS" },
+            { name: "16293 Gray", hex: "#8F9596", cmyk: "4,0,0,41", category: "10032-17930 GLOSS" },
+            { name: "16307 Machinery gray", hex: "#969890", cmyk: "2,0,5,40", category: "10032-17930 GLOSS" },
+            { name: "16314 Gray", hex: "#949995", cmyk: "3,0,2,40", category: "10032-17930 GLOSS" },
+            { name: "16329 Gray", hex: "#8F9F9F", cmyk: "10,0,0,38", category: "10032-17930 GLOSS" },
+            { name: "16350 Gray", hex: "#938C7A", cmyk: "0,5,17,42", category: "10032-17930 GLOSS" },
+            { name: "16357 Gray", hex: "#A3A094", cmyk: "0,2,10,36", category: "10032-17930 GLOSS" },
+            { name: "16360 Gray", hex: "#AEA895", cmyk: "0,4,16,32", category: "10032-17930 GLOSS" },
+            { name: "16376 Blue", hex: "#A0A298", cmyk: "3,0,6,36", category: "10032-17930 GLOSS" },
+            { name: "16405 Parchment", hex: "#BEB7A2", cmyk: "0,3,15,25", category: "10032-17930 GLOSS" },
+            { name: "16440 Light gray 85285 / 81352", hex: "#B4B5AC", cmyk: "0,0,5,29", category: "10032-17930 GLOSS" },
+            { name: "16473 Aircraft gray / NASA / ANA 512", hex: "#A2ACA8", cmyk: "6,0,3,33", category: "10032-17930 GLOSS" },
+            { name: "16480 Canada 501-109 10032-17930 GLOSS", hex: "#ADBAB4", cmyk: "7,0,4,27", category: "10032-17930 GLOSS" },
+            { name: "16492 Dawn gray", hex: "#BCBCB5", cmyk: "0,0,4,26", category: "10032-17930 GLOSS" },
+            { name: "16515 Boeing gray 707", hex: "#BEC1BE", cmyk: "1,0,1,24", category: "10032-17930 GLOSS" },
+            { name: "16555 Gray", hex: "#C7BCA2", cmyk: "0,5,19,22", category: "10032-17930 GLOSS" },
+            { name: "17038 OSHA black / ANA 515 / 622", hex: "#3A3A3A", cmyk: "0,0,0,77", category: "10032-17930 GLOSS" },
+            { name: "17043 Gold", hex: "#B49A64", cmyk: "0,14,44,29", category: "10032-17930 GLOSS" },
+            { name: "17100 Purple", hex: "#6F5576", cmyk: "6,26,0,53", category: "10032-17930 GLOSS" },
+            { name: "17142 OSHA safety purple", hex: "#945E83", cmyk: "0,37,11,42", category: "10032-17930 GLOSS" },
+            { name: "17155 OSHA safety purple", hex: "#91648F", cmyk: "0,31,1,43", category: "10032-17930 GLOSS" },
+            { name: "17178 Silver/Aluminum Int'l", hex: "#C4C6C8", cmyk: "2,1,0,22", category: "10032-17930 GLOSS" },
+            { name: "17773 Blue white", hex: "#DDE3D6", cmyk: "5,0,9,11", category: "10032-17930 GLOSS" },
+            { name: "17778", hex: "#E7E1C9", cmyk: "0,3,13,9", category: "10032-17930 GLOSS" },
+            { name: "17855", hex: "#E9DDBB", cmyk: "0,5,20,9", category: "10032-17930 GLOSS" },
+            { name: "17860 Coast guard white", hex: "#E7E8DF", cmyk: "1,0,4,9", category: "10032-17930 GLOSS" },
+            { name: "17865 Hawker Beechcraft white 17865", hex: "#E2E5E3", cmyk: "1,0,1,10", category: "10032-17930 GLOSS" },
+            { name: "17875 Insignia white / ANA 511", hex: "#E7E8DD", cmyk: "1,0,5,9", category: "10032-17930 GLOSS" },
+            { name: "17877 Coast guard white", hex: "#E5EFE7", cmyk: "4,0,4,6", category: "10032-17930 GLOSS" },
+            { name: "17886 Bone white", hex: "#EEEAD9", cmyk: "0,2,9,7", category: "10032-17930 GLOSS" },
+            { name: "17925 Untinted white", hex: "#F2F3EA", cmyk: "0,0,4,5", category: "10032-17930 GLOSS" },
+            { name: "17930 RCAF Snowbird white I-1310", hex: "#F6F8F3", cmyk: "1,0,2,3", category: "10032-17930 GLOSS" },
+
+            // --- 20040-27925 Semi-gloss ---
+            { name: "20040 Brown", hex: "#534B46", cmyk: "0,10,15,67", category: "20040-27925 SEMI-GLOSS" },
+            { name: "20045 Brown", hex: "#615554", cmyk: "0,12,11,62", category: "20040-27925 SEMI-GLOSS" },
+            { name: "20059 Forest service sign standard", hex: "#5E4E4A", cmyk: "0,16,21,63", category: "20040-27925 SEMI-GLOSS" },
+            { name: "20061 Brown", hex: "#654949", cmyk: "0,28,28,60", category: "20040-27925 SEMI-GLOSS" },
+            { name: "20062 Brown", hex: "#5A514F", cmyk: "0,10,12,65", category: "20040-27925 SEMI-GLOSS" },
+            { name: "20065 Brown 356", hex: "#786F67", cmyk: "0,7,13,53", category: "20040-27925 SEMI-GLOSS" },
+            { name: "20068 Madeira 1957", hex: "#61594C", cmyk: "0,8,22,62", category: "20040-27925 SEMI-GLOSS" },
+            { name: "20090 Highland 480", hex: "#675446", cmyk: "0,19,32,60", category: "20040-27925 SEMI-GLOSS" },
+            { name: "20095 Brown", hex: "#76685A", cmyk: "0,12,24,54", category: "20040-27925 SEMI-GLOSS" },
+            { name: "20100 Brown", hex: "#855A49", cmyk: "0,32,45,48", category: "20040-27925 SEMI-GLOSS" },
+            { name: "20109 F. S. Seminal brown", hex: "#84534C", cmyk: "0,37,42,48", category: "20040-27925 SEMI-GLOSS" },
+            { name: "20117 Brown", hex: "#7E5F50", cmyk: "0,25,36,51", category: "20040-27925 SEMI-GLOSS" },
+            { name: "20122 Brown", hex: "#73594A", cmyk: "0,22,36,55", category: "20040-27925 SEMI-GLOSS" },
+            { name: "20140 Brown", hex: "#816B5E", cmyk: "0,17,27,49", category: "20040-27925 SEMI-GLOSS" },
+            { name: "20150 Coyote 476 / 498", hex: "#7A6852", cmyk: "0,15,32,52", category: "20040-27925 SEMI-GLOSS" },
+            { name: "20152 Brown", hex: "#8C5049", cmyk: "0,43,48,45", category: "20040-27925 SEMI-GLOSS" },
+            { name: "20155 Light brown 493", hex: "#7F604E", cmyk: "0,24,38,50", category: "20040-27925 SEMI-GLOSS" },
+            { name: "20170 Olive Mohave", hex: "#83735F", cmyk: "0,12,27,49", category: "20040-27925 SEMI-GLOSS" },
+            { name: "20180 Tan 499", hex: "#847A66", cmyk: "0,8,23,48", category: "20040-27925 SEMI-GLOSS" },
+            { name: "20206 Brown", hex: "#987C78", cmyk: "0,18,20,40", category: "20040-27925 SEMI-GLOSS" },
+            { name: "20219 Brown", hex: "#937968", cmyk: "0,18,29,42", category: "20040-27925 SEMI-GLOSS" },
+            { name: "20220 Light coyote 481", hex: "#917F6B", cmyk: "0,12,25,43", category: "20040-27925 SEMI-GLOSS" },
+            { name: "20227 Brown", hex: "#9A8576", cmyk: "0,13,23,40", category: "20040-27925 SEMI-GLOSS" },
+            { name: "20233 Brown", hex: "#A1776C", cmyk: "0,26,33,37", category: "20040-27925 SEMI-GLOSS" },
+            { name: "20252 Rose", hex: "#AE7969", cmyk: "0,31,40,32", category: "20040-27925 SEMI-GLOSS" },
+            { name: "20260 Brown", hex: "#C6A571", cmyk: "0,16,43,22", category: "20040-27925 SEMI-GLOSS" },
+            { name: "20266 Brown", hex: "#A7885E", cmyk: "0,18,44,35", category: "20040-27925 SEMI-GLOSS" },
+            { name: "20270 Urban tan 478", hex: "#A19285", cmyk: "0,11,18,37", category: "20040-27925 SEMI-GLOSS" },
+            { name: "20313 Brown", hex: "#B0978B", cmyk: "0,15,22,31", category: "20040-27925 SEMI-GLOSS" },
+            { name: "20318 Brown", hex: "#A79982", cmyk: "0,8,22,35", category: "20040-27925 SEMI-GLOSS" },
+            { name: "20372 Tan", hex: "#AE9F8C", cmyk: "0,9,19,32", category: "20040-27925 SEMI-GLOSS" },
+            { name: "20400 Brown", hex: "#C79D77", cmyk: "0,20,40,22", category: "20040-27925 SEMI-GLOSS" },
+            { name: "20450 Brown", hex: "#C1A794", cmyk: "0,13,23,24", category: "20040-27925 SEMI-GLOSS" },
+            { name: "20460 Mushroom", hex: "#C1B6A3", cmyk: "0,6,15,24", category: "20040-27925 SEMI-GLOSS" },
+            { name: "20475 Saudi color #11 (SANG)", hex: "#CDB090", cmyk: "0,15,30,20", category: "20040-27925 SEMI-GLOSS" },
+            { name: "21105 Red", hex: "#973F3F", cmyk: "0,58,58,41", category: "20040-27925 SEMI-GLOSS" },
+            { name: "21136 Red", hex: "#914344", cmyk: "0,53,52,43", category: "20040-27925 SEMI-GLOSS" },
+            { name: "21158 Red", hex: "#B65A65", cmyk: "0,50,44,29", category: "20040-27925 SEMI-GLOSS" },
+            { name: "21302 Red", hex: "#B74E4B", cmyk: "0,58,59,28", category: "20040-27925 SEMI-GLOSS" },
+            { name: "21310 Red", hex: "#B94843", cmyk: "0,61,63,28", category: "20040-27925 SEMI-GLOSS" },
+            { name: "21400 Red", hex: "#CA5348", cmyk: "0,60,64,21", category: "20040-27925 SEMI-GLOSS" },
+            { name: "21433 Red", hex: "#C89787", cmyk: "0,24,31,22", category: "20040-27925 SEMI-GLOSS" },
+            { name: "21575 Red", hex: "#DDB6A4", cmyk: "0,18,26,13", category: "20040-27925 SEMI-GLOSS" },
+            { name: "21643 Red", hex: "#E6CCB4", cmyk: "0,11,21,10", category: "20040-27925 SEMI-GLOSS" },
+            { name: "21667 Red", hex: "#E6CAAB", cmyk: "0,11,25,10", category: "20040-27925 SEMI-GLOSS" },
+            { name: "21668 Red", hex: "#E8CBC2", cmyk: "0,12,16,9", category: "20040-27925 SEMI-GLOSS" },
+            { name: "21670 Red", hex: "#EECAB3", cmyk: "0,15,25,7", category: "20040-27925 SEMI-GLOSS" },
+            { name: "22144 Orange", hex: "#A55848", cmyk: "0,47,57,35", category: "20040-27925 SEMI-GLOSS" },
+            { name: "22190 Orange", hex: "#CC4A3C", cmyk: "0,64,71,20", category: "20040-27925 SEMI-GLOSS" },
+            { name: "22203 Orange", hex: "#B6614C", cmyk: "0,46,58,28", category: "20040-27925 SEMI-GLOSS" },
+            { name: "22246 Orange", hex: "#D55E3D", cmyk: "0,56,71,16", category: "20040-27925 SEMI-GLOSS" },
+            { name: "22276 Orange", hex: "#C17461", cmyk: "0,40,50,24", category: "20040-27925 SEMI-GLOSS" },
+            { name: "22356 Orange", hex: "#D48070", cmyk: "0,39,47,17", category: "20040-27925 SEMI-GLOSS" },
+            { name: "22473 Orange", hex: "#DC6D3A", cmyk: "0,51,74,14", category: "20040-27925 SEMI-GLOSS" },
+            { name: "22510 Orange", hex: "#F16832", cmyk: "0,57,79,5", category: "20040-27925 SEMI-GLOSS" },
+            { name: "22516 Light orange brown", hex: "#D59776", cmyk: "0,29,45,16", category: "20040-27925 SEMI-GLOSS" },
+            { name: "22519 Rosewood", hex: "#D3AF97", cmyk: "0,17,28,17", category: "20040-27925 SEMI-GLOSS" },
+            { name: "22544 Orange", hex: "#EB9353", cmyk: "0,37,65,8", category: "20040-27925 SEMI-GLOSS" },
+            { name: "22563 Beachwood", hex: "#D8B99C", cmyk: "0,14,28,15", category: "20040-27925 SEMI-GLOSS" },
+            { name: "22630 Buff", hex: "#E0BEA2", cmyk: "0,15,28,12", category: "20040-27925 SEMI-GLOSS" },
+            { name: "22648 Buff", hex: "#E3BE9A", cmyk: "0,16,32,11", category: "20040-27925 SEMI-GLOSS" },
+            { name: "23275 Yellow", hex: "#BA853E", cmyk: "0,29,67,27", category: "20040-27925 SEMI-GLOSS" },
+            { name: "23275 Orange", hex: "#BA853E", cmyk: "0,29,67,27", category: "20040-27925 SEMI-GLOSS" },
+            { name: "23420 Khaki 475", hex: "#837E6E", cmyk: "0,4,16,49", category: "20040-27925 SEMI-GLOSS" },
+            { name: "23430 Khaki P1", hex: "#9D9279", cmyk: "0,7,28,38", category: "20040-27925 SEMI-GLOSS" },
+            { name: "23435 Ligh khaki 494", hex: "#9C937B", cmyk: "0,6,25,39", category: "20040-27925 SEMI-GLOSS" },
+            { name: "23448 Yellow", hex: "#B7A17D", cmyk: "0,11,31,28", category: "20040-27925 SEMI-GLOSS" },
+            { name: "23522 Yellow", hex: "#C7B89E", cmyk: "0,8,21,22", category: "20040-27925 SEMI-GLOSS" },
+            { name: "23525 Desert sand 500/503", hex: "#BFB4A5", cmyk: "0,5,13,25", category: "20040-27925 SEMI-GLOSS" },
+            { name: "23530 Light tan 479", hex: "#B3A798", cmyk: "0,7,14,30", category: "20040-27925 SEMI-GLOSS" },
+            { name: "23531 Light mushroom", hex: "#CEBBA4", cmyk: "0,9,20,19", category: "20040-27925 SEMI-GLOSS" },
+            { name: "23538 Yellow", hex: "#ECA123", cmyk: "0,32,85,7", category: "20040-27925 SEMI-GLOSS" },
+            { name: "23540 Yellow", hex: "#DCA24B", cmyk: "0,26,66,14", category: "20040-27925 SEMI-GLOSS" },
+            { name: "23564 Yellow", hex: "#D5C59E", cmyk: "0,7,26,16", category: "20040-27925 SEMI-GLOSS" },
+            { name: "23578 Yellow", hex: "#D4C2A0", cmyk: "0,8,25,17", category: "20040-27925 SEMI-GLOSS" },
+            { name: "23594 Yellow", hex: "#E5C083", cmyk: "0,16,43,10", category: "20040-27925 SEMI-GLOSS" },
+            { name: "23613 Buff", hex: "#E8C9A4", cmyk: "0,13,29,9", category: "20040-27925 SEMI-GLOSS" },
+            { name: "23617 Yellow", hex: "#D5C4AA", cmyk: "0,7,20,16", category: "20040-27925 SEMI-GLOSS" },
+            { name: "23619 Yellow", hex: "#DDC59E", cmyk: "0,11,29,13", category: "20040-27925 SEMI-GLOSS" },
+            { name: "23640 Yellow 13655", hex: "#F6B524", cmyk: "0,26,85,4", category: "20040-27925 SEMI-GLOSS" },
+            { name: "23655 Yellow", hex: "#F7B51B", cmyk: "0,27,89,3", category: "20040-27925 SEMI-GLOSS" },
+            { name: "23685 Yellow", hex: "#DED7A1", cmyk: "0,3,28,13", category: "20040-27925 SEMI-GLOSS" },
+            { name: "23690 Yellow", hex: "#E0CEAD", cmyk: "0,8,23,12", category: "20040-27925 SEMI-GLOSS" },
+            { name: "23695 Forest service sign standard", hex: "#ECC985", cmyk: "0,15,44,7", category: "20040-27925 SEMI-GLOSS" },
+            { name: "23697 Sunglow", hex: "#E9CA85", cmyk: "0,13,43,9", category: "20040-27925 SEMI-GLOSS" },
+            { name: "23711 Yellow", hex: "#E7CEAA", cmyk: "0,10,26,9", category: "20040-27925 SEMI-GLOSS" },
+            { name: "23717 Yellow", hex: "#E5D2B0", cmyk: "0,8,23,10", category: "20040-27925 SEMI-GLOSS" },
+            { name: "23722 Yellow", hex: "#E3D0A6", cmyk: "0,8,27,11", category: "20040-27925 SEMI-GLOSS" },
+            { name: "23727 Yellow", hex: "#E7D5A4", cmyk: "0,7,28,9", category: "20040-27925 SEMI-GLOSS" },
+            { name: "23785 Yellow", hex: "#E7C753", cmyk: "0,14,64,9", category: "20040-27925 SEMI-GLOSS" },
+            { name: "23793 Yellow", hex: "#EDDD8C", cmyk: "0,7,41,7", category: "20040-27925 SEMI-GLOSS" },
+            { name: "23814 Yellow", hex: "#DCDD9D", cmyk: "0,1,30,13", category: "20040-27925 SEMI-GLOSS" },
+            { name: "24052 Marine green #23", hex: "#4D4E49", cmyk: "0,2,6,69", category: "20040-27925 SEMI-GLOSS" },
+            { name: "24064 Green", hex: "#53524A", cmyk: "0,2,10,68", category: "20040-27925 SEMI-GLOSS" },
+            { name: "24070 Army green 491", hex: "#4C524F", cmyk: "7,0,4,68", category: "20040-27925 SEMI-GLOSS" },
+            { name: "24079 Green", hex: "#54574D", cmyk: "4,0,11,66", category: "20040-27925 SEMI-GLOSS" },
+            { name: "24084 Green", hex: "#4A4844", cmyk: "0,3,7,71", category: "20040-27925 SEMI-GLOSS" },
+            { name: "24091 Green", hex: "#63605E", cmyk: "0,3,5,61", category: "20040-27925 SEMI-GLOSS" },
+            { name: "24097 Green", hex: "#606652", cmyk: "6,0,18,60", category: "20040-27925 SEMI-GLOSS" },
+            { name: "24098 Green", hex: "#656249", cmyk: "0,5,28,60", category: "20040-27925 SEMI-GLOSS" },
+            { name: "24108 Green", hex: "#4D6959", cmyk: "27,0,17,58", category: "20040-27925 SEMI-GLOSS" },
+            { name: "24111 Dark green 455", hex: "#536151", cmyk: "14,0,16,63", category: "20040-27925 SEMI-GLOSS" },
+            { name: "24112 Green 474", hex: "#556258", cmyk: "12,0,8,65", category: "20040-27925 SEMI-GLOSS" },
+            { name: "24119 Marine OG green", hex: "#626555", cmyk: "4,0,15,60", category: "20040-27925 SEMI-GLOSS" },
+            { name: "24148 Green", hex: "#647776", cmyk: "15,0,2,53", category: "20040-27925 SEMI-GLOSS" },
+            { name: "24158 Green", hex: "#6B7875", cmyk: "10,0,3,53", category: "20040-27925 SEMI-GLOSS" },
+            { name: "24159 Green", hex: "#747B70", cmyk: "5,0,8,52", category: "20040-27925 SEMI-GLOSS" },
+            { name: "24165 Foliage green 502/504", hex: "#6E716B", cmyk: "4,0,6,56", category: "20040-27925 SEMI-GLOSS" },
+            { name: "24172 MIL-P-24441 Primer", hex: "#76997C", cmyk: "23,0,19,40", category: "20040-27925 SEMI-GLOSS" },
+            { name: "24172 Green", hex: "#6C7B6A", cmyk: "12,0,13,52", category: "20040-27925 SEMI-GLOSS" },
+            { name: "24190 Green", hex: "#4A9D56", cmyk: "52,0,45,38", category: "20040-27925 SEMI-GLOSS" },
+            { name: "24201 Green", hex: "#88806C", cmyk: "0,5,20,45", category: "20040-27925 SEMI-GLOSS" },
+            { name: "24210 Light green 354", hex: "#80765F", cmyk: "0,8,26,50", category: "20040-27925 SEMI-GLOSS" },
+            { name: "24226 Green", hex: "#7F8B7C", cmyk: "9,0,11,45", category: "20040-27925 SEMI-GLOSS" },
+            { name: "24227 Green", hex: "#7A8B70", cmyk: "13,0,19,45", category: "20040-27925 SEMI-GLOSS" },
+            { name: "24233 Green", hex: "#80928E", cmyk: "12,0,3,43", category: "20040-27925 SEMI-GLOSS" },
+            { name: "24241 Green", hex: "#829D92", cmyk: "17,0,8,38", category: "20040-27925 SEMI-GLOSS" },
+            { name: "24260 Green", hex: "#65987A", cmyk: "34,0,20,40", category: "20040-27925 SEMI-GLOSS" },
+            { name: "24277 Green", hex: "#879A93", cmyk: "12,0,4,40", category: "20040-27925 SEMI-GLOSS" },
+            { name: "24300 Green", hex: "#859C8E", cmyk: "14,0,9,39", category: "20040-27925 SEMI-GLOSS" },
+            { name: "24325 Green", hex: "#7FA695", cmyk: "24,0,13,35", category: "20040-27925 SEMI-GLOSS" },
+            { name: "24373 Green", hex: "#9AA991", cmyk: "9,0,14,34", category: "20040-27925 SEMI-GLOSS" },
+            { name: "24410 Green", hex: "#A0B0A1", cmyk: "10,0,9,31", category: "20040-27925 SEMI-GLOSS" },
+            { name: "24417 Green", hex: "#A9B29E", cmyk: "5,0,12,30", category: "20040-27925 SEMI-GLOSS" },
+            { name: "24424 Green", hex: "#AAAE97", cmyk: "3,0,14,32", category: "20040-27925 SEMI-GLOSS" },
+            { name: "24432 Green", hex: "#A7AF9E", cmyk: "5,0,10,31", category: "20040-27925 SEMI-GLOSS" },
+            { name: "24441 Green", hex: "#A7B39A", cmyk: "7,0,14,30", category: "20040-27925 SEMI-GLOSS" },
+            { name: "24449 Green", hex: "#A1B596", cmyk: "11,0,16,29", category: "20040-27925 SEMI-GLOSS" },
+            { name: "24466 Green", hex: "#A2B79F", cmyk: "11,0,13,28", category: "20040-27925 SEMI-GLOSS" },
+            { name: "24491 Green", hex: "#A6BCA7", cmyk: "11,0,11,26", category: "20040-27925 SEMI-GLOSS" },
+            { name: "24504 Green", hex: "#ACBBA3", cmyk: "8,0,13,27", category: "20040-27925 SEMI-GLOSS" },
+            { name: "24516 Clipper blue", hex: "#B2C4B2", cmyk: "9,0,9,23", category: "20040-27925 SEMI-GLOSS" },
+            { name: "24518 Green", hex: "#AAB9A6", cmyk: "8,0,10,27", category: "20040-27925 SEMI-GLOSS" },
+            { name: "24525 Green", hex: "#B1BFA6", cmyk: "7,0,13,25", category: "20040-27925 SEMI-GLOSS" },
+            { name: "24533 Seafoam green", hex: "#ADBA96", cmyk: "7,0,19,27", category: "20040-27925 SEMI-GLOSS" },
+            { name: "24552 Green", hex: "#C6C286", cmyk: "0,3,32,22", category: "20040-27925 SEMI-GLOSS" },
+            { name: "24554 Green", hex: "#CDCEB2", cmyk: "0,0,13,19", category: "20040-27925 SEMI-GLOSS" },
+            { name: "24558 Green", hex: "#B6C7A9", cmyk: "9,0,15,22", category: "20040-27925 SEMI-GLOSS" },
+            { name: "24583 Green", hex: "#B8BDA1", cmyk: "3,0,15,26", category: "20040-27925 SEMI-GLOSS" },
+            { name: "24585 Postal green", hex: "#C3DBBF", cmyk: "11,0,13,14", category: "20040-27925 SEMI-GLOSS" },
+            { name: "24664 Green", hex: "#BDD3BA", cmyk: "10,0,11,17", category: "20040-27925 SEMI-GLOSS" },
+            { name: "24670 Green", hex: "#C9D6C3", cmyk: "5,0,8,16", category: "20040-27925 SEMI-GLOSS" },
+            { name: "24672 Green", hex: "#CCD5B9", cmyk: "4,0,13,16", category: "20040-27925 SEMI-GLOSS" },
+            { name: "25042 Blue sea / ANA 606", hex: "#43484D", cmyk: "12,6,0,70", category: "20040-27925 SEMI-GLOSS" },
+            { name: "25044 RCAF blue 25044", hex: "#40444D", cmyk: "14,10,0,70", category: "20040-27925 SEMI-GLOSS" },
+            { name: "25045 Blue", hex: "#3E4B53", cmyk: "25,9,0,67", category: "20040-27925 SEMI-GLOSS" },
+            { name: "25048 Blue", hex: "#3D4A5E", cmyk: "35,21,0,63", category: "20040-27925 SEMI-GLOSS" },
+            { name: "25049 Army blue 450", hex: "#444649", cmyk: "6,4,0,71", category: "20040-27925 SEMI-GLOSS" },
+            { name: "25051 Blue", hex: "#4F5666", cmyk: "24,15,0,60", category: "20040-27925 SEMI-GLOSS" },
+            { name: "25052 Blue", hex: "#3C5270", cmyk: "45,26,0,56", category: "20040-27925 SEMI-GLOSS" },
+            { name: "25053 Royal blue", hex: "#465469", cmyk: "34,20,0,59", category: "20040-27925 SEMI-GLOSS" },
+            { name: "25056 Blue", hex: "#3D486D", cmyk: "43,34,0,57", category: "20040-27925 SEMI-GLOSS" },
+            { name: "25060 Army blue 451", hex: "#444E5F", cmyk: "28,17,0,63", category: "20040-27925 SEMI-GLOSS" },
+            { name: "25095 Blue", hex: "#3D6CA6", cmyk: "63,34,0,35", category: "20040-27925 SEMI-GLOSS" },
+            { name: "25102 Blue", hex: "#3C6990", cmyk: "58,26,0,44", category: "20040-27925 SEMI-GLOSS" },
+            { name: "25109 Blue", hex: "#557183", cmyk: "35,14,0,49", category: "20040-27925 SEMI-GLOSS" },
+            { name: "25177 Blue", hex: "#638194", cmyk: "33,14,0,42", category: "20040-27925 SEMI-GLOSS" },
+            { name: "25183 Blue", hex: "#4083AE", cmyk: "63,24,0,32", category: "20040-27925 SEMI-GLOSS" },
+            { name: "25184 Blue", hex: "#588496", cmyk: "41,12,0,41", category: "20040-27925 SEMI-GLOSS" },
+            { name: "25185 Blue", hex: "#3D87A0", cmyk: "62,14,0,37", category: "20040-27925 SEMI-GLOSS" },
+            { name: "25189 Blue", hex: "#70878E", cmyk: "21,4,0,44", category: "20040-27925 SEMI-GLOSS" },
+            { name: "25190 Blue", hex: "#638DA0", cmyk: "38,11,0,37", category: "20040-27925 SEMI-GLOSS" },
+            { name: "25193 Blue", hex: "#5B8A8F", cmyk: "36,3,0,44", category: "20040-27925 SEMI-GLOSS" },
+            { name: "25200 Blue", hex: "#5BB7CC", cmyk: "55,8,0,20", category: "20040-27925 SEMI-GLOSS" },
+            { name: "25230 Electrical blue", hex: "#5490C5", cmyk: "58,27,0,23", category: "20040-27925 SEMI-GLOSS" },
+            { name: "25237 Blue", hex: "#7E8A90", cmyk: "12,4,0,44", category: "20040-27925 SEMI-GLOSS" },
+            { name: "25240 Blue", hex: "#7C96B4", cmyk: "30,16,0,29", category: "20040-27925 SEMI-GLOSS" },
+            { name: "25299 Blue", hex: "#76A19B", cmyk: "27,0,5,37", category: "20040-27925 SEMI-GLOSS" },
+            { name: "25352 Blue", hex: "#8AA19D", cmyk: "14,0,3,37", category: "20040-27925 SEMI-GLOSS" },
+            { name: "25414 Blue", hex: "#90AAA8", cmyk: "16,0,2,33", category: "20040-27925 SEMI-GLOSS" },
+            { name: "25440 Admiral blue", hex: "#86AFC7", cmyk: "33,12,0,22", category: "20040-27925 SEMI-GLOSS" },
+            { name: "25488 Blue", hex: "#9BBAD0", cmyk: "25,9,0,18", category: "20040-27925 SEMI-GLOSS" },
+            { name: "25526 Pastel blue", hex: "#C4C3B7", cmyk: "0,0,6,23", category: "20040-27925 SEMI-GLOSS" },
+            { name: "25530 Carl Vinson blue", hex: "#B6C4C4", cmyk: "7,0,0,23", category: "20040-27925 SEMI-GLOSS" },
+            { name: "25550 Blue", hex: "#C7D8DA", cmyk: "9,0,0,15", category: "20040-27925 SEMI-GLOSS" },
+            { name: "25622 Blue", hex: "#C8D3C9", cmyk: "4,0,3,17", category: "20040-27925 SEMI-GLOSS" },
+            { name: "25630 Blue", hex: "#D4D4CD", cmyk: "0,0,3,17", category: "20040-27925 SEMI-GLOSS" },
+            { name: "26008 Exterior deck gray", hex: "#575B5F", cmyk: "7,4,0,63", category: "20040-27925 SEMI-GLOSS" },
+            { name: "26044 Gray", hex: "#494E53", cmyk: "11,6,0,67", category: "20040-27925 SEMI-GLOSS" },
+            { name: "26081 Sea plane gray / ANA 625", hex: "#585B5B", cmyk: "3,1,0,64", category: "20040-27925 SEMI-GLOSS" },
+            { name: "26099 Gray", hex: "#5B6267", cmyk: "11,5,0,60", category: "20040-27925 SEMI-GLOSS" },
+            { name: "26118 Gray", hex: "#5E646B", cmyk: "12,7,0,58", category: "20040-27925 SEMI-GLOSS" },
+            { name: "26120 Gray", hex: "#615853", cmyk: "0,7,13,62", category: "20040-27925 SEMI-GLOSS" },
+            { name: "26122 Gray", hex: "#6B6968", cmyk: "0,2,2,58", category: "20040-27925 SEMI-GLOSS" },
+            { name: "26132 Slate gray", hex: "#6D6F72", cmyk: "4,3,0,55", category: "20040-27925 SEMI-GLOSS" },
+            { name: "26134 Gray / Filing cabinet", hex: "#70716E", cmyk: "1,0,2,56", category: "20040-27925 SEMI-GLOSS" },
+            { name: "26152 Gray", hex: "#707477", cmyk: "5,2,0,53", category: "20040-27925 SEMI-GLOSS" },
+            { name: "26173 Ocean gray / NAVSEA", hex: "#7B8187", cmyk: "8,4,0,47", category: "20040-27925 SEMI-GLOSS" },
+            { name: "26176 Ocean gray", hex: "#777F88", cmyk: "12,7,0,47", category: "20040-27925 SEMI-GLOSS" },
+            { name: "26187 Gray", hex: "#767D7E", cmyk: "5,1,0,51", category: "20040-27925 SEMI-GLOSS" },
+            { name: "26231 Gray", hex: "#848889", cmyk: "3,1,0,46", category: "20040-27925 SEMI-GLOSS" },
+            { name: "26250 Gray", hex: "#858C8B", cmyk: "4,0,1,45", category: "20040-27925 SEMI-GLOSS" },
+            { name: "26251 Gray", hex: "#888B8B", cmyk: "2,0,0,45", category: "20040-27925 SEMI-GLOSS" },
+            { name: "26255 Dark gray 509", hex: "#818588", cmyk: "5,2,0,47", category: "20040-27925 SEMI-GLOSS" },
+            { name: "26260 Urban gray 501/505", hex: "#8A8A81", cmyk: "0,0,6,46", category: "20040-27925 SEMI-GLOSS" },
+            { name: "26270 Interior haze gray", hex: "#898F91", cmyk: "4,1,0,43", category: "20040-27925 SEMI-GLOSS" },
+            { name: "26280 Gray", hex: "#8F938F", cmyk: "2,0,2,42", category: "20040-27925 SEMI-GLOSS" },
+            { name: "26290 Gray", hex: "#8E9292", cmyk: "2,0,0,43", category: "20040-27925 SEMI-GLOSS" },
+            { name: "26293 Gray", hex: "#8F9595", cmyk: "4,0,0,42", category: "20040-27925 SEMI-GLOSS" },
+            { name: "26295 Gray 510", hex: "#A2A3A7", cmyk: "3,2,0,35", category: "20040-27925 SEMI-GLOSS" },
+            { name: "26306 Sand gray", hex: "#9B938A", cmyk: "0,4,10,39", category: "20040-27925 SEMI-GLOSS" },
+            { name: "26307 Bulkhead machinery gray #30", hex: "#94968D", cmyk: "2,0,5,41", category: "20040-27925 SEMI-GLOSS" },
+            { name: "26314 Gray", hex: "#949996", cmyk: "3,0,2,40", category: "20040-27925 SEMI-GLOSS" },
+            { name: "26329 Gray", hex: "#919F9F", cmyk: "9,0,0,38", category: "20040-27925 SEMI-GLOSS" },
+            { name: "26357 Gray", hex: "#A4A295", cmyk: "0,2,9,36", category: "20040-27925 SEMI-GLOSS" },
+            { name: "26360 Gray", hex: "#AEA996", cmyk: "0,3,14,32", category: "20040-27925 SEMI-GLOSS" },
+            { name: "26373 Light gray #37", hex: "#A4A9A8", cmyk: "3,0,1,34", category: "20040-27925 SEMI-GLOSS" },
+            { name: "26380 Medium gray 508", hex: "#A3A9AC", cmyk: "5,2,0,33", category: "20040-27925 SEMI-GLOSS" },
+            { name: "26400 Yellow gray", hex: "#CBC2A9", cmyk: "0,5,17,20", category: "20040-27925 SEMI-GLOSS" },
+            { name: "26405 Gray", hex: "#BFB7A2", cmyk: "0,4,15,25", category: "20040-27925 SEMI-GLOSS" },
+            { name: "26408 Gray", hex: "#BCBBAD", cmyk: "0,1,8,27", category: "20040-27925 SEMI-GLOSS" },
+            { name: "26420 DLA light blue/gray", hex: "#B4B1AE", cmyk: "0,1,2,29", category: "20040-27925 SEMI-GLOSS" },
+            { name: "26424 Gray", hex: "#BEB6AC", cmyk: "0,4,9,26", category: "20040-27925 SEMI-GLOSS" },
+            { name: "26440 Gray", hex: "#B4B4AB", cmyk: "0,0,5,29", category: "20040-27925 SEMI-GLOSS" },
+            { name: "26480 Canada 501-109", hex: "#AFBBB5", cmyk: "7,0,4,27", category: "20040-27925 SEMI-GLOSS" },
+            { name: "26492 Gray", hex: "#BCBCB6", cmyk: "0,0,4,26", category: "20040-27925 SEMI-GLOSS" },
+            { name: "26493 Pearl gray", hex: "#B9BCBA", cmyk: "2,0,1,26", category: "20040-27925 SEMI-GLOSS" },
+            { name: "26496 Green gray", hex: "#B1B2A7", cmyk: "0,0,6,30", category: "20040-27925 SEMI-GLOSS" },
+            { name: "26521 Gray", hex: "#C4B9AC", cmyk: "0,5,11,23", category: "20040-27925 SEMI-GLOSS" },
+            { name: "26555 Gray", hex: "#C8BEA2", cmyk: "0,4,18,22", category: "20040-27925 SEMI-GLOSS" },
+            { name: "26559 Parchment", hex: "#C1BFB0", cmyk: "0,1,9,24", category: "20040-27925 SEMI-GLOSS" },
+            { name: "26586 Gray", hex: "#CBC3AA", cmyk: "0,4,16,20", category: "20040-27925 SEMI-GLOSS" },
+            { name: "26595 Gray", hex: "#C2C2B3", cmyk: "0,0,8,24", category: "20040-27925 SEMI-GLOSS" },
+            { name: "26622 Gray", hex: "#C5C3B8", cmyk: "0,1,6,23", category: "20040-27925 SEMI-GLOSS" },
+            { name: "26630 Light gray 507", hex: "#CED0CC", cmyk: "0,0,2,19", category: "20040-27925 SEMI-GLOSS" },
+            { name: "27038 ANA 514", hex: "#3D3D3E", cmyk: "0,0,0,76", category: "20040-27925 SEMI-GLOSS" },
+            { name: "27040 Filing cabinet black", hex: "#424345", cmyk: "3,2,0,74", category: "20040-27925 SEMI-GLOSS" },
+            { name: "27041 Black", hex: "#424345", cmyk: "3,2,0,74", category: "20040-27925 SEMI-GLOSS" },
+            { name: "27043 Gold", hex: "#B69E6A", cmyk: "0,13,42,29", category: "20040-27925 SEMI-GLOSS" },
+            { name: "27142 Misc - purple", hex: "#955F84", cmyk: "0,36,8,42", category: "20040-27925 SEMI-GLOSS" },
+            { name: "27144 Misc - purple", hex: "#836B8A", cmyk: "5,22,0,46", category: "20040-27925 SEMI-GLOSS" },
+            { name: "27160 Misc - purple", hex: "#9382B9", cmyk: "21,30,0,27", category: "20040-27925 SEMI-GLOSS" },
+            { name: "27722 Misc - white", hex: "#DCD9CC", cmyk: "0,1,7,14", category: "20040-27925 SEMI-GLOSS" },
+            { name: "27769 Parchment", hex: "#DED3BB", cmyk: "0,5,16,13", category: "20040-27925 SEMI-GLOSS" },
+            { name: "27778 Candlelight", hex: "#EAE3CA", cmyk: "0,3,14,8", category: "20040-27925 SEMI-GLOSS" },
+            { name: "27780 Misc - white", hex: "#EAE4D2", cmyk: "0,2,10,8", category: "20040-27925 SEMI-GLOSS" },
+            { name: "27855 Misc - yellow white", hex: "#E9DDBB", cmyk: "0,5,20,9", category: "20040-27925 SEMI-GLOSS" },
+            { name: "27875 ANA 626", hex: "#E8E9DE", cmyk: "0,0,4,9", category: "20040-27925 SEMI-GLOSS" },
+            { name: "27880 Misc - white", hex: "#F4EEDC", cmyk: "0,3,9,4", category: "20040-27925 SEMI-GLOSS" },
+            { name: "27885 White 506", hex: "#F3F1E7", cmyk: "0,0,5,5", category: "20040-27925 SEMI-GLOSS" },
+            { name: "27886 Misc - white", hex: "#EFEAD9", cmyk: "0,2,9,6", category: "20040-27925 SEMI-GLOSS" },
+            { name: "27925 Misc - white", hex: "#EFF1E7", cmyk: "0,0,5,6", category: "20040-27925 SEMI-GLOSS" },
+            { name: "28913 Fluorescent - red", hex: "#F64336", cmyk: "0,73,78,4", category: "20040-27925 SEMI-GLOSS" },
+            { name: "28915 Fluorescent - orange", hex: "#FF5E2D", cmyk: "0,63,82,0", category: "20040-27925 SEMI-GLOSS" },
+
+            // --- 30040-38907 Flat/Matt ---
+            { name: "30037 - U.S. Army # 561 / Bark brown", hex: "#584E4C", cmyk: "0,10,15,65", category: "30040-38907 FLAT/MATT" },
+            { name: "30040 - Brown", hex: "#514842", cmyk: "0,10,20,68", category: "30040-38907 FLAT/MATT" },
+            { name: "30045 - Brown", hex: "#5A4B47", cmyk: "0,15,20,65", category: "30040-38907 FLAT/MATT" },
+            { name: "30051 - Brown 383 Camouflage", hex: "#5A4E46", cmyk: "0,10,20,65", category: "30040-38907 FLAT/MATT" },
+            { name: "30059 - Brown", hex: "#523E37", cmyk: "0,25,30,68", category: "30040-38907 FLAT/MATT" },
+            { name: "30063 - U.S. Army # 530 - Dark brown", hex: "#524844", cmyk: "0,10,15,68", category: "30040-38907 FLAT/MATT" },
+            { name: "30097 - Earth brown Camo", hex: "#605143", cmyk: "0,15,30,60", category: "30040-38907 FLAT/MATT" },
+            { name: "30098 - U.S. Army # 529 - brown", hex: "#645241", cmyk: "0,20,35,60", category: "30040-38907 FLAT/MATT" },
+            { name: "30099 - Earth brown", hex: "#68584A", cmyk: "0,15,30,60", category: "30040-38907 FLAT/MATT" },
+            { name: "30108 - Walnut brown", hex: "#5D463D", cmyk: "0,25,35,63", category: "30040-38907 FLAT/MATT" },
+            { name: "30109 - Dull red / ANA 618", hex: "#824D44", cmyk: "0,40,45,50", category: "30040-38907 FLAT/MATT" },
+            { name: "30111 - Maroon olympic russet / Park service brown", hex: "#6F4E47", cmyk: "0,30,35,65", category: "30040-38907 FLAT/MATT" },
+            { name: "30117 - Brown international", hex: "#7E5D4D", cmyk: "0,25,35,50", category: "30040-38907 FLAT/MATT" },
+            { name: "30118 - Field drab camo / ANA 617", hex: "#6E5C42", cmyk: "0,15,40,60", category: "30040-38907 FLAT/MATT" },
+            { name: "30140 - Brown international", hex: "#7A6150", cmyk: "0,20,35,50", category: "30040-38907 FLAT/MATT" },
+            { name: "30145 - Butternut stain", hex: "#7D634B", cmyk: "0,20,40,50", category: "30040-38907 FLAT/MATT" },
+            { name: "30160 - Brown", hex: "#764650", cmyk: "0,40,30,55", category: "30040-38907 FLAT/MATT" },
+            { name: "30166 - Brown", hex: "#825047", cmyk: "0,40,45,50", category: "30040-38907 FLAT/MATT" },
+            { name: "30169 - U.S. Army # 450 / Tan", hex: "#83715E", cmyk: "0,15,30,50", category: "30040-38907 FLAT/MATT" },
+            { name: "30206 - Brown", hex: "#906F6A", cmyk: "0,20,25,45", category: "30040-38907 FLAT/MATT" },
+            { name: "30215 - Brown", hex: "#8F674B", cmyk: "0,30,45,45", category: "30040-38907 FLAT/MATT" },
+            { name: "30219 - Sierra tan / ANA 628", hex: "#917561", cmyk: "0,20,30,45", category: "30040-38907 FLAT/MATT" },
+            { name: "30227 - Brown", hex: "#998070", cmyk: "0,15,25,40", category: "30040-38907 FLAT/MATT" },
+            { name: "30233 - Brown", hex: "#9D7063", cmyk: "0,30,35,40", category: "30040-38907 FLAT/MATT" },
+            { name: "30252 - Rust red", hex: "#AE755F", cmyk: "0,30,45,30", category: "30040-38907 FLAT/MATT" },
+            { name: "30257 - Earth yellow", hex: "#B58B5D", cmyk: "0,25,50,30", category: "30040-38907 FLAT/MATT" },
+            { name: "30266 - Tan / ANA 615", hex: "#A38254", cmyk: "0,20,50,35", category: "30040-38907 FLAT/MATT" },
+            { name: "30267 - U.S. Army # M-1 / Khaki", hex: "#988567", cmyk: "0,15,35,40", category: "30040-38907 FLAT/MATT" },
+            { name: "30277 - Sand", hex: "#9A8B72", cmyk: "0,10,25,40", category: "30040-38907 FLAT/MATT" },
+            { name: "30279 - Desert sand / ANA 616", hex: "#AD9281", cmyk: "0,15,25,30", category: "30040-38907 FLAT/MATT" },
+            { name: "30313 - Desert sand", hex: "#AA8F81", cmyk: "0,15,25,30", category: "30040-38907 FLAT/MATT" },
+            { name: "30315 - Desert sand camo", hex: "#AC9281", cmyk: "0,15,25,30", category: "30040-38907 FLAT/MATT" },
+            { name: "30318 - Brown", hex: "#A6967C", cmyk: "0,10,25,35", category: "30040-38907 FLAT/MATT" },
+            { name: "30324 - Desert sand", hex: "#A88D7D", cmyk: "0,15,25,35", category: "30040-38907 FLAT/MATT" },
+            { name: "30340 - Tan 380", hex: "#A6927F", cmyk: "0,10,25,35", category: "30040-38907 FLAT/MATT" },
+            { name: "30372 - Brown", hex: "#A89985", cmyk: "0,10,20,35", category: "30040-38907 FLAT/MATT" },
+            { name: "30373 - U.S. Army # 525 / Tan", hex: "#9B836E", cmyk: "0,15,30,40", category: "30040-38907 FLAT/MATT" },
+            { name: "30450 - Beige", hex: "#C2A892", cmyk: "0,15,25,20", category: "30040-38907 FLAT/MATT" },
+            { name: "30475 - Saudi color #11 (SANG)", hex: "#C6A887", cmyk: "0,15,30,20", category: "30040-38907 FLAT/MATT" },
+            { name: "30480 - Tan 459", hex: "#CAAB8A", cmyk: "0,15,30,20", category: "30040-38907 FLAT/MATT" },
+            { name: "31090 - Earth red camo", hex: "#76543C", cmyk: "0,30,50,50", category: "30040-38907 FLAT/MATT" },
+            { name: "31100 - U.S. Army # 453 / Maroon", hex: "#5B3C41", cmyk: "0,35,30,65", category: "30040-38907 FLAT/MATT" },
+            { name: "31136 - Red international / CARC aircraft red / ANA 619", hex: "#8F403E", cmyk: "0,55,55,45", category: "30040-38907 FLAT/MATT" },
+            { name: "31158 - Light red international", hex: "#B25761", cmyk: "0,50,45,30", category: "30040-38907 FLAT/MATT" },
+            { name: "31302 - Red", hex: "#BA4740", cmyk: "0,60,65,25", category: "30040-38907 FLAT/MATT" },
+            { name: "31310 - Red", hex: "#B94437", cmyk: "0,60,70,25", category: "30040-38907 FLAT/MATT" },
+            { name: "31348 - U.S. Army # 2501/2502/2510 / Scarlet", hex: "#A4393C", cmyk: "0,65,60,35", category: "30040-38907 FLAT/MATT" },
+            { name: "31400 - Red", hex: "#C24A3C", cmyk: "0,60,70,25", category: "30040-38907 FLAT/MATT" },
+            { name: "31433 - Red", hex: "#C39180", cmyk: "0,25,35,25", category: "30040-38907 FLAT/MATT" },
+            { name: "31575 - Red", hex: "#D7B09C", cmyk: "0,20,25,15", category: "30040-38907 FLAT/MATT" },
+            { name: "31638 - Red", hex: "#E2ABAD", cmyk: "0,25,25,10", category: "30040-38907 FLAT/MATT" },
+            { name: "31643 - Red", hex: "#E3C8AF", cmyk: "0,10,25,10", category: "30040-38907 FLAT/MATT" },
+            { name: "31667 - Tan", hex: "#E5C6A8", cmyk: "0,10,25,10", category: "30040-38907 FLAT/MATT" },
+            { name: "31668 - Red", hex: "#E7CAC0", cmyk: "0,10,15,10", category: "30040-38907 FLAT/MATT" },
+            { name: "31669 - Red", hex: "#E8C7C3", cmyk: "0,10,15,10", category: "30040-38907 FLAT/MATT" },
+            { name: "31670 - Red", hex: "#EECAB4", cmyk: "0,15,25,5", category: "30040-38907 FLAT/MATT" },
+            { name: "32169 - Orange", hex: "#AA5637", cmyk: "0,50,65,35", category: "30040-38907 FLAT/MATT" },
+            { name: "32246 - Navy torpedo", hex: "#D85B37", cmyk: "0,60,75,15", category: "30040-38907 FLAT/MATT" },
+            { name: "32276 - Orange", hex: "#BD6C56", cmyk: "0,45,55,25", category: "30040-38907 FLAT/MATT" },
+            { name: "32356 - Orange", hex: "#D47B69", cmyk: "0,45,50,15", category: "30040-38907 FLAT/MATT" },
+            { name: "32473 - Orange", hex: "#E16E34", cmyk: "0,50,75,10", category: "30040-38907 FLAT/MATT" },
+            { name: "32516 - Orange", hex: "#D4946F", cmyk: "0,30,50,15", category: "30040-38907 FLAT/MATT" },
+            { name: "32540 - Naviar flat orange #1", hex: "#F68E44", cmyk: "0,40,70,5", category: "30040-38907 FLAT/MATT" },
+            { name: "32544 - Orange", hex: "#E9924D", cmyk: "0,35,65,10", category: "30040-38907 FLAT/MATT" },
+            { name: "32555 - Orange", hex: "#EBA059", cmyk: "0,30,60,10", category: "30040-38907 FLAT/MATT" },
+            { name: "32630 - Orange", hex: "#DFBB9D", cmyk: "0,15,30,15", category: "30040-38907 FLAT/MATT" },
+            { name: "32648 - Orange", hex: "#E1BB96", cmyk: "0,15,35,10", category: "30040-38907 FLAT/MATT" },
+            { name: "33070 - Olive drab Camo", hex: "#544F3E", cmyk: "0,5,25,70", category: "30040-38907 FLAT/MATT" },
+            { name: "33105 - Field drab camouflage", hex: "#6F5C42", cmyk: "0,15,40,60", category: "30040-38907 FLAT/MATT" },
+            { name: "33245 - Earth yellow camouflage", hex: "#A27C53", cmyk: "0,25,50,35", category: "30040-38907 FLAT/MATT" },
+            { name: "33275 - Yellow", hex: "#B48030", cmyk: "0,30,75,30", category: "30040-38907 FLAT/MATT" },
+            { name: "33303 - Sand camouflage", hex: "#9F9074", cmyk: "0,10,25,40", category: "30040-38907 FLAT/MATT" },
+            { name: "33434 - Yellow", hex: "#CD994E", cmyk: "0,25,60,20", category: "30040-38907 FLAT/MATT" },
+            { name: "33440 - Green gold stain", hex: "#9A8159", cmyk: "0,15,40,40", category: "30040-38907 FLAT/MATT" },
+            { name: "33446 - Tan 686A camouflage", hex: "#B49D80", cmyk: "0,10,30,30", category: "30040-38907 FLAT/MATT" },
+            { name: "33448 - Yellow", hex: "#B89F7A", cmyk: "0,10,35,30", category: "30040-38907 FLAT/MATT" },
+            { name: "33481 - Yellow", hex: "#C3A749", cmyk: "0,15,65,25", category: "30040-38907 FLAT/MATT" },
+            { name: "33510 - Dark sandstone camouflage", hex: "#BDAB90", cmyk: "0,10,25,25", category: "30040-38907 FLAT/MATT" },
+            { name: "33522 - Tan", hex: "#C3B296", cmyk: "0,10,25,25", category: "30040-38907 FLAT/MATT" },
+            { name: "33531 - Sand", hex: "#C7B49E", cmyk: "0,10,20,20", category: "30040-38907 FLAT/MATT" },
+            { name: "33538 - Yellow international / Traffic yellow / ANA 614", hex: "#EFA11B", cmyk: "0,30,90,5", category: "30040-38907 FLAT/MATT" },
+            { name: "33564 - Yellow", hex: "#D5C49C", cmyk: "0,10,25,15", category: "30040-38907 FLAT/MATT" },
+            { name: "33578 - Yellow", hex: "#D4C39F", cmyk: "0,10,25,15", category: "30040-38907 FLAT/MATT" },
+            { name: "33613 - Yellow", hex: "#E7C7A1", cmyk: "0,10,30,10", category: "30040-38907 FLAT/MATT" },
+            { name: "33617 - Sand / TT-P-47", hex: "#D1BFA3", cmyk: "0,10,25,15", category: "30040-38907 FLAT/MATT" },
+            { name: "33637 - Yellow", hex: "#DAA222", cmyk: "0,25,85,15", category: "30040-38907 FLAT/MATT" },
+            { name: "33654 - U.S. Army #558 / Gold", hex: "#EDB31B", cmyk: "0,25,90,5", category: "30040-38907 FLAT/MATT" },
+            { name: "33655 - Yellow", hex: "#F3B100", cmyk: "0,25,100,5", category: "30040-38907 FLAT/MATT" },
+            { name: "33685 - Yellow", hex: "#DDD5A0", cmyk: "0,5,30,15", category: "30040-38907 FLAT/MATT" },
+            { name: "33690 - Very light sand", hex: "#DDCBAB", cmyk: "0,10,25,15", category: "30040-38907 FLAT/MATT" },
+            { name: "33695 - Yellow", hex: "#EAC67D", cmyk: "0,15,45,10", category: "30040-38907 FLAT/MATT" },
+            { name: "33696 - Yellow", hex: "#F9C767", cmyk: "0,20,60,0", category: "30040-38907 FLAT/MATT" },
+            { name: "33711 - Tan", hex: "#E3CAA6", cmyk: "0,10,25,10", category: "30040-38907 FLAT/MATT" },
+            { name: "33717 - Yellow", hex: "#E4D1AF", cmyk: "0,10,25,10", category: "30040-38907 FLAT/MATT" },
+            { name: "33722 - Yellow", hex: "#E3CFA4", cmyk: "0,10,30,10", category: "30040-38907 FLAT/MATT" },
+            { name: "33727 - Yellow", hex: "#E7D5A4", cmyk: "0,10,30,10", category: "30040-38907 FLAT/MATT" },
+            { name: "33793 - Yellow", hex: "#EFDC8D", cmyk: "0,10,45,5", category: "30040-38907 FLAT/MATT" },
+            { name: "33798 - Yellow", hex: "#F0D89A", cmyk: "0,10,35,5", category: "30040-38907 FLAT/MATT" },
+            { name: "33814 - Yellow", hex: "#D5D799", cmyk: "0,5,35,15", category: "30040-38907 FLAT/MATT" },
+            { name: "34031 - Aircraft green camouflage", hex: "#484743", cmyk: "0,0,5,75", category: "30040-38907 FLAT/MATT" },
+            { name: "34052 - Marine green #23", hex: "#4B4E48", cmyk: "0,0,5,75", category: "30040-38907 FLAT/MATT" },
+            { name: "34057 - U.S. Army # 297 / Rifle green", hex: "#3B4140", cmyk: "0,5,5,80", category: "30040-38907 FLAT/MATT" },
+            { name: "34058 - Dark blue green", hex: "#325251", cmyk: "40,0,5,70", category: "30040-38907 FLAT/MATT" },
+            { name: "34064 - Olive drab 85285", hex: "#4C4C42", cmyk: "0,0,15,75", category: "30040-38907 FLAT/MATT" },
+            { name: "34065 - U.S. Army # 2209 / Green", hex: "#57514A", cmyk: "0,5,15,70", category: "30040-38907 FLAT/MATT" },
+            { name: "34076 - U.S. Army / Ranger green", hex: "#605B50", cmyk: "0,5,15,65", category: "30040-38907 FLAT/MATT" },
+            { name: "34078 - U.S. Army # 2247/2248 / OD green", hex: "#4E5040", cmyk: "0,0,20,75", category: "30040-38907 FLAT/MATT" },
+            { name: "34079 - Army forest green / ANA 631", hex: "#545648", cmyk: "0,0,15,75", category: "30040-38907 FLAT/MATT" },
+            { name: "34080 - U.S. Army # 2212 / Green", hex: "#535046", cmyk: "0,5,15,70", category: "30040-38907 FLAT/MATT" },
+            { name: "34082 - Dark green camouflage", hex: "#565C44", cmyk: "0,0,25,70", category: "30040-38907 FLAT/MATT" },
+            { name: "34083 - Air force forest green", hex: "#494B3D", cmyk: "0,0,20,75", category: "30040-38907 FLAT/MATT" },
+            { name: "34084 - Dark green camo", hex: "#46443E", cmyk: "0,0,10,80", category: "30040-38907 FLAT/MATT" },
+            { name: "34085 - U.S. Army green # 2243 / Green", hex: "#515044", cmyk: "0,0,15,75", category: "30040-38907 FLAT/MATT" },
+            { name: "34086 - Army forest green camo", hex: "#57554C", cmyk: "0,0,10,70", category: "30040-38907 FLAT/MATT" },
+            { name: "34087 - U.S. Army # 523 / Belleau wood green", hex: "#534E42", cmyk: "0,5,20,70", category: "30040-38907 FLAT/MATT" },
+            { name: "34088 - Olive drab CARC", hex: "#665F4C", cmyk: "0,10,25,65", category: "30040-38907 FLAT/MATT" },
+            { name: "34089 - Light green camo", hex: "#5F5F3A", cmyk: "0,0,40,65", category: "30040-38907 FLAT/MATT" },
+            { name: "34090 - Green", hex: "#1B6B48", cmyk: "75,0,55,60", category: "30040-38907 FLAT/MATT" },
+            { name: "34092 - Gunship green / ANA 612", hex: "#4A5A52", cmyk: "20,0,10,70", category: "30040-38907 FLAT/MATT" },
+            { name: "34094 - Green 383 camouflage", hex: "#4F5545", cmyk: "0,0,20,75", category: "30040-38907 FLAT/MATT" },
+            { name: "34095 - Field green", hex: "#50553F", cmyk: "0,0,25,75", category: "30040-38907 FLAT/MATT" },
+            { name: "34096 - Green", hex: "#545647", cmyk: "0,0,15,75", category: "30040-38907 FLAT/MATT" },
+            { name: "34097 - Field green / ANA 627", hex: "#5B634A", cmyk: "0,0,25,65", category: "30040-38907 FLAT/MATT" },
+            { name: "34098 - Green", hex: "#636143", cmyk: "0,0,35,65", category: "30040-38907 FLAT/MATT" },
+            { name: "34101 - U.S. Army # 528 / Dark green", hex: "#5D644A", cmyk: "0,0,25,65", category: "30040-38907 FLAT/MATT" },
+            { name: "34102 - Dark green", hex: "#585C46", cmyk: "0,0,25,70", category: "30040-38907 FLAT/MATT" },
+            { name: "34108 - Dark green international / Navy torpedo", hex: "#466653", cmyk: "30,0,20,65", category: "30040-38907 FLAT/MATT" },
+            { name: "34127 - Light green camo", hex: "#605F41", cmyk: "0,0,35,65", category: "30040-38907 FLAT/MATT" },
+            { name: "34128 - Green", hex: "#586753", cmyk: "0,0,20,65", category: "30040-38907 FLAT/MATT" },
+            { name: "34129 - Navair flat green #2", hex: "#5C5C4B", cmyk: "0,0,20,70", category: "30040-38907 FLAT/MATT" },
+            { name: "34130 - Munsell color 10Y3/3", hex: "#5D5B3C", cmyk: "0,0,35,65", category: "30040-38907 FLAT/MATT" },
+            { name: "34138 - Green", hex: "#547648", cmyk: "30,0,40,55", category: "30040-38907 FLAT/MATT" },
+            { name: "34148 - Green", hex: "#5A716F", cmyk: "20,0,5,60", category: "30040-38907 FLAT/MATT" },
+            { name: "34150 - U.S. Army # 562 / Moss green", hex: "#746C49", cmyk: "0,10,40,55", category: "30040-38907 FLAT/MATT" },
+            { name: "34151 - Interior green TT-P-1757 / ANA 611", hex: "#65643C", cmyk: "0,0,40,65", category: "30040-38907 FLAT/MATT" },
+            { name: "34158 - Blue drab", hex: "#62706E", cmyk: "15,0,5,60", category: "30040-38907 FLAT/MATT" },
+            { name: "34159 - Green", hex: "#6A7367", cmyk: "10,0,10,60", category: "30040-38907 FLAT/MATT" },
+            { name: "34160 - Foliage green", hex: "#676962", cmyk: "0,0,5,65", category: "30040-38907 FLAT/MATT" },
+            { name: "34170 - Navair flat green #1", hex: "#606154", cmyk: "0,0,10,65", category: "30040-38907 FLAT/MATT" },
+            { name: "34201 - Green", hex: "#827963", cmyk: "0,10,25,50", category: "30040-38907 FLAT/MATT" },
+            { name: "34202 - U.S. Army # 526 / Pale green", hex: "#887E65", cmyk: "0,10,25,50", category: "30040-38907 FLAT/MATT" },
+            { name: "34203 - U.S. Army # 560 / Light sage", hex: "#898067", cmyk: "0,10,25,50", category: "30040-38907 FLAT/MATT" },
+            { name: "34226 - NASA primer", hex: "#7A8676", cmyk: "10,0,10,50", category: "30040-38907 FLAT/MATT" },
+            { name: "34227 Green", hex: "#788A6D", cmyk: "13,0,22,45", category: "30040-38907 FLAT/MATT" },
+            { name: "34230 Green", hex: "#518F4E", cmyk: "43,0,45,44", category: "30040-38907 FLAT/MATT" },
+            { name: "34233 Green", hex: "#7D908C", cmyk: "13,0,4,44", category: "30040-38907 FLAT/MATT" },
+            { name: "34241 Green", hex: "#7E9B8D", cmyk: "18,0,10,39", category: "30040-38907 FLAT/MATT" },
+            { name: "34256 U.S. Army # 527 / Olive", hex: "#877C5B", cmyk: "0,10,33,47", category: "30040-38907 FLAT/MATT" },
+            { name: "34258 Green", hex: "#7F8259", cmyk: "3,0,31,49", category: "30040-38907 FLAT/MATT" },
+            { name: "34259 Green", hex: "#807235", cmyk: "0,14,58,50", category: "30040-38907 FLAT/MATT" },
+            { name: "34272 Green", hex: "#6F9575", cmyk: "26,0,22,42", category: "30040-38907 FLAT/MATT" },
+            { name: "34277 Sea mist green", hex: "#788A6D", cmyk: "13,0,22,45", category: "30040-38907 FLAT/MATT" },
+            { name: "34300 Green", hex: "#839B8C", cmyk: "15,0,11,39", category: "30040-38907 FLAT/MATT" },
+            { name: "34325 Green", hex: "#80A695", cmyk: "21,0,12,35", category: "30040-38907 FLAT/MATT" },
+            { name: "34350 Forest service green", hex: "#6DC8AF", cmyk: "46,0,23,22", category: "30040-38907 FLAT/MATT" },
+            { name: "34373 Sagebrush", hex: "#97A78F", cmyk: "8,0,14,35", category: "30040-38907 FLAT/MATT" },
+            { name: "34410 Green", hex: "#9DAE9E", cmyk: "10,0,10,32", category: "30040-38907 FLAT/MATT" },
+            { name: "34414 Green", hex: "#ABB8A3", cmyk: "7,0,12,28", category: "30040-38907 FLAT/MATT" },
+            { name: "34424 ANA 610", hex: "#A9AC95", cmyk: "0,0,13,33", category: "30040-38907 FLAT/MATT" },
+            { name: "34432 Green", hex: "#A4AD9B", cmyk: "5,0,11,32", category: "30040-38907 FLAT/MATT" },
+            { name: "34441 Green", hex: "#A4B095", cmyk: "8,0,17,31", category: "30040-38907 FLAT/MATT" },
+            { name: "34449 Light green international", hex: "#A2B597", cmyk: "10,0,16,29", category: "30040-38907 FLAT/MATT" },
+            { name: "34491 Green", hex: "#A3B9A3", cmyk: "12,0,12,28", category: "30040-38907 FLAT/MATT" },
+            { name: "34504 Green", hex: "#A6B59C", cmyk: "8,0,14,29", category: "30040-38907 FLAT/MATT" },
+            { name: "34516 Green", hex: "#AFBFAD", cmyk: "8,0,9,25", category: "30040-38907 FLAT/MATT" },
+            { name: "34518 Green", hex: "#A6B6A4", cmyk: "8,0,10,29", category: "30040-38907 FLAT/MATT" },
+            { name: "34524 Green", hex: "#AFBA91", cmyk: "6,0,22,27", category: "30040-38907 FLAT/MATT" },
+            { name: "34533 Green", hex: "#A8B690", cmyk: "8,0,21,29", category: "30040-38907 FLAT/MATT" },
+            { name: "34540 Green", hex: "#95C57F", cmyk: "24,0,36,23", category: "30040-38907 FLAT/MATT" },
+            { name: "34552 Green", hex: "#C4BF82", cmyk: "0,3,34,23", category: "30040-38907 FLAT/MATT" },
+            { name: "34554 Public building standard", hex: "#CACBAE", cmyk: "0,0,16,20", category: "30040-38907 FLAT/MATT" },
+            { name: "34558 Light green international", hex: "#B7C8AA", cmyk: "9,0,15,22", category: "30040-38907 FLAT/MATT" },
+            { name: "34583 Green", hex: "#B1B697", cmyk: "3,0,17,29", category: "30040-38907 FLAT/MATT" },
+            { name: "34666 Green", hex: "#CDDA9F", cmyk: "6,0,28,15", category: "30040-38907 FLAT/MATT" },
+            { name: "34670 Green", hex: "#C7D3C1", cmyk: "6,0,8,17", category: "30040-38907 FLAT/MATT" },
+            { name: "34672 Pastel blue", hex: "#C7D0B3", cmyk: "5,0,14,18", category: "30040-38907 FLAT/MATT" },
+            { name: "35039 U.S. Army # 2307 / Marine dark blue", hex: "#3C3D3F", cmyk: "5,3,0,75", category: "30040-38907 FLAT/MATT" },
+            { name: "35040 U.S. Army # 2312 / Marine dark blue", hex: "#3B3B3D", cmyk: "3,3,0,76", category: "30040-38907 FLAT/MATT" },
+            { name: "35041 U.S. Army # 450 / Blue", hex: "#3B3C3F", cmyk: "5,3,0,75", category: "30040-38907 FLAT/MATT" },
+            { name: "35042 Sea blue / ANA 607", hex: "#3F464A", cmyk: "15,6,0,71", category: "30040-38907 FLAT/MATT" },
+            { name: "35043 U.S. Army # 3378 / Blue", hex: "#393A42", cmyk: "14,13,0,74", category: "30040-38907 FLAT/MATT" },
+            { name: "35044 Aircraft insignia blue / ANA 605", hex: "#3B3B49", cmyk: "19,19,0,71", category: "30040-38907 FLAT/MATT" },
+            { name: "35045 Blue", hex: "#39454E", cmyk: "27,13,0,69", category: "30040-38907 FLAT/MATT" },
+            { name: "35046 U.S. Army # 2319 / Sky blue", hex: "#36425B", cmyk: "41,26,0,64", category: "30040-38907 FLAT/MATT" },
+            { name: "35047 U.S. Army # 451 / Blue", hex: "#374258", cmyk: "38,26,0,65", category: "30040-38907 FLAT/MATT" },
+            { name: "35048 Blue", hex: "#38455C", cmyk: "40,25,0,64", category: "30040-38907 FLAT/MATT" },
+            { name: "35052 Blue", hex: "#3A4F6B", cmyk: "45,27,0,58", category: "30040-38907 FLAT/MATT" },
+            { name: "35056 Blue", hex: "#3D456C", cmyk: "44,37,0,58", category: "30040-38907 FLAT/MATT" },
+            { name: "35095 Blue", hex: "#38639C", cmyk: "65,37,0,39", category: "30040-38907 FLAT/MATT" },
+            { name: "35109 Light blue international", hex: "#4B6B7E", cmyk: "41,15,0,51", category: "30040-38907 FLAT/MATT" },
+            { name: "35164 Navy blue 212 / ANA 608", hex: "#63727E", cmyk: "22,9,0,51", category: "30040-38907 FLAT/MATT" },
+            { name: "35177 Blue", hex: "#5A7A90", cmyk: "38,15,0,44", category: "30040-38907 FLAT/MATT" },
+            { name: "35180 Blue", hex: "#316FA2", cmyk: "70,32,0,36", category: "30040-38907 FLAT/MATT" },
+            { name: "35183 Blue", hex: "#347CA7", cmyk: "69,25,0,35", category: "30040-38907 FLAT/MATT" },
+            { name: "35189 Blue", hex: "#71868C", cmyk: "19,4,0,45", category: "30040-38907 FLAT/MATT" },
+            { name: "35190 Blue", hex: "#618C9F", cmyk: "39,12,0,38", category: "30040-38907 FLAT/MATT" },
+            { name: "35193 Blue", hex: "#55868C", cmyk: "39,5,0,45", category: "30040-38907 FLAT/MATT" },
+            { name: "35231 ANA 609", hex: "#708AAD", cmyk: "35,20,0,32", category: "30040-38907 FLAT/MATT" },
+            { name: "35237 Blue gray", hex: "#7C898E", cmyk: "13,4,0,44", category: "30040-38907 FLAT/MATT" },
+            { name: "35240 Blue", hex: "#7591B1", cmyk: "34,18,0,31", category: "30040-38907 FLAT/MATT" },
+            { name: "35250 UN flag blue", hex: "#54A2CB", cmyk: "59,10,0,20", category: "30040-38907 FLAT/MATT" },
+            { name: "35260 Forest service blue", hex: "#44ABC9", cmyk: "67,6,0,21", category: "30040-38907 FLAT/MATT" },
+            { name: "35275 Blue", hex: "#329FA2", cmyk: "69,0,19,36", category: "30040-38907 FLAT/MATT" },
+            { name: "35299 Blue", hex: "#70A099", cmyk: "31,0,10,37", category: "30040-38907 FLAT/MATT" },
+            { name: "35352 Blue", hex: "#839C98", cmyk: "15,0,3,39", category: "30040-38907 FLAT/MATT" },
+            { name: "35414 Blue green", hex: "#88A4A1", cmyk: "17,0,4,36", category: "30040-38907 FLAT/MATT" },
+            { name: "35450 Blue", hex: "#89B2C5", cmyk: "31,9,0,23", category: "30040-38907 FLAT/MATT" },
+            { name: "35466 Blue", hex: "#7DC6D8", cmyk: "43,0,5,15", category: "30040-38907 FLAT/MATT" },
+            { name: "35488 Blue", hex: "#98B9CE", cmyk: "26,9,0,19", category: "30040-38907 FLAT/MATT" },
+            { name: "35526 Blue", hex: "#A5BBBE", cmyk: "13,2,0,25", category: "30040-38907 FLAT/MATT" },
+            { name: "35550 Blue", hex: "#C6D8D9", cmyk: "9,0,0,15", category: "30040-38907 FLAT/MATT" },
+            { name: "35622 Blue", hex: "#C6D1C7", cmyk: "4,0,4,18", category: "30040-38907 FLAT/MATT" },
+            { name: "35630 Blue", hex: "#D2D2CA", cmyk: "0,0,4,18", category: "30040-38907 FLAT/MATT" },
+            { name: "36007 U.S. Army # 548 / Slate gray", hex: "#474A49", cmyk: "5,0,1,71", category: "30040-38907 FLAT/MATT" },
+            { name: "36076 Navy gray #2 / Dark gray", hex: "#4E5259", cmyk: "11,7,0,65", category: "30040-38907 FLAT/MATT" },
+            { name: "36081 Deep gray / F-4 aircraft", hex: "#585A5A", cmyk: "1,0,0,65", category: "30040-38907 FLAT/MATT" },
+            { name: "36099 Dark blue gray", hex: "#525B61", cmyk: "15,5,0,62", category: "30040-38907 FLAT/MATT" },
+            { name: "36118 Gunship gray / ANA 603", hex: "#5C626A", cmyk: "14,8,0,58", category: "30040-38907 FLAT/MATT" },
+            { name: "36134 Gray", hex: "#676966", cmyk: "2,0,3,59", category: "30040-38907 FLAT/MATT" },
+            { name: "36152 Gray", hex: "#686E71", cmyk: "7,3,0,56", category: "30040-38907 FLAT/MATT" },
+            { name: "36170 Camouflage gray", hex: "#6C6C6B", cmyk: "0,0,1,58", category: "30040-38907 FLAT/MATT" },
+            { name: "36173 Ocean gray / NAVSEA", hex: "#71787E", cmyk: "10,4,0,51", category: "30040-38907 FLAT/MATT" },
+            { name: "36176 Ocean gray", hex: "#6D7881", cmyk: "15,7,0,49", category: "30040-38907 FLAT/MATT" },
+            { name: "36231 Gray international / Aircraft gray / ANA 621", hex: "#7E8385", cmyk: "5,2,0,48", category: "30040-38907 FLAT/MATT" },
+            { name: "36251 Gray", hex: "#828585", cmyk: "3,0,0,48", category: "30040-38907 FLAT/MATT" },
+            { name: "36270 Haze gray", hex: "#84898C", cmyk: "5,2,0,45", category: "30040-38907 FLAT/MATT" },
+            { name: "36280 Gray", hex: "#898D8B", cmyk: "3,0,2,45", category: "30040-38907 FLAT/MATT" },
+            { name: "36293 Gray", hex: "#898F90", cmyk: "5,0,0,44", category: "30040-38907 FLAT/MATT" },
+            { name: "36300 Aircraft gray camouflage", hex: "#91979F", cmyk: "9,5,0,38", category: "30040-38907 FLAT/MATT" },
+            { name: "36306 Gray", hex: "#978F85", cmyk: "0,4,11,41", category: "30040-38907 FLAT/MATT" },
+            { name: "36307 Bulkhead gray", hex: "#95978F", cmyk: "0,0,5,41", category: "30040-38907 FLAT/MATT" },
+            { name: "36314 Gray", hex: "#8F9591", cmyk: "5,0,4,42", category: "30040-38907 FLAT/MATT" },
+            { name: "36320 Gray", hex: "#8C969E", cmyk: "12,4,0,38", category: "30040-38907 FLAT/MATT" },
+            { name: "36356 U.S. Army # 2246 / Pewter", hex: "#7D786B", cmyk: "0,4,14,51", category: "30040-38907 FLAT/MATT" },
+            { name: "36357 Gray", hex: "#9E9C8F", cmyk: "0,1,9,38", category: "30040-38907 FLAT/MATT" },
+            { name: "36373 Gray", hex: "#9CA2A2", cmyk: "4,0,0,36", category: "30040-38907 FLAT/MATT" },
+            { name: "36375 Medium gray", hex: "#9BA4AA", cmyk: "9,3,0,33", category: "30040-38907 FLAT/MATT" },
+            { name: "36405 Gray", hex: "#BBB49D", cmyk: "0,3,16,27", category: "30040-38907 FLAT/MATT" },
+            { name: "36415 Beige gray stain", hex: "#BAAA92", cmyk: "0,7,20,27", category: "30040-38907 FLAT/MATT" },
+            { name: "36424 Gray", hex: "#BBB3A7", cmyk: "0,4,10,27", category: "30040-38907 FLAT/MATT" },
+            { name: "36440 Light gray 81352 / ANA 602 / 620", hex: "#ADADA3", cmyk: "0,0,6,32", category: "30040-38907 FLAT/MATT" },
+            { name: "36463 Gray", hex: "#A5A9A8", cmyk: "3,0,1,34", category: "30040-38907 FLAT/MATT" },
+            { name: "36473 Gray", hex: "#9DA8A6", cmyk: "7,0,2,34", category: "30040-38907 FLAT/MATT" },
+            { name: "36480 Canada 501-109", hex: "#AAB7B1", cmyk: "7,0,4,28", category: "30040-38907 FLAT/MATT" },
+            { name: "36492 Gray", hex: "#BABAB4", cmyk: "0,0,4,27", category: "30040-38907 FLAT/MATT" },
+            { name: "36495 Gray", hex: "#C2C7C4", cmyk: "2,0,1,22", category: "30040-38907 FLAT/MATT" },
+            { name: "36521 Gray", hex: "#C2B6A8", cmyk: "0,5,13,24", category: "30040-38907 FLAT/MATT" },
+            { name: "36555 Beige", hex: "#C8BDA1", cmyk: "0,5,20,22", category: "30040-38907 FLAT/MATT" },
+            { name: "36559 Gray", hex: "#C0BFAE", cmyk: "0,0,10,25", category: "30040-38907 FLAT/MATT" },
+            { name: "36586 Gray", hex: "#C8C0A7", cmyk: "0,3,17,22", category: "30040-38907 FLAT/MATT" },
+            { name: "36595 Gray", hex: "#C1C3B3", cmyk: "0,0,9,24", category: "30040-38907 FLAT/MATT" },
+            { name: "36622 Gray", hex: "#C1C1B4", cmyk: "0,0,7,24", category: "30040-38907 FLAT/MATT" },
+            { name: "36628 Gray", hex: "#CBCEC7", cmyk: "0,0,3,19", category: "30040-38907 FLAT/MATT" },
+            { name: "36642 Gray", hex: "#E0CCB7", cmyk: "0,9,18,12", category: "30040-38907 FLAT/MATT" },
+            { name: "36650 DLA light blue / gray", hex: "#E2DFD8", cmyk: "0,1,4,11", category: "30040-38907 FLAT/MATT" },
+            { name: "37029 U.S. Army # 477 / Black", hex: "#3B3C3D", cmyk: "3,2,0,76", category: "30040-38907 FLAT/MATT" },
+            { name: "37030 Black camouflage", hex: "#393A3A", cmyk: "1,0,0,77", category: "30040-38907 FLAT/MATT" },
+            { name: "37031 Interior aircraft black / Camouflage", hex: "#383939", cmyk: "1,0,0,78", category: "30040-38907 FLAT/MATT" },
+            { name: "37032 U.S. Army # 557 / Black", hex: "#3C3C3C", cmyk: "0,0,0,76", category: "30040-38907 FLAT/MATT" },
+            { name: "37033 U.S. Army # 458 / Black", hex: "#3C3C3E", cmyk: "3,3,0,76", category: "30040-38907 FLAT/MATT" },
+            { name: "37034 U.S. Army # 3202 / Black", hex: "#3C3D3E", cmyk: "3,2,0,75", category: "30040-38907 FLAT/MATT" },
+            { name: "37038 Black international / Navy #3 black / ANA 604", hex: "#393A3A", cmyk: "1,0,0,77", category: "30040-38907 FLAT/MATT" },
+            { name: "37039 U.S. Army # 2607 / Black", hex: "#3E3F41", cmyk: "5,3,0,74", category: "30040-38907 FLAT/MATT" },
+            { name: "37056 Misc", hex: "#4C4643", cmyk: "0,6,10,70", category: "30040-38907 FLAT/MATT" },
+            { name: "37100 Violet", hex: "#684972", cmyk: "9,36,0,55", category: "30040-38907 FLAT/MATT" },
+            { name: "37142 Misc", hex: "#92557F", cmyk: "0,42,13,43", category: "30040-38907 FLAT/MATT" },
+            { name: "37144 Misc", hex: "#806687", cmyk: "5,25,0,47", category: "30040-38907 FLAT/MATT" },
+            { name: "37150 Misc", hex: "#D0C8BA", cmyk: "0,4,11,18", category: "30040-38907 FLAT/MATT" },
+            { name: "37200 Misc", hex: "#9C9D9D", cmyk: "0,0,0,38", category: "30040-38907 FLAT/MATT" },
+            { name: "37490 U.S. Army # 559 / Dark cream", hex: "#9D9482", cmyk: "0,5,18,39", category: "30040-38907 FLAT/MATT" },
+            { name: "37500 U.S. Army # 524 / Cream", hex: "#A79B85", cmyk: "0,7,20,35", category: "30040-38907 FLAT/MATT" },
+            { name: "37722 Misc", hex: "#D9D4C4", cmyk: "0,2,10,15", category: "30040-38907 FLAT/MATT" },
+            { name: "37769 Misc", hex: "#DFD3BC", cmyk: "0,6,16,13", category: "30040-38907 FLAT/MATT" },
+            { name: "37778 Misc", hex: "#E7DFC7", cmyk: "0,3,14,9", category: "30040-38907 FLAT/MATT" },
+            { name: "37855 Eggshell / Ivory", hex: "#E9DCB9", cmyk: "0,5,21,9", category: "30040-38907 FLAT/MATT" },
+            { name: "37875 White int'l / ACFT Insignia white / ANA 601", hex: "#E4E6D8", cmyk: "1,0,6,10", category: "30040-38907 FLAT/MATT" },
+            { name: "37886 Misc", hex: "#EDE8D5", cmyk: "0,2,10,7", category: "30040-38907 FLAT/MATT" },
+            { name: "37925 Misc", hex: "#F0F0E3", cmyk: "0,0,5,6", category: "30040-38907 FLAT/MATT" },
+            { name: "37970 U.S. Army # 521 / White", hex: "#E3E7ED", cmyk: "5,3,0,7", category: "30040-38907 FLAT/MATT" },
+            { name: "37971 U.S. Army # 2414 / White", hex: "#EAEDF2", cmyk: "4,2,0,5", category: "30040-38907 FLAT/MATT" },
+            { name: "38901 Fluorescent - green", hex: "#00A240", cmyk: "100,0,61,36", category: "30040-38907 FLAT/MATT" },
+            { name: "38903 Fluorescent - orange", hex: "#FF4B19", cmyk: "0,71,90,0", category: "30040-38907 FLAT/MATT" },
+            { name: "38905 Fluorescent - red", hex: "#F33932", cmyk: "0,77,79,5", category: "30040-38907 FLAT/MATT" },
+            { name: "38907 Fluorescent - yellow", hex: "#FFAC00", cmyk: "0,33,100,0", category: "30040-38907 FLAT/MATT" }
+        ];
+        
+        // Group colors by category
+        const groupedColors = colors.reduce((acc, color) => {
+            if (!acc[color.category]) {
+                acc[color.category] = [];
+            }
+            acc[color.category].push(color);
+            return acc;
+        }, {});
+        
+        // Render colors with categories
+        Object.entries(groupedColors).forEach(([category, colorGroup]) => {
+            const categoryGroup = document.createElement('div');
+            categoryGroup.className = 'category-group';
+            
+            const categoryLabel = document.createElement('div');
+            categoryLabel.className = 'category-label';
+            categoryLabel.textContent = category;
+            categoryGroup.appendChild(categoryLabel);
+            
+            const categoryRow = document.createElement('div');
+            categoryRow.className = 'category-row';
+            
+            colorGroup.forEach(color => {
+                const card = document.createElement('div');
+                card.className = 'color-card';
+                
+                card.innerHTML = `
+                    <div class="color-swatch" style="background-color: ${color.hex};"></div>
+                    <div class="color-info">
+                        <div class="color-name">${color.name}</div>
+                        <div class="color-values">
+                            <div class="value-group">
+                                <span>${color.hex}</span>
+                                <button onclick="copyToClipboard('${color.hex}')">⧉ Hex</button>
+                            </div>
+                            <div class="value-group">
+                                <span>${color.cmyk}</span>
+                                <button onclick="copyToClipboard('${color.cmyk}')">⧉ CMYK</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                categoryRow.appendChild(card);
+            });
+            
+            categoryGroup.appendChild(categoryRow);
+            paletteContainer.appendChild(categoryGroup);
+        });
+        
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Copied to clipboard: ' + text);
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        }
+    </script>
+</body>
+<!--
+"The code giveth, and the code taketh away."
+"In a world full of digital clocks, you chose to build poetry in motion."
+"In a world of complexity, you've mastered the art of elegant simplicity."
+© JEVH, CodeDino & NeoSynth. 
+-->
+</html>

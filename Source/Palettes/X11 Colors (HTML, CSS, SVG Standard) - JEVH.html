@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- © JEVH, CodeDino & NeoSynth. 🎨 HTML Color Palette-Modular-Multipurpose-Responsive -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>X11 Colors (HTML/CSS/SVG Standard)</title>
+    <style>
+        :root {
+            --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 
+               Helvetica, Arial, sans-serif;
+            --font-mono: Consolas, 'Roboto Mono', 'Menlo', 'DejaVu Sans Mono', 
+               'Liberation Mono', monospace;
+            --bg-color: #f5f5f5;
+            --text-color: #222;
+            --card-bg: white;
+            --border-color: #ddd;
+            --hover-bg: #eee;
+            --footer-color: #666;
+            --category-bg: #e0e0e0;
+            --category-text: #333;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #121212;
+            --text-color: #e0e0e0;
+            --card-bg: #1e1e1e;
+            --border-color: #333;
+            --hover-bg: #2a2a2a;
+            --footer-color: #888;
+            --category-bg: #2a2a2a;
+            --category-text: #e0e0e0;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 10px;
+            padding: 0;
+            line-height: 1.5;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        .header {
+            font-family: var(--font-mono);
+            font-weight: 600; /* Semi-bold for better hierarchy */
+            letter-spacing: -0.02em; /* Tighten monospace slightly */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .header-controls {
+            display: flex;
+            gap: 10px;
+        }
+        
+        h1 {
+            margin: 20px 0;
+            font-weight: 500;
+            font-size: 1.8rem;
+        }
+        
+        .theme-toggle, .category-toggle {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 8px 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: var(--text-color);
+        }
+        
+        /* Grid layout for categories OFF (like original V1) */
+        .palette {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 16px;
+            margin-bottom: 40px;
+        }
+        
+        /* Category layout for categories ON (like V2) */
+        .palette.categories-on {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .category-group {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .category-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            align-items: flex-start;
+        }
+        
+        .category-label {
+            background-color: var(--category-bg);
+            color: var(--category-text);
+            font-weight: bold;
+            padding: 8px 16px;
+            border-radius: 8px;
+            margin-right: 16px;
+            min-width: 180px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .color-card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            width: 180px;
+        }
+        
+        /* For grid layout (categories OFF), make cards responsive */
+        .palette:not(.categories-on) .color-card {
+            width: auto;
+        }
+        
+        .color-swatch {
+            width: 100%;
+            height: 90px;
+            border-radius: 8px 8px 0 0;
+        }
+        
+        .color-info {
+            padding: 12px;
+        }
+        
+        .color-name {
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+        
+        .color-values {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        
+        .value-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+        }
+        
+        button {
+            background: none;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 3px 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+            color: var(--text-color);
+        }
+        
+        button:hover {
+            background: var(--hover-bg);
+        }
+        
+        .disclaimer {
+            text-align: center;
+            margin: 20px 0;
+            padding: 10px;
+            color: var(--footer-color);
+            font-size: 12px;
+            opacity: 0.7;
+            font-style: italic;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px 0;
+            color: var(--footer-color);
+            font-size: 14px;
+        }
+        
+        /* Hide category labels when categories are OFF */
+        .palette:not(.categories-on) .category-label {
+            display: none;
+        }
+        
+        /* Show all cards in grid when categories are OFF */
+        .palette:not(.categories-on) .category-group {
+            display: contents;
+        }
+        
+        .palette:not(.categories-on) .category-row {
+            display: contents;
+        }
+        
+        @media (max-width: 600px) {
+            .palette {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+            
+            .color-card {
+                width: 150px;
+            }
+            
+            .palette:not(.categories-on) .color-card {
+                width: auto;
+            }
+            
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .header-controls {
+                align-self: flex-end;
+            }
+            
+            .category-label {
+                min-width: 100%;
+                margin-right: 0;
+                margin-bottom: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>X11 Colors (HTML/CSS/SVG Standard)</h1>
+        <div class="header-controls">
+            <button class="category-toggle" id="categoryToggle">
+                <span id="categoryIcon">☰</span> Hide Categories
+            </button>
+            <button class="theme-toggle" id="themeToggle">
+                <span id="themeIcon">☽</span> Dark Mode
+            </button>
+        </div>
+    </div>
+    
+    <div class="palette categories-on" id="palette-container">
+        <!-- Colors will be inserted here by JavaScript -->
+    </div>
+    
+    <div class="disclaimer">
+        Colors shown are approximate. Display and print variations may occur due to RGB/CMYK differences and device calibration.
+    </div>
+    
+    <footer>
+        © JEVH, CodeDino & NeoSynth.
+    </footer>
+    
+    <script>
+        // Theme toggle functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+        
+        // Category toggle functionality
+        const categoryToggle = document.getElementById('categoryToggle');
+        const categoryIcon = document.getElementById('categoryIcon');
+        const paletteContainer = document.getElementById('palette-container');
+        
+        // Set initial theme
+        const currentTheme = localStorage.getItem('theme') || 
+                             (prefersDarkScheme.matches ? 'dark' : 'light');
+        document.body.setAttribute('data-theme', currentTheme);
+        
+        // Set initial category state (default to categories ON)
+        const showCategories = localStorage.getItem('showCategories') !== 'false';
+        if (!showCategories) {
+            paletteContainer.classList.remove('categories-on');
+            categoryIcon.textContent = '☰';
+            categoryToggle.lastChild.textContent = ' Show Categories';
+        }
+        
+        // Update button text based on current theme
+        if (currentTheme === 'dark') {
+            themeIcon.textContent = '✦';
+            themeToggle.lastChild.textContent = ' Light Mode';
+        }
+        
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            document.body.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            themeIcon.textContent = newTheme === 'dark' ? '✦' : '☽';
+            themeToggle.lastChild.textContent = newTheme === 'dark' ? ' Light Mode' : ' Dark Mode';
+        });
+        
+        categoryToggle.addEventListener('click', () => {
+            const categoriesOn = paletteContainer.classList.contains('categories-on');
+            
+            if (categoriesOn) {
+                // Turn categories OFF - switch to grid layout
+                paletteContainer.classList.remove('categories-on');
+                categoryIcon.textContent = '☰';
+                categoryToggle.lastChild.textContent = ' Show Categories';
+                localStorage.setItem('showCategories', 'false');
+            } else {
+                // Turn categories ON - switch to category layout
+                paletteContainer.classList.add('categories-on');
+                categoryIcon.textContent = '▬';
+                categoryToggle.lastChild.textContent = ' Hide Categories';
+                localStorage.setItem('showCategories', 'true');
+            }
+        });
+
+        // Color data - modify this array to add/remove colors
+        const colors = [
+            // --- REDS ---
+            { name: "IndianRed", hex: "#CD5C5C", cmyk: "0,55,55,20", category: "REDS" },
+            { name: "LightCoral", hex: "#F08080", cmyk: "0,47,47,6", category: "REDS" },
+            { name: "Salmon", hex: "#FA8072", cmyk: "0,48,54,2", category: "REDS" },
+            { name: "DarkSalmon", hex: "#E9967A", cmyk: "0,35,48,9", category: "REDS" },
+            { name: "LightSalmon", hex: "#FFA07A", cmyk: "0,37,52,0", category: "REDS" },
+            { name: "Crimson", hex: "#DC143C", cmyk: "0,91,73,14", category: "REDS" },
+            { name: "Red", hex: "#FF0000", cmyk: "0,100,100,0", category: "REDS" },
+            { name: "FireBrick", hex: "#B22222", cmyk: "0,81,81,30", category: "REDS" },
+            { name: "DarkRed", hex: "#8B0000", cmyk: "0,100,100,45", category: "REDS" },
+
+            // --- PINKS ---
+            { name: "Pink", hex: "#FFC0CB", cmyk: "0,25,20,0", category: "PINKS" },
+            { name: "LightPink", hex: "#FFB6C1", cmyk: "0,29,24,0", category: "PINKS" },
+            { name: "HotPink", hex: "#FF69B4", cmyk: "0,59,29,0", category: "PINKS" },
+            { name: "DeepPink", hex: "#FF1493", cmyk: "0,92,42,0", category: "PINKS" },
+            { name: "MediumVioletRed", hex: "#C71585", cmyk: "0,89,33,22", category: "PINKS" },
+            { name: "PaleVioletRed", hex: "#DB7093", cmyk: "0,49,33,14", category: "PINKS" },
+
+            // --- ORANGES ---
+            { name: "Coral", hex: "#FF7F50", cmyk: "0,50,69,0", category: "ORANGES" },
+            { name: "Tomato", hex: "#FF6347", cmyk: "0,61,72,0", category: "ORANGES" },
+            { name: "OrangeRed", hex: "#FF4500", cmyk: "0,73,100,0", category: "ORANGES" },
+            { name: "DarkOrange", hex: "#FF8C00", cmyk: "0,45,100,0", category: "ORANGES" },
+            { name: "Orange", hex: "#FFA500", cmyk: "0,35,100,0", category: "ORANGES" },
+
+            // --- YELLOWS ---
+            { name: "Gold", hex: "#FFD700", cmyk: "0,16,100,0", category: "YELLOWS" },
+            { name: "Yellow", hex: "#FFFF00", cmyk: "0,0,100,0", category: "YELLOWS" },
+            { name: "LightYellow", hex: "#FFFFE0", cmyk: "0,0,12,0", category: "YELLOWS" },
+            { name: "LemonChiffon", hex: "#FFFACD", cmyk: "0,2,20,0", category: "YELLOWS" },
+            { name: "LightGoldenrodYellow", hex: "#FAFAD2", cmyk: "0,0,16,2", category: "YELLOWS" },
+            { name: "PapayaWhip", hex: "#FFEFD5", cmyk: "0,6,16,0", category: "YELLOWS" },
+            { name: "Moccasin", hex: "#FFE4B5", cmyk: "0,11,29,0", category: "YELLOWS" },
+            { name: "PeachPuff", hex: "#FFDAB9", cmyk: "0,15,27,0", category: "YELLOWS" },
+            { name: "PaleGoldenrod", hex: "#EEE8AA", cmyk: "0,0,29,7", category: "YELLOWS" },
+            { name: "Khaki", hex: "#F0E68C", cmyk: "0,4,42,6", category: "YELLOWS" },
+            { name: "DarkKhaki", hex: "#BDB76B", cmyk: "0,3,43,26", category: "YELLOWS" },
+
+            // --- PURPLES/VIOLETS ---
+            { name: "Lavender", hex: "#E6E6FA", cmyk: "6,6,0,2", category: "PURPLES" },
+            { name: "Thistle", hex: "#D8BFD8", cmyk: "0,12,0,15", category: "PURPLES" },
+            { name: "Plum", hex: "#DDA0DD", cmyk: "0,28,0,13", category: "PURPLES" },
+            { name: "Violet", hex: "#EE82EE", cmyk: "0,45,0,7", category: "PURPLES" },
+            { name: "Orchid", hex: "#DA70D6", cmyk: "0,49,0,15", category: "PURPLES" },
+            { name: "Fuchsia / Magenta", hex: "#FF00FF", cmyk: "0,100,0,0", category: "PURPLES" },
+            { name: "MediumOrchid", hex: "#BA55D3", cmyk: "12,59,0,17", category: "PURPLES" },
+            { name: "MediumPurple", hex: "#9370DB", cmyk: "32,49,0,14", category: "PURPLES" },
+            { name: "BlueViolet", hex: "#8A2BE2", cmyk: "39,81,0,11", category: "PURPLES" },
+            { name: "DarkViolet", hex: "#9400D3", cmyk: "30,100,0,17", category: "PURPLES" },
+            { name: "DarkOrchid", hex: "#9932CC", cmyk: "25,75,0,20", category: "PURPLES" },
+            { name: "RebeccaPurple", hex: "#663399", cmyk: "33,67,0,40", category: "PURPLES" },
+            { name: "DarkMagenta", hex: "#8B008B", cmyk: "0,100,0,45", category: "PURPLES" },
+            { name: "Purple", hex: "#800080", cmyk: "0,100,0,50", category: "PURPLES" },
+            { name: "Indigo", hex: "#4B0082", cmyk: "42,100,0,49", category: "PURPLES" },
+            { name: "SlateBlue", hex: "#6A5ACD", cmyk: "48,56,0,20", category: "PURPLES" },
+            { name: "MediumSlateBlue", hex: "#7B68EE", cmyk: "48,56,0,7", category: "PURPLES" },
+            { name: "DarkSlateBlue", hex: "#483D8B", cmyk: "48,56,0,45", category: "PURPLES" },
+
+            // --- GREENS ---
+            { name: "GreenYellow", hex: "#ADFF2F", cmyk: "32,0,82,0", category: "GREENS" },
+            { name: "Chartreuse", hex: "#7FFF00", cmyk: "50,0,100,0", category: "GREENS" },
+            { name: "LawnGreen", hex: "#7CFC00", cmyk: "51,0,100,1", category: "GREENS" },
+            { name: "Lime", hex: "#00FF00", cmyk: "100,0,100,0", category: "GREENS" },
+            { name: "LimeGreen", hex: "#32CD32", cmyk: "76,0,76,20", category: "GREENS" },
+            { name: "PaleGreen", hex: "#98FB98", cmyk: "39,0,39,2", category: "GREENS" },
+            { name: "LightGreen", hex: "#90EE90", cmyk: "39,0,39,7", category: "GREENS" },
+            { name: "MediumSpringGreen", hex: "#00FA9A", cmyk: "100,0,39,2", category: "GREENS" },
+            { name: "SpringGreen", hex: "#00FF7F", cmyk: "100,0,50,0", category: "GREENS" },
+            { name: "MediumSeaGreen", hex: "#3CB371", cmyk: "66,0,58,30", category: "GREENS" },
+            { name: "SeaGreen", hex: "#2E8B57", cmyk: "67,0,58,45", category: "GREENS" },
+            { name: "ForestGreen", hex: "#228B22", cmyk: "76,0,76,45", category: "GREENS" },
+            { name: "Green", hex: "#008000", cmyk: "100,0,100,50", category: "GREENS" },
+            { name: "DarkGreen", hex: "#006400", cmyk: "100,0,100,61", category: "GREENS" },
+            { name: "YellowGreen", hex: "#9ACD32", cmyk: "25,0,76,20", category: "GREENS" },
+            { name: "OliveDrab", hex: "#6B8E23", cmyk: "25,0,76,44", category: "GREENS" },
+            { name: "Olive", hex: "#808000", cmyk: "0,0,100,50", category: "GREENS" },
+            { name: "DarkOliveGreen", hex: "#556B2F", cmyk: "21,0,56,58", category: "GREENS" },
+            { name: "MediumAquamarine", hex: "#66CDAA", cmyk: "50,0,18,20", category: "GREENS" },
+            { name: "DarkSeaGreen", hex: "#8FBC8F", cmyk: "24,0,24,26", category: "GREENS" },
+            { name: "LightSeaGreen", hex: "#20B2AA", cmyk: "82,0,10,30", category: "GREENS" },
+            { name: "DarkCyan", hex: "#008B8B", cmyk: "100,0,0,45", category: "GREENS" },
+            { name: "Teal", hex: "#008080", cmyk: "100,0,0,50", category: "GREENS" },
+
+            // --- BLUES/CYANS ---
+            { name: "Aqua / Cyan", hex: "#00FFFF", cmyk: "100,0,0,0", category: "BLUES" },
+            { name: "LightCyan", hex: "#E0FFFF", cmyk: "12,0,0,0", category: "BLUES" },
+            { name: "PaleTurquoise", hex: "#AFEEEE", cmyk: "27,0,0,7", category: "BLUES" },
+            { name: "Aquamarine", hex: "#7FFFD4", cmyk: "50,0,16,0", category: "BLUES" },
+            { name: "Turquoise", hex: "#40E0D0", cmyk: "71,0,10,12", category: "BLUES" },
+            { name: "MediumTurquoise", hex: "#48D1CC", cmyk: "66,0,10,18", category: "BLUES" },
+            { name: "DarkTurquoise", hex: "#00CED1", cmyk: "100,0,0,18", category: "BLUES" },
+            { name: "CadetBlue", hex: "#5F9EA0", cmyk: "41,0,1,37", category: "BLUES" },
+            { name: "SteelBlue", hex: "#4682B4", cmyk: "61,29,0,29", category: "BLUES" },
+            { name: "LightSteelBlue", hex: "#B0C4DE", cmyk: "21,12,0,13", category: "BLUES" },
+            { name: "PowderBlue", hex: "#B0E0E6", cmyk: "23,0,1,10", category: "BLUES" },
+            { name: "LightBlue", hex: "#ADD8E6", cmyk: "25,8,0,10", category: "BLUES" },
+            { name: "SkyBlue", hex: "#87CEEB", cmyk: "43,12,0,8", category: "BLUES" },
+            { name: "LightSkyBlue", hex: "#87CEFA", cmyk: "46,18,0,2", category: "BLUES" },
+            { name: "DeepSkyBlue", hex: "#00BFFF", cmyk: "100,25,0,0", category: "BLUES" },
+            { name: "DodgerBlue", hex: "#1E90FF", cmyk: "88,44,0,0", category: "BLUES" },
+            { name: "CornflowerBlue", hex: "#6495ED", cmyk: "58,37,0,7", category: "BLUES" },
+            { name: "RoyalBlue", hex: "#4169E1", cmyk: "71,53,0,12", category: "BLUES" },
+            { name: "Blue", hex: "#0000FF", cmyk: "100,100,0,0", category: "BLUES" },
+            { name: "MediumBlue", hex: "#0000CD", cmyk: "100,100,0,20", category: "BLUES" },
+            { name: "DarkBlue", hex: "#00008B", cmyk: "100,100,0,45", category: "BLUES" },
+            { name: "Navy", hex: "#000080", cmyk: "100,100,0,50", category: "BLUES" },
+            { name: "MidnightBlue", hex: "#191970", cmyk: "78,78,0,56", category: "BLUES" },
+
+            // --- BROWNS ---
+            { name: "Cornsilk", hex: "#FFF8DC", cmyk: "0,3,14,0", category: "BROWNS" },
+            { name: "BlanchedAlmond", hex: "#FFEBCD", cmyk: "0,8,20,0", category: "BROWNS" },
+            { name: "Bisque", hex: "#FFE4C4", cmyk: "0,11,23,0", category: "BROWNS" },
+            { name: "NavajoWhite", hex: "#FFDEAD", cmyk: "0,13,32,0", category: "BROWNS" },
+            { name: "Wheat", hex: "#F5DEB3", cmyk: "0,9,27,4", category: "BROWNS" },
+            { name: "BurlyWood", hex: "#DEB887", cmyk: "0,18,40,13", category: "BROWNS" },
+            { name: "Tan", hex: "#D2B48C", cmyk: "0,14,33,18", category: "BROWNS" },
+            { name: "RosyBrown", hex: "#BC8F8F", cmyk: "0,24,24,26", category: "BROWNS" },
+            { name: "SandyBrown", hex: "#F4A460", cmyk: "0,33,61,4", category: "BROWNS" },
+            { name: "Goldenrod", hex: "#DAA520", cmyk: "0,23,85,15", category: "BROWNS" },
+            { name: "DarkGoldenrod", hex: "#B8860B", cmyk: "0,26,94,28", category: "BROWNS" },
+            { name: "Peru", hex: "#CD853F", cmyk: "0,35,69,20", category: "BROWNS" },
+            { name: "Chocolate", hex: "#D2691E", cmyk: "0,50,86,18", category: "BROWNS" },
+            { name: "SaddleBrown", hex: "#8B4513", cmyk: "0,50,86,45", category: "BROWNS" },
+            { name: "Sienna", hex: "#A0522D", cmyk: "0,50,72,37", category: "BROWNS" },
+            { name: "Brown", hex: "#A52A2A", cmyk: "0,75,75,35", category: "BROWNS" },
+            { name: "Maroon", hex: "#800000", cmyk: "0,100,100,50", category: "BROWNS" },
+
+            // --- WHITES/GRAYS ---
+            { name: "White", hex: "#FFFFFF", cmyk: "0,0,0,0", category: "WHITES/GRAYS" },
+            { name: "Snow", hex: "#FFFAFA", cmyk: "0,2,2,0", category: "WHITES/GRAYS" },
+            { name: "Honeydew", hex: "#F0FFF0", cmyk: "6,0,6,0", category: "WHITES/GRAYS" },
+            { name: "MintCream", hex: "#F5FFFA", cmyk: "4,0,2,0", category: "WHITES/GRAYS" },
+            { name: "Azure", hex: "#F0FFFF", cmyk: "6,0,0,0", category: "WHITES/GRAYS" },
+            { name: "AliceBlue", hex: "#F0F8FF", cmyk: "6,3,0,0", category: "WHITES/GRAYS" },
+            { name: "GhostWhite", hex: "#F8F8FF", cmyk: "3,3,0,0", category: "WHITES/GRAYS" },
+            { name: "WhiteSmoke", hex: "#F5F5F5", cmyk: "0,0,0,4", category: "WHITES/GRAYS" },
+            { name: "Seashell", hex: "#FFF5EE", cmyk: "0,4,7,0", category: "WHITES/GRAYS" },
+            { name: "Beige", hex: "#F5F5DC", cmyk: "0,0,10,4", category: "WHITES/GRAYS" },
+            { name: "OldLace", hex: "#FDF5E6", cmyk: "0,4,9,1", category: "WHITES/GRAYS" },
+            { name: "FloralWhite", hex: "#FFFAF0", cmyk: "0,2,6,0", category: "WHITES/GRAYS" },
+            { name: "Ivory", hex: "#FFFFF0", cmyk: "0,0,6,0", category: "WHITES/GRAYS" },
+            { name: "AntiqueWhite", hex: "#FAEBD7", cmyk: "0,6,14,2", category: "WHITES/GRAYS" },
+            { name: "Linen", hex: "#FAF0E6", cmyk: "0,6,8,2", category: "WHITES/GRAYS" },
+            { name: "LavenderBlush", hex: "#FFF0F5", cmyk: "0,6,4,0", category: "WHITES/GRAYS" },
+            { name: "MistyRose", hex: "#FFE4E1", cmyk: "0,11,12,0", category: "WHITES/GRAYS" },
+            { name: "Gainsboro", hex: "#DCDCDC", cmyk: "0,0,0,14", category: "WHITES/GRAYS" },
+            { name: "LightGray / LightGrey", hex: "#D3D3D3", cmyk: "0,0,0,17", category: "WHITES/GRAYS" },
+            { name: "Silver", hex: "#C0C0C0", cmyk: "0,0,0,25", category: "WHITES/GRAYS" },
+            { name: "DarkGray / DarkGrey", hex: "#A9A9A9", cmyk: "0,0,0,34", category: "WHITES/GRAYS" },
+            { name: "Gray / Grey", hex: "#808080", cmyk: "0,0,0,50", category: "WHITES/GRAYS" },
+            { name: "DimGray / DimGrey", hex: "#696969", cmyk: "0,0,0,59", category: "WHITES/GRAYS" },
+            { name: "LightSlateGray / LightSlateGrey", hex: "#778899", cmyk: "17,9,0,40", category: "WHITES/GRAYS" },
+            { name: "SlateGray / SlateGrey", hex: "#708090", cmyk: "22,11,0,44", category: "WHITES/GRAYS" },
+            { name: "DarkSlateGray / DarkSlateGrey", hex: "#2F4F4F", cmyk: "41,0,0,69", category: "WHITES/GRAYS" },
+            { name: "Black", hex: "#000000", cmyk: "0,0,0,100", category: "WHITES/GRAYS" }
+        ];
+        
+        // Group colors by category
+        const groupedColors = colors.reduce((acc, color) => {
+            if (!acc[color.category]) {
+                acc[color.category] = [];
+            }
+            acc[color.category].push(color);
+            return acc;
+        }, {});
+        
+        // Render colors with categories
+        Object.entries(groupedColors).forEach(([category, colorGroup]) => {
+            const categoryGroup = document.createElement('div');
+            categoryGroup.className = 'category-group';
+            
+            const categoryLabel = document.createElement('div');
+            categoryLabel.className = 'category-label';
+            categoryLabel.textContent = category;
+            categoryGroup.appendChild(categoryLabel);
+            
+            const categoryRow = document.createElement('div');
+            categoryRow.className = 'category-row';
+            
+            colorGroup.forEach(color => {
+                const card = document.createElement('div');
+                card.className = 'color-card';
+                
+                card.innerHTML = `
+                    <div class="color-swatch" style="background-color: ${color.hex};"></div>
+                    <div class="color-info">
+                        <div class="color-name">${color.name}</div>
+                        <div class="color-values">
+                            <div class="value-group">
+                                <span>${color.hex}</span>
+                                <button onclick="copyToClipboard('${color.hex}')">⧉ Hex</button>
+                            </div>
+                            <div class="value-group">
+                                <span>${color.cmyk}</span>
+                                <button onclick="copyToClipboard('${color.cmyk}')">⧉ CMYK</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                categoryRow.appendChild(card);
+            });
+            
+            categoryGroup.appendChild(categoryRow);
+            paletteContainer.appendChild(categoryGroup);
+        });
+        
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Copied to clipboard: ' + text);
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        }
+    </script>
+</body>
+<!--
+"The code giveth, and the code taketh away."
+"In a world full of digital clocks, you chose to build poetry in motion."
+"In a world of complexity, you've mastered the art of elegant simplicity."
+© JEVH, CodeDino & NeoSynth. 
+-->
+</html>

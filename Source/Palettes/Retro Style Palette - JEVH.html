@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- © JEVH, CodeDino & NeoSynth. 🎨 HTML Color Palette-Modular-Multipurpose-Responsive -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retro Style Palette</title>
+    <style>
+        :root {
+            --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 
+               Helvetica, Arial, sans-serif;
+            --font-mono: Consolas, 'Roboto Mono', 'Menlo', 'DejaVu Sans Mono', 
+               'Liberation Mono', monospace;
+            --bg-color: #f5f5f5;
+            --text-color: #222;
+            --card-bg: white;
+            --border-color: #ddd;
+            --hover-bg: #eee;
+            --footer-color: #666;
+            --category-bg: #e0e0e0;
+            --category-text: #333;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #121212;
+            --text-color: #e0e0e0;
+            --card-bg: #1e1e1e;
+            --border-color: #333;
+            --hover-bg: #2a2a2a;
+            --footer-color: #888;
+            --category-bg: #2a2a2a;
+            --category-text: #e0e0e0;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 10px;
+            padding: 0;
+            line-height: 1.5;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        .header {
+            font-family: var(--font-mono);
+            font-weight: 600; /* Semi-bold for better hierarchy */
+            letter-spacing: -0.02em; /* Tighten monospace slightly */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .header-controls {
+            display: flex;
+            gap: 10px;
+        }
+        
+        h1 {
+            margin: 20px 0;
+            font-weight: 500;
+            font-size: 1.8rem;
+        }
+        
+        .theme-toggle, .category-toggle {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 8px 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: var(--text-color);
+        }
+        
+        /* Grid layout for categories OFF (like original V1) */
+        .palette {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 16px;
+            margin-bottom: 40px;
+        }
+        
+        /* Category layout for categories ON (like V2) */
+        .palette.categories-on {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .category-group {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .category-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            align-items: flex-start;
+        }
+        
+        .category-label {
+            background-color: var(--category-bg);
+            color: var(--category-text);
+            font-weight: bold;
+            padding: 8px 16px;
+            border-radius: 8px;
+            margin-right: 16px;
+            min-width: 180px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .color-card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            width: 180px;
+        }
+        
+        /* For grid layout (categories OFF), make cards responsive */
+        .palette:not(.categories-on) .color-card {
+            width: auto;
+        }
+        
+        .color-swatch {
+            width: 100%;
+            height: 90px;
+            border-radius: 8px 8px 0 0;
+        }
+        
+        .color-info {
+            padding: 12px;
+        }
+        
+        .color-name {
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+        
+        .color-values {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        
+        .value-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+        }
+        
+        button {
+            background: none;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 3px 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+            color: var(--text-color);
+        }
+        
+        button:hover {
+            background: var(--hover-bg);
+        }
+        
+        .disclaimer {
+            text-align: center;
+            margin: 20px 0;
+            padding: 10px;
+            color: var(--footer-color);
+            font-size: 12px;
+            opacity: 0.7;
+            font-style: italic;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px 0;
+            color: var(--footer-color);
+            font-size: 14px;
+        }
+        
+        /* Hide category labels when categories are OFF */
+        .palette:not(.categories-on) .category-label {
+            display: none;
+        }
+        
+        /* Show all cards in grid when categories are OFF */
+        .palette:not(.categories-on) .category-group {
+            display: contents;
+        }
+        
+        .palette:not(.categories-on) .category-row {
+            display: contents;
+        }
+        
+        @media (max-width: 600px) {
+            .palette {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+            
+            .color-card {
+                width: 150px;
+            }
+            
+            .palette:not(.categories-on) .color-card {
+                width: auto;
+            }
+            
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .header-controls {
+                align-self: flex-end;
+            }
+            
+            .category-label {
+                min-width: 100%;
+                margin-right: 0;
+                margin-bottom: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Retro Style Palette</h1>
+        <div class="header-controls">
+            <button class="category-toggle" id="categoryToggle">
+                <span id="categoryIcon">☰</span> Hide Categories
+            </button>
+            <button class="theme-toggle" id="themeToggle">
+                <span id="themeIcon">☽</span> Dark Mode
+            </button>
+        </div>
+    </div>
+    
+    <div class="palette categories-on" id="palette-container">
+        <!-- Colors will be inserted here by JavaScript -->
+    </div>
+    
+    <div class="disclaimer">
+        Colors shown are approximate. Display and print variations may occur due to RGB/CMYK differences and device calibration.
+    </div>
+    
+    <footer>
+        © JEVH, CodeDino & NeoSynth.
+    </footer>
+    
+    <script>
+        // Theme toggle functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+        
+        // Category toggle functionality
+        const categoryToggle = document.getElementById('categoryToggle');
+        const categoryIcon = document.getElementById('categoryIcon');
+        const paletteContainer = document.getElementById('palette-container');
+        
+        // Set initial theme
+        const currentTheme = localStorage.getItem('theme') || 
+                             (prefersDarkScheme.matches ? 'dark' : 'light');
+        document.body.setAttribute('data-theme', currentTheme);
+        
+        // Set initial category state (default to categories ON)
+        const showCategories = localStorage.getItem('showCategories') !== 'false';
+        if (!showCategories) {
+            paletteContainer.classList.remove('categories-on');
+            categoryIcon.textContent = '☰';
+            categoryToggle.lastChild.textContent = ' Show Categories';
+        }
+        
+        // Update button text based on current theme
+        if (currentTheme === 'dark') {
+            themeIcon.textContent = '✦';
+            themeToggle.lastChild.textContent = ' Light Mode';
+        }
+        
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            document.body.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            themeIcon.textContent = newTheme === 'dark' ? '✦' : '☽';
+            themeToggle.lastChild.textContent = newTheme === 'dark' ? ' Light Mode' : ' Dark Mode';
+        });
+        
+        categoryToggle.addEventListener('click', () => {
+            const categoriesOn = paletteContainer.classList.contains('categories-on');
+            
+            if (categoriesOn) {
+                // Turn categories OFF - switch to grid layout
+                paletteContainer.classList.remove('categories-on');
+                categoryIcon.textContent = '☰';
+                categoryToggle.lastChild.textContent = ' Show Categories';
+                localStorage.setItem('showCategories', 'false');
+            } else {
+                // Turn categories ON - switch to category layout
+                paletteContainer.classList.add('categories-on');
+                categoryIcon.textContent = '▬';
+                categoryToggle.lastChild.textContent = ' Hide Categories';
+                localStorage.setItem('showCategories', 'true');
+            }
+        });
+
+        // Color data - modify this array to add/remove colors
+        const colors = [
+            // --- 50s DINER PASTELS ---
+            { name: "Bubblegum Pink", hex: "#FFB6C1", cmyk: "0,29,24,0", category: "50s DINER PASTELS" },
+            { name: "Mint Cream", hex: "#98FF98", cmyk: "40,0,40,0", category: "50s DINER PASTELS" },
+            { name: "Sky Blue", hex: "#87CEEB", cmyk: "43,12,0,8", category: "50s DINER PASTELS" },
+            { name: "Lemon Chiffon", hex: "#FFFACD", cmyk: "0,2,20,0", category: "50s DINER PASTELS" },
+            { name: "Lavender", hex: "#E6E6FA", cmyk: "8,8,0,2", category: "50s DINER PASTELS" },
+            { name: "Peach Puff", hex: "#FFDAB9", cmyk: "0,15,27,0", category: "50s DINER PASTELS" },
+            { name: "Powder Blue", hex: "#B0E0E6", cmyk: "23,3,0,10", category: "50s DINER PASTELS" },
+            { name: "Cotton Candy", hex: "#FFBCD9", cmyk: "0,26,15,0", category: "50s DINER PASTELS" },
+            { name: "Buttermilk", hex: "#FEF1B5", cmyk: "0,5,29,0", category: "50s DINER PASTELS" },
+
+            // --- 60s SPACE AGE METALLICS ---
+            { name: "Chrome Silver", hex: "#C0C0C0", cmyk: "0,0,0,25", category: "60s SPACE AGE METALLICS" },
+            { name: "Brass Gold", hex: "#B5A642", cmyk: "0,8,64,29", category: "60s SPACE AGE METALLICS" },
+            { name: "Copper", hex: "#B87333", cmyk: "0,36,72,28", category: "60s SPACE AGE METALLICS" },
+            { name: "Pewter", hex: "#8E8E8E", cmyk: "0,0,0,44", category: "60s SPACE AGE METALLICS" },
+            { name: "Bronze", hex: "#CD7F32", cmyk: "0,38,76,20", category: "60s SPACE AGE METALLICS" },
+            { name: "Rose Gold", hex: "#B76E79", cmyk: "0,40,33,28", category: "60s SPACE AGE METALLICS" },
+            { name: "Patina Green", hex: "#5F9EA0", cmyk: "41,1,0,37", category: "60s SPACE AGE METALLICS" },
+            { name: "Gunmetal", hex: "#2C3539", cmyk: "23,6,0,78", category: "60s SPACE AGE METALLICS" },
+            { name: "Antique Gold", hex: "#D4AF37", cmyk: "0,18,74,17", category: "60s SPACE AGE METALLICS" },
+
+            // --- 60s/70s ORGANIC EARTHY ---
+            { name: "Burnt Sienna", hex: "#E97451", cmyk: "0,50,65,9", category: "60s/70s ORGANIC EARTHY" },
+            { name: "Harvest Brown", hex: "#8B4513", cmyk: "0,50,86,45", category: "60s/70s ORGANIC EARTHY" },
+            { name: "Denim Blue", hex: "#1560BD", cmyk: "89,60,0,26", category: "60s/70s ORGANIC EARTHY" },
+            { name: "Forest Moss", hex: "#4A5D23", cmyk: "22,0,63,64", category: "60s/70s ORGANIC EARTHY" },
+            { name: "Rust Red", hex: "#B7410E", cmyk: "0,64,92,28", category: "60s/70s ORGANIC EARTHY" },
+            { name: "Goldenrod", hex: "#DAA520", cmyk: "0,22,85,15", category: "60s/70s ORGANIC EARTHY" },
+            { name: "Slate Green", hex: "#657F4E", cmyk: "20,0,39,50", category: "60s/70s ORGANIC EARTHY" },
+            { name: "Adobe Clay", hex: "#CC7357", cmyk: "0,43,57,20", category: "60s/70s ORGANIC EARTHY" },
+            { name: "Deep Mustard", hex: "#FFDB58", cmyk: "0,14,65,0", category: "60s/70s ORGANIC EARTHY" },
+
+            // --- 70s EARTHY MUTED ---
+            { name: "Avocado Cream", hex: "#88B04B", cmyk: "23,0,56,31", category: "70s EARTHY MUTED" },
+            { name: "Dusty Rose", hex: "#D4A59A", cmyk: "0,22,28,17", category: "70s EARTHY MUTED" },
+            { name: "Mustard Gold", hex: "#E1B000", cmyk: "0,21,100,12", category: "70s EARTHY MUTED" },
+            { name: "Olive Dream", hex: "#6B8E23", cmyk: "25,0,75,44", category: "70s EARTHY MUTED" },
+            { name: "Vintage Teal", hex: "#5F9EA0", cmyk: "41,1,0,37", category: "70s EARTHY MUTED" },
+            { name: "Clay Pink", hex: "#B38B6D", cmyk: "0,23,39,30", category: "70s EARTHY MUTED" },
+            { name: "Moss Green", hex: "#8A9A5B", cmyk: "10,0,40,40", category: "70s EARTHY MUTED" },
+            { name: "Terra Cotta", hex: "#E2725B", cmyk: "0,50,60,11", category: "70s EARTHY MUTED" },
+            { name: "Warm Beige", hex: "#D2B48C", cmyk: "0,14,34,18", category: "70s EARTHY MUTED" },
+
+            // --- 70s MOODY DARK ---
+            { name: "Velvet Wine", hex: "#6D214F", cmyk: "0,69,26,58", category: "70s MOODY DARK" },
+            { name: "Midnight Blue", hex: "#191970", cmyk: "79,79,0,56", category: "70s MOODY DARK" },
+            { name: "Charcoal", hex: "#36454F", cmyk: "31,12,0,69", category: "70s MOODY DARK" },
+            { name: "Deep Plum", hex: "#4B0082", cmyk: "42,100,0,49", category: "70s MOODY DARK" },
+            { name: "Smoky Teal", hex: "#1F6357", cmyk: "69,0,12,61", category: "70s MOODY DARK" },
+            { name: "Espresso", hex: "#4B3621", cmyk: "0,26,55,71", category: "70s MOODY DARK" },
+            { name: "Gothic Purple", hex: "#663399", cmyk: "34,67,0,40", category: "70s MOODY DARK" },
+            { name: "Obsidian", hex: "#0B0B0B", cmyk: "0,0,0,96", category: "70s MOODY DARK" },
+            { name: "Blood Red", hex: "#660000", cmyk: "0,100,100,60", category: "70s MOODY DARK" },
+
+            // --- 70s/80s POP VIBRANT ---
+            { name: "Sunset Orange", hex: "#FF6B6B", cmyk: "0,58,58,0", category: "70s/80s POP VIBRANT" },
+            { name: "Mellow Yellow", hex: "#FFD166", cmyk: "0,18,60,0", category: "70s/80s POP VIBRANT" },
+            { name: "Electric Blue", hex: "#06AED5", cmyk: "97,18,0,16", category: "70s/80s POP VIBRANT" },
+            { name: "Radical Pink", hex: "#EE4266", cmyk: "0,73,57,7", category: "70s/80s POP VIBRANT" },
+            { name: "Psychedelic Purple", hex: "#540D6E", cmyk: "24,88,0,57", category: "70s/80s POP VIBRANT" },
+            { name: "Lime Punch", hex: "#C1F80A", cmyk: "25,0,96,3", category: "70s/80s POP VIBRANT" },
+            { name: "Disco Teal", hex: "#25FDE9", cmyk: "85,0,7,1", category: "70s/80s POP VIBRANT" },
+            { name: "Hot Coral", hex: "#FF7F50", cmyk: "0,50,69,0", category: "70s/80s POP VIBRANT" },
+            { name: "Neon Fuchsia", hex: "#FF44CC", cmyk: "0,73,20,0", category: "70s/80s POP VIBRANT" },
+
+            // --- 80s ARCADE NEONS ---
+            { name: "Laser Lemon", hex: "#FDFF00", cmyk: "1,0,100,0", category: "80s ARCADE NEONS" },
+            { name: "Hot Magenta", hex: "#FF00FF", cmyk: "0,100,0,0", category: "80s ARCADE NEONS" },
+            { name: "Cyber Green", hex: "#00FF7F", cmyk: "100,0,50,0", category: "80s ARCADE NEONS" },
+            { name: "Atomic Pink", hex: "#FF6EC7", cmyk: "0,57,22,0", category: "80s ARCADE NEONS" },
+            { name: "Arcade Blue", hex: "#00F5FF", cmyk: "100,0,4,0", category: "80s ARCADE NEONS" },
+            { name: "Synthwave Pink", hex: "#FF38A8", cmyk: "0,78,34,0", category: "80s ARCADE NEONS" },
+            { name: "Glow Orange", hex: "#FF5E1F", cmyk: "0,63,88,0", category: "80s ARCADE NEONS" },
+            { name: "Electric Lime", hex: "#CCFF00", cmyk: "20,0,100,0", category: "80s ARCADE NEONS" },
+            { name: "Neon Cyan", hex: "#00FFEF", cmyk: "100,0,6,0", category: "80s ARCADE NEONS" },
+
+            // --- 90s GRITTY GRUNGE ---
+            { name: "Sludge Green", hex: "#6B8E23", cmyk: "25,0,75,44", category: "90s GRITTY GRUNGE" },
+            { name: "Dirty Orange", hex: "#E68F17", cmyk: "0,37,90,10", category: "90s GRITTY GRUNGE" },
+            { name: "Mud Brown", hex: "#6F4E37", cmyk: "0,30,50,57", category: "90s GRITTY GRUNGE" },
+            { name: "Asphalt", hex: "#505050", cmyk: "0,0,0,69", category: "90s GRITTY GRUNGE" },
+            { name: "Faded Red", hex: "#D35D6E", cmyk: "0,56,48,17", category: "90s GRITTY GRUNGE" },
+            { name: "Concrete Gray", hex: "#A9A9A9", cmyk: "0,0,0,34", category: "90s GRITTY GRUNGE" },
+            { name: "Worn Denim", hex: "#5D8AA8", cmyk: "45,18,0,34", category: "90s GRITTY GRUNGE" },
+            { name: "Rusty Nail", hex: "#8B4000", cmyk: "0,54,100,45", category: "90s GRITTY GRUNGE" },
+            { name: "Grunge Purple", hex: "#9370DB", cmyk: "33,49,0,14", category: "90s GRITTY GRUNGE" }
+        ];
+        
+        // Group colors by category
+        const groupedColors = colors.reduce((acc, color) => {
+            if (!acc[color.category]) {
+                acc[color.category] = [];
+            }
+            acc[color.category].push(color);
+            return acc;
+        }, {});
+        
+        // Render colors with categories
+        Object.entries(groupedColors).forEach(([category, colorGroup]) => {
+            const categoryGroup = document.createElement('div');
+            categoryGroup.className = 'category-group';
+            
+            const categoryLabel = document.createElement('div');
+            categoryLabel.className = 'category-label';
+            categoryLabel.textContent = category;
+            categoryGroup.appendChild(categoryLabel);
+            
+            const categoryRow = document.createElement('div');
+            categoryRow.className = 'category-row';
+            
+            colorGroup.forEach(color => {
+                const card = document.createElement('div');
+                card.className = 'color-card';
+                
+                card.innerHTML = `
+                    <div class="color-swatch" style="background-color: ${color.hex};"></div>
+                    <div class="color-info">
+                        <div class="color-name">${color.name}</div>
+                        <div class="color-values">
+                            <div class="value-group">
+                                <span>${color.hex}</span>
+                                <button onclick="copyToClipboard('${color.hex}')">⧉ Hex</button>
+                            </div>
+                            <div class="value-group">
+                                <span>${color.cmyk}</span>
+                                <button onclick="copyToClipboard('${color.cmyk}')">⧉ CMYK</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                categoryRow.appendChild(card);
+            });
+            
+            categoryGroup.appendChild(categoryRow);
+            paletteContainer.appendChild(categoryGroup);
+        });
+        
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Copied to clipboard: ' + text);
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        }
+    </script>
+</body>
+<!--
+"The code giveth, and the code taketh away."
+"In a world full of digital clocks, you chose to build poetry in motion."
+"In a world of complexity, you've mastered the art of elegant simplicity."
+© JEVH, CodeDino & NeoSynth. 
+-->
+</html>

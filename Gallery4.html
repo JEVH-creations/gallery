@@ -9,30 +9,50 @@
 		<link rel="icon" type="image/png" href="Source/favicon-96x96.png" sizes="96x96" />
 		<link rel="icon" type="image/png" href="Source/favicon-128.png" sizes="128x128" />
 		<link rel="icon" type="image/png" href="Source/favicon-196x196.png" sizes="196x196" />
+		<link rel="apple-touch-icon" sizes="152x152" href="Source/apple-touch-icon-152x152.png">
+		<link rel="apple-touch-icon" sizes="167x167" href="Source/apple-touch-icon-167x167.png">
 		<link rel="apple-touch-icon" sizes="180x180" href="Source/apple-touch-icon-180x180.png">
 
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<meta name="description" content="JEVH.creations">
 		<meta name="author" content="JEVH">
-		<meta name="keywords" content="JEVH, Artist, Illustrator, Commissions, Art, Illustration, Visual, Design, Media, Gallery, Gaming, Game, Modding, Concept">
+		<meta name="keywords" content="JEVH, Artist, Illustrator, Art Commissions, Digital Art, Concept Art, Game Art, Character Design, Illustration Portfolio, Visual Arts, Graphic Design, Multidisciplinary Design, Painting, Drawing, Traditional Art, Digital Painting, Creative Art, Fantasy Art, Modding, Video Game Design">
 
+		<script src="Source/P-Module T1.js"></script>
+
+    <style>
+        /* Additional style for the iframe to fill the modal */
+        .modal-iframe {
+            position: absolute;
+            top: 60px; /* Space for close button */
+            left: 0;
+            width: 100%;
+            height: calc(100% - 60px);
+            border: none;
+        }
+    </style>
 </head>
 
 <body>
 <div class="DivContent">
 
+<!--Web Link Gallery Start-->
 
-<object data="Source/Docs/JEVH preview mag 8.5in x 11in.pdf#view=FitV" type="application/pdf" width="100%" height="100%">
+    <img class="img" alt="X11 Colors" src="Source/Palettes/PaletteThumb1.png" data-href="Source/Palettes/X11 Colors (HTML, CSS, SVG Standard) - JEVH.html" onContextMenu="return false;" draggable="false">
+    <img class="img" alt="AMS-STD-595A" src="Source/Palettes/PaletteThumb2.png" data-href="Source/Palettes/AMS Standard 595A - JEVH.html" onContextMenu="return false;" draggable="false">
+    <img class="img" alt="Cyberpunk Palette" src="Source/Palettes/PaletteThumb3.png" data-href="Source/Palettes/Cyberpunk Style Palette - JEVH.html" onContextMenu="return false;" draggable="false">
+    <img class="img" alt="Retro Palette" src="Source/Palettes/PaletteThumb4.png" data-href="Source/Palettes/Retro Style Palette - JEVH.html" onContextMenu="return false;" draggable="false">
 
-<!--Browser Support Start-->
-<object width="100%" height="100%" data="https://docs.google.com/gview?embedded=true&url=https://raw.githubusercontent.com/JEVH-creations/Gallery/47705422ba9aecf4e152069ab1b7dcf9db53eeb9/Source/Docs/JEVH%20preview%20mag%208.5in%20x%2011in.pdf"></object>
-<!--Browser Support End-->
+    <div id="webModal" class="modal">
+        <span class="close">&times;</span>
+        <iframe class="modal-iframe" id="webFrame" onContextMenu="return false;" draggable="false"></iframe>
+        <div id="webCaption"></div>
+    </div>
 
-	<p>Your device's browser does</p>
-	<p>not support PDF viewing.</p>
-</object>
+    <script src="Source/GalleryScriptWeb.js"></script>
 
+<!--Web Link Gallery End-->
 
 </div>
 </body>

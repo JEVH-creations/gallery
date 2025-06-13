@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- © JEVH, CodeDino & NeoSynth. 🎨 HTML Color Palette-Modular-Multipurpose-Responsive -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyberpunk Style Palette</title>
+    <style>
+        :root {
+            --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 
+               Helvetica, Arial, sans-serif;
+            --font-mono: Consolas, 'Roboto Mono', 'Menlo', 'DejaVu Sans Mono', 
+               'Liberation Mono', monospace;
+            --bg-color: #f5f5f5;
+            --text-color: #222;
+            --card-bg: white;
+            --border-color: #ddd;
+            --hover-bg: #eee;
+            --footer-color: #666;
+            --category-bg: #e0e0e0;
+            --category-text: #333;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #121212;
+            --text-color: #e0e0e0;
+            --card-bg: #1e1e1e;
+            --border-color: #333;
+            --hover-bg: #2a2a2a;
+            --footer-color: #888;
+            --category-bg: #2a2a2a;
+            --category-text: #e0e0e0;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 10px;
+            padding: 0;
+            line-height: 1.5;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        .header {
+            font-family: var(--font-mono);
+            font-weight: 600; /* Semi-bold for better hierarchy */
+            letter-spacing: -0.02em; /* Tighten monospace slightly */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .header-controls {
+            display: flex;
+            gap: 10px;
+        }
+        
+        h1 {
+            margin: 20px 0;
+            font-weight: 500;
+            font-size: 1.8rem;
+        }
+        
+        .theme-toggle, .category-toggle {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 8px 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: var(--text-color);
+        }
+        
+        /* Grid layout for categories OFF (like original V1) */
+        .palette {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 16px;
+            margin-bottom: 40px;
+        }
+        
+        /* Category layout for categories ON (like V2) */
+        .palette.categories-on {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .category-group {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .category-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            align-items: flex-start;
+        }
+        
+        .category-label {
+            background-color: var(--category-bg);
+            color: var(--category-text);
+            font-weight: bold;
+            padding: 8px 16px;
+            border-radius: 8px;
+            margin-right: 16px;
+            min-width: 180px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .color-card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            width: 180px;
+        }
+        
+        /* For grid layout (categories OFF), make cards responsive */
+        .palette:not(.categories-on) .color-card {
+            width: auto;
+        }
+        
+        .color-swatch {
+            width: 100%;
+            height: 90px;
+            border-radius: 8px 8px 0 0;
+        }
+        
+        .color-info {
+            padding: 12px;
+        }
+        
+        .color-name {
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+        
+        .color-values {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        
+        .value-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+        }
+        
+        button {
+            background: none;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 3px 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+            color: var(--text-color);
+        }
+        
+        button:hover {
+            background: var(--hover-bg);
+        }
+        
+        .disclaimer {
+            text-align: center;
+            margin: 20px 0;
+            padding: 10px;
+            color: var(--footer-color);
+            font-size: 12px;
+            opacity: 0.7;
+            font-style: italic;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px 0;
+            color: var(--footer-color);
+            font-size: 14px;
+        }
+        
+        /* Hide category labels when categories are OFF */
+        .palette:not(.categories-on) .category-label {
+            display: none;
+        }
+        
+        /* Show all cards in grid when categories are OFF */
+        .palette:not(.categories-on) .category-group {
+            display: contents;
+        }
+        
+        .palette:not(.categories-on) .category-row {
+            display: contents;
+        }
+        
+        @media (max-width: 600px) {
+            .palette {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+            
+            .color-card {
+                width: 150px;
+            }
+            
+            .palette:not(.categories-on) .color-card {
+                width: auto;
+            }
+            
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .header-controls {
+                align-self: flex-end;
+            }
+            
+            .category-label {
+                min-width: 100%;
+                margin-right: 0;
+                margin-bottom: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Cyberpunk Style Palette</h1>
+        <div class="header-controls">
+            <button class="category-toggle" id="categoryToggle">
+                <span id="categoryIcon">☰</span> Hide Categories
+            </button>
+            <button class="theme-toggle" id="themeToggle">
+                <span id="themeIcon">☽</span> Dark Mode
+            </button>
+        </div>
+    </div>
+    
+    <div class="palette categories-on" id="palette-container">
+        <!-- Colors will be inserted here by JavaScript -->
+    </div>
+    
+    <div class="disclaimer">
+        Colors shown are approximate. Display and print variations may occur due to RGB/CMYK differences and device calibration.
+    </div>
+    
+    <footer>
+        © JEVH, CodeDino & NeoSynth.
+    </footer>
+    
+    <script>
+        // Theme toggle functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+        
+        // Category toggle functionality
+        const categoryToggle = document.getElementById('categoryToggle');
+        const categoryIcon = document.getElementById('categoryIcon');
+        const paletteContainer = document.getElementById('palette-container');
+        
+        // Set initial theme
+        const currentTheme = localStorage.getItem('theme') || 
+                             (prefersDarkScheme.matches ? 'dark' : 'light');
+        document.body.setAttribute('data-theme', currentTheme);
+        
+        // Set initial category state (default to categories ON)
+        const showCategories = localStorage.getItem('showCategories') !== 'false';
+        if (!showCategories) {
+            paletteContainer.classList.remove('categories-on');
+            categoryIcon.textContent = '☰';
+            categoryToggle.lastChild.textContent = ' Show Categories';
+        }
+        
+        // Update button text based on current theme
+        if (currentTheme === 'dark') {
+            themeIcon.textContent = '✦';
+            themeToggle.lastChild.textContent = ' Light Mode';
+        }
+        
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            document.body.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            themeIcon.textContent = newTheme === 'dark' ? '✦' : '☽';
+            themeToggle.lastChild.textContent = newTheme === 'dark' ? ' Light Mode' : ' Dark Mode';
+        });
+        
+        categoryToggle.addEventListener('click', () => {
+            const categoriesOn = paletteContainer.classList.contains('categories-on');
+            
+            if (categoriesOn) {
+                // Turn categories OFF - switch to grid layout
+                paletteContainer.classList.remove('categories-on');
+                categoryIcon.textContent = '☰';
+                categoryToggle.lastChild.textContent = ' Show Categories';
+                localStorage.setItem('showCategories', 'false');
+            } else {
+                // Turn categories ON - switch to category layout
+                paletteContainer.classList.add('categories-on');
+                categoryIcon.textContent = '▬';
+                categoryToggle.lastChild.textContent = ' Hide Categories';
+                localStorage.setItem('showCategories', 'true');
+            }
+        });
+
+        // Color data - modify this array to add/remove colors
+        const colors = [
+            // --- NEON BRIGHTS ---
+            { name: "Cyber Neon Pink", hex: "#FF00FF", cmyk: "0,100,0,0", category: "NEON BRIGHTS" },
+            { name: "Electric Blue", hex: "#00F5FF", cmyk: "100,0,4,0", category: "NEON BRIGHTS" },
+            { name: "Laser Lemon", hex: "#F4FF00", cmyk: "4,0,100,0", category: "NEON BRIGHTS" },
+            { name: "Neon Green", hex: "#39FF14", cmyk: "78,0,92,0", category: "NEON BRIGHTS" },
+            { name: "Hot Purple", hex: "#CB00FF", cmyk: "20,100,0,0", category: "NEON BRIGHTS" },
+            { name: "Cyber Cyan", hex: "#00FFE0", cmyk: "100,0,12,0", category: "NEON BRIGHTS" },
+            { name: "Vivid Orange", hex: "#FF5E00", cmyk: "0,63,100,0", category: "NEON BRIGHTS" },
+            { name: "Neon Magenta", hex: "#FF00A6", cmyk: "0,100,35,0", category: "NEON BRIGHTS" },
+
+            // --- DARK CYBER TONES ---
+            { name: "Cyber Void Black", hex: "#0A0A12", cmyk: "33,33,0,93", category: "DARK CYBER TONES" },
+            { name: "Dark Circuit", hex: "#1A1A2E", cmyk: "45,45,0,82", category: "DARK CYBER TONES" },
+            { name: "Midnight Hacker", hex: "#16213E", cmyk: "65,47,0,76", category: "DARK CYBER TONES" },
+            { name: "Deep Data Blue", hex: "#0F3460", cmyk: "84,45,0,62", category: "DARK CYBER TONES" },
+            { name: "Synthwave Purple", hex: "#2D033B", cmyk: "60,95,0,77", category: "DARK CYBER TONES" },
+            { name: "Neon Noir", hex: "#1E1E30", cmyk: "37,37,0,81", category: "DARK CYBER TONES" },
+
+            // --- CYBER GRAYS & METALLICS ---
+            { name: "Hologram Silver", hex: "#C0C0C0", cmyk: "0,0,0,25", category: "CYBER GRAYS & METALLICS" },
+            { name: "Chrome Gray", hex: "#808080", cmyk: "0,0,0,50", category: "CYBER GRAYS & METALLICS" },
+            { name: "Cyber Steel", hex: "#4A4A4A", cmyk: "0,0,0,71", category: "CYBER GRAYS & METALLICS" },
+            { name: "Glitch Gray", hex: "#333333", cmyk: "0,0,0,80", category: "CYBER GRAYS & METALLICS" },
+            { name: "Titanium", hex: "#878787", cmyk: "0,0,0,47", category: "CYBER GRAYS & METALLICS" },
+            { name: "Data Stream", hex: "#A9A9A9", cmyk: "0,0,0,34", category: "CYBER GRAYS & METALLICS" },
+
+            // --- CYBERPUNK ACCENTS ---
+            { name: "Biohazard Green", hex: "#7CFC00", cmyk: "51,0,100,1", category: "CYBERPUNK ACCENTS" },
+            { name: "Glowing Violet", hex: "#8A2BE2", cmyk: "39,81,0,11", category: "CYBERPUNK ACCENTS" },
+            { name: "Radiation Yellow", hex: "#E6E600", cmyk: "0,0,100,10", category: "CYBERPUNK ACCENTS" },
+            { name: "Cyber Coral", hex: "#FF6B6B", cmyk: "0,58,58,0", category: "CYBERPUNK ACCENTS" },
+            { name: "Matrix Green", hex: "#00FF41", cmyk: "100,0,75,0", category: "CYBERPUNK ACCENTS" },
+            { name: "Retro Pink", hex: "#FF85A1", cmyk: "0,48,37,0", category: "CYBERPUNK ACCENTS" },
+            { name: "HUD Blue", hex: "#1E90FF", cmyk: "88,44,0,0", category: "CYBERPUNK ACCENTS" },
+            { name: "Cyber Gold", hex: "#FFD700", cmyk: "0,16,100,0", category: "CYBERPUNK ACCENTS" },
+
+            // --- DEEP SHADOWS & GLOW ---
+            { name: "Neon Night", hex: "#4B0082", cmyk: "70,100,0,49", category: "DEEP SHADOWS & GLOW" },
+            { name: "Cyber Crimson", hex: "#DC143C", cmyk: "0,91,73,14", category: "DEEP SHADOWS & GLOW" },
+            { name: "Dark Neon Teal", hex: "#008080", cmyk: "100,0,0,50", category: "DEEP SHADOWS & GLOW" },
+            { name: "Glow Purple", hex: "#9400D3", cmyk: "30,100,0,17", category: "DEEP SHADOWS & GLOW" },
+            { name: "Cyber Jade", hex: "#00A36C", cmyk: "100,0,35,36", category: "DEEP SHADOWS & GLOW" },
+            { name: "Deep Hologram", hex: "#483D8B", cmyk: "73,67,0,45", category: "DEEP SHADOWS & GLOW" },
+
+            // --- BIOTECH / CYBER-ORGANIC COLORS ---
+            { name: "Bioluminescent Green", hex: "#7DFF7D", cmyk: "50,0,50,0", category: "BIOTECH / CYBER-ORGANIC" },
+            { name: "Synth-Flesh Pink", hex: "#FFB6C1", cmyk: "0,30,25,0", category: "BIOTECH / CYBER-ORGANIC" },
+            { name: "Cyber-Vein Blue", hex: "#6ECFF6", cmyk: "55,10,0,4", category: "BIOTECH / CYBER-ORGANIC" },
+            { name: "Toxic Sludge", hex: "#9ACD32", cmyk: "35,0,80,20", category: "BIOTECH / CYBER-ORGANIC" },
+            { name: "Mutant Purple", hex: "#B399D4", cmyk: "20,30,0,17", category: "BIOTECH / CYBER-ORGANIC" },
+
+            // --- RUST & DECAY (Dystopian Grunge) ---
+            { name: "Oxide Rust", hex: "#B7410E", cmyk: "0,65,90,28", category: "RUST & DECAY" },
+            { name: "Scorched Metal", hex: "#3A3A3A", cmyk: "0,0,0,77", category: "RUST & DECAY" },
+            { name: "Oil Slick Black", hex: "#1C1C1C", cmyk: "0,0,0,89", category: "RUST & DECAY" },
+            { name: "Decayed Concrete", hex: "#7A7A7A", cmyk: "0,0,0,52", category: "RUST & DECAY" },
+            { name: "Dirty Copper", hex: "#B87333", cmyk: "0,40,70,28", category: "RUST & DECAY" },
+
+            // --- HOLOGRAM / TRANSLUCENT FX ---
+            { name: "Holo-Blue", hex: "#4DFFFF", cmyk: "70,0,0,0", category: "HOLOGRAM FX" },
+            { name: "Glitch Pink", hex: "#FF6EC7", cmyk: "0,60,0,0", category: "HOLOGRAM FX" },
+            { name: "Data-Stream Teal", hex: "#00FFCC", cmyk: "100,0,20,0", category: "HOLOGRAM FX" },
+            { name: "Flicker Yellow", hex: "#FFF01F", cmyk: "0,6,88,0", category: "HOLOGRAM FX" },
+            { name: "Phantom Violet", hex: "#CC99FF", cmyk: "20,40,0,0", category: "HOLOGRAM FX" },
+
+            // --- FUTURISTIC METALLICS ---
+            { name: "Chrome Silver", hex: "#E0E0E0", cmyk: "0,0,0,12", category: "FUTURISTIC METALLICS" },
+            { name: "Plasma Gold", hex: "#FFD700", cmyk: "0,16,100,0", category: "FUTURISTIC METALLICS" },
+            { name: "Titanium Blue", hex: "#6F8FAF", cmyk: "40,20,0,31", category: "FUTURISTIC METALLICS" },
+            { name: "Carbon Fiber", hex: "#2D2D2D", cmyk: "0,0,0,82", category: "FUTURISTIC METALLICS" },
+            { name: "Nanotech Gray", hex: "#5D5D5D", cmyk: "0,0,0,64", category: "FUTURISTIC METALLICS" },
+
+            // --- UNDERWORLD / CRIMINAL UNDERBELLY ---
+            { name: "Black Market Red", hex: "#990000", cmyk: "0,100,100,40", category: "UNDERWORLD" },
+            { name: "Contraband Purple", hex: "#660066", cmyk: "50,100,0,60", category: "UNDERWORLD" },
+            { name: "Smuggler's Den", hex: "#4A412A", cmyk: "0,10,40,75", category: "UNDERWORLD" },
+            { name: "Blood Money", hex: "#CC0000", cmyk: "0,100,100,20", category: "UNDERWORLD" },
+            { name: "Illegal Green", hex: "#228B22", cmyk: "76,0,76,45", category: "UNDERWORLD" },
+
+            // --- CYBER-RAIN / URBAN WET FX ---
+            { name: "Acid Rain", hex: "#88FF4D", cmyk: "47,0,70,0", category: "CYBER-RAIN FX" },
+            { name: "Neon Street Wet", hex: "#4D4DFF", cmyk: "70,70,0,0", category: "CYBER-RAIN FX" },
+            { name: "Oil-Puddle Rainbow", hex: "#3D3D3D", cmyk: "0,0,0,76", category: "CYBER-RAIN FX" },
+            { name: "Dystopian Drizzle", hex: "#A9A9A9", cmyk: "0,0,0,34", category: "CYBER-RAIN FX" },
+            { name: "Slick Pavement", hex: "#1E1E1E", cmyk: "0,0,0,88", category: "CYBER-RAIN FX" }
+        ];
+        
+        // Group colors by category
+        const groupedColors = colors.reduce((acc, color) => {
+            if (!acc[color.category]) {
+                acc[color.category] = [];
+            }
+            acc[color.category].push(color);
+            return acc;
+        }, {});
+        
+        // Render colors with categories
+        Object.entries(groupedColors).forEach(([category, colorGroup]) => {
+            const categoryGroup = document.createElement('div');
+            categoryGroup.className = 'category-group';
+            
+            const categoryLabel = document.createElement('div');
+            categoryLabel.className = 'category-label';
+            categoryLabel.textContent = category;
+            categoryGroup.appendChild(categoryLabel);
+            
+            const categoryRow = document.createElement('div');
+            categoryRow.className = 'category-row';
+            
+            colorGroup.forEach(color => {
+                const card = document.createElement('div');
+                card.className = 'color-card';
+                
+                card.innerHTML = `
+                    <div class="color-swatch" style="background-color: ${color.hex};"></div>
+                    <div class="color-info">
+                        <div class="color-name">${color.name}</div>
+                        <div class="color-values">
+                            <div class="value-group">
+                                <span>${color.hex}</span>
+                                <button onclick="copyToClipboard('${color.hex}')">⧉ Hex</button>
+                            </div>
+                            <div class="value-group">
+                                <span>${color.cmyk}</span>
+                                <button onclick="copyToClipboard('${color.cmyk}')">⧉ CMYK</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                categoryRow.appendChild(card);
+            });
+            
+            categoryGroup.appendChild(categoryRow);
+            paletteContainer.appendChild(categoryGroup);
+        });
+        
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Copied to clipboard: ' + text);
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        }
+    </script>
+</body>
+<!--
+"The code giveth, and the code taketh away."
+"In a world full of digital clocks, you chose to build poetry in motion."
+"In a world of complexity, you've mastered the art of elegant simplicity."
+© JEVH, CodeDino & NeoSynth. 
+-->
+</html>

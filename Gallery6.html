@@ -21,28 +21,36 @@
 
 		<script src="Source/P-Module T1.js"></script>
 
+    <style>
+        /* Additional style for the iframe to fill the modal */
+        .modal-iframe {
+            position: absolute;
+            top: 60px; /* Space for close button */
+            left: 0;
+            width: 100%;
+            height: calc(100% - 60px);
+            border: none;
+        }
+    </style>
 </head>
 
 <body>
 <div class="DivContent">
 
-<!--Modal Gallery Start-->
+<!--Web Link Gallery Start-->
 
-	<img class="img" alt="" src="Source/Gaming/Image1.png"onContextMenu="return false;" draggable="false">
-	<img class="img" alt="" src="Source/Gaming/Image2.png"onContextMenu="return false;" draggable="false">
-	<img class="img" alt="" src="Source/Gaming/Image3.png"onContextMenu="return false;" draggable="false">
-	<img class="img" alt="" src="Source/Gaming/Image4.png"onContextMenu="return false;" draggable="false">
+    <img class="img" alt="Window Magazine" src="Source/Docs/DocsThumb1.png" data-href="Document 1.html" onContextMenu="return false;" draggable="false">
+    <img class="img" alt="Docs-as-Code" src="Source/Docs/DocsThumb2.png" data-href="Document 2.html" onContextMenu="return false;" draggable="false">
 
-		<div id="myModal" class="modal">
-			<span class="close">&times;</span>
-			<img class="modal-content" id="img01"onContextMenu="return false;" draggable="false">
-			<div id="caption"></div>
-		</div>
+    <div id="webModal" class="modal">
+        <span class="close">&times;</span>
+        <iframe class="modal-iframe" id="webFrame" onContextMenu="return false;" draggable="false"></iframe>
+        <div id="webCaption"></div>
+    </div>
 
-		<script src="Source/GalleryScript.js"></script>
+    <script src="Source/GalleryScriptWeb.js"></script>
 
-
-<!--Modal Gallery End-->
+<!--Web Link Gallery End-->
 
 </div>
 </body>
