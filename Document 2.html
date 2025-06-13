@@ -1,41 +1,95 @@
 <html>
 <head>
-		<title>JEVH.creations</title>
-		<link rel="stylesheet" href="Source\style.css" type="text/css" />
+    <title>JEVH.creations</title>
+    <link rel="stylesheet" href="Source\style.css" type="text/css" />
+    
+    <link rel="shortcut icon" href="Source/favicon.ico">
+    <link rel="icon" type="image/png" href="Source/favicon-16x16.png" sizes="16x16" />
+    <link rel="icon" type="image/png" href="Source/favicon-32x32.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="Source/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/png" href="Source/favicon-128.png" sizes="128x128" />
+    <link rel="icon" type="image/png" href="Source/favicon-196x196.png" sizes="196x196" />
+    <link rel="apple-touch-icon" sizes="152x152" href="Source/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="167x167" href="Source/apple-touch-icon-167x167.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="Source/apple-touch-icon-180x180.png">
 
-		<link rel="shortcut icon" href="Source/favicon.ico">
-		<link rel="icon" type="image/png" href="Source/favicon-16x16.png" sizes="16x16" />
-		<link rel="icon" type="image/png" href="Source/favicon-32x32.png" sizes="32x32" />
-		<link rel="icon" type="image/png" href="Source/favicon-96x96.png" sizes="96x96" />
-		<link rel="icon" type="image/png" href="Source/favicon-128.png" sizes="128x128" />
-		<link rel="icon" type="image/png" href="Source/favicon-196x196.png" sizes="196x196" />
-		<link rel="apple-touch-icon" sizes="152x152" href="Source/apple-touch-icon-152x152.png">
-		<link rel="apple-touch-icon" sizes="167x167" href="Source/apple-touch-icon-167x167.png">
-		<link rel="apple-touch-icon" sizes="180x180" href="Source/apple-touch-icon-180x180.png">
-
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<meta name="description" content="JEVH.creations">
-		<meta name="author" content="JEVH">
-		<meta name="keywords" content="JEVH, Artist, Illustrator, Art Commissions, Digital Art, Concept Art, Game Art, Character Design, Illustration Portfolio, Visual Arts, Graphic Design, Multidisciplinary Design, Painting, Drawing, Traditional Art, Digital Painting, Creative Art, Fantasy Art, Modding, Video Game Design">
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="JEVH.creations">
+    <meta name="author" content="JEVH">
+    <meta name="keywords" content="JEVH, Artist, Illustrator, Art Commissions, Digital Art, Concept Art, Game Art, Character Design, Illustration Portfolio, Visual Arts, Graphic Design, Multidisciplinary Design, Painting, Drawing, Traditional Art, Digital Painting, Creative Art, Fantasy Art, Modding, Video Game Design">
+    
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+        }
+        
+        .pdf-container {
+            width: 100%;
+            height: 100vh;
+            position: relative;
+        }
+        
+        .pdf-embed {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        .fallback-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 8px;
+            font-family: Arial, sans-serif;
+        }
+        
+        .fallback-link {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 10px 20px;
+            background: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        
+        .fallback-link:hover {
+            background: #0056b3;
+        }
+    </style>
 </head>
 
 <body>
-<div class="DivContent">
-
-
-<object data="Source/Docs/JEVH Sample Documentation (docs-as-code).pdf#view=FitV" type="application/pdf" width="100%" height="100%">
-
-<!--Browser Support Start-->
-<object width="100%" height="100%" data="https://docs.google.com/gview?embedded=true&url=https://raw.githubusercontent.com/JEVH-creations/Gallery/47705422ba9aecf4e152069ab1b7dcf9db53eeb9/Source/Docs/JEVH%20Sample%20Documentation%20(docs-as-code).pdf"></object>
-<!--Browser Support End-->
-
-	<p>Your device's browser does</p>
-	<p>not support PDF viewing.</p>
-</object>
-
-
-</div>
+    <div class="pdf-container">
+        <!-- Primary PDF embed -->
+        <object class="pdf-embed" 
+                data="Source/Docs/JEVH Sample Documentation (docs-as-code).pdf#view=FitV&toolbar=0&navpanes=0&scrollbar=1" 
+                type="application/pdf">
+            
+            <!-- Fallback: Google Docs Viewer -->
+            <iframe class="pdf-embed" 
+                    src="https://docs.google.com/gview?embedded=true&url=https://raw.githubusercontent.com/JEVH-creations/Gallery/47705422ba9aecf4e152069ab1b7dcf9db53eeb9/Source/Docs/JEVH%20Sample%20Documentation%20(docs-as-code).pdf""
+                    frameborder="0">
+                
+                <!-- Final fallback message -->
+                <div class="fallback-message">
+                    <p>Your browser doesn't support PDF viewing.</p>
+                    <a href="Source/Docs/JEVH preview mag 8.5in x 11in.pdf" 
+                       class="fallback-link" 
+                       target="_blank">
+                        Download PDF
+                    </a>
+                </div>
+            </iframe>
+        </object>
+    </div>
 </body>
 </html>
