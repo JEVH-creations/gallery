@@ -4,78 +4,43 @@ var webFrame = document.getElementById("webFrame");
 var webCaptionText = document.getElementById("webCaption");
 
 // Configure modal
-webModal.style.overflow = "hidden"; // Disable modal scrolling (we'll handle it in iframe)
+webModal.style.overflow = "hidden";
 
 // Configure iframe for full content display
 webFrame.style.position = "absolute";
-webFrame.style.top = "80px"; // Space for close button
+webFrame.style.top = "60px"; // Reduced space for close button
 webFrame.style.left = "0";
 webFrame.style.width = "100%";
-webFrame.style.height = "calc(100% - 180px)";
+webFrame.style.height = "calc(100% - 60px)"; // Use full available height
 webFrame.style.border = "none";
-webFrame.style.overflowY = "auto"; // Enable iframe scrolling
 
-// Make close button stay fixed during scrolling
+// Make close button stay fixed
 var closeBtn = document.getElementsByClassName("close")[0];
-closeBtn.style.position = "fixed";
-closeBtn.style.zIndex = "2"; // Ensure it stays above content
+closeBtn.style.position = "absolute";
+closeBtn.style.top = "15px";
+closeBtn.style.right = "35px";
+closeBtn.style.zIndex = "1001";
 
-// Handle dynamic content loading
-webFrame.onload = function() {
-    // Reset iframe height to content height
-    try {
-        var body = webFrame.contentWindow.document.body;
-        var html = webFrame.contentWindow.document.documentElement;
-        
-        var height = Math.max(
-            body.scrollHeight,
-            body.offsetHeight,
-            html.clientHeight,
-            html.scrollHeight,
-            html.offsetHeight
-        );
-        
-        webFrame.style.height = height + "px";
-    } catch(e) {
-        // Fallback to original height if cross-origin
-        webFrame.style.height = "calc(100% - 180px)";
-    }
-};
-
-// Window resize handler for responsive height
-function resizeIframe() {
-    if (webModal.style.display === "block") {
-        webFrame.style.height = window.innerHeight - 180 + 'px';
-        
-        // Try to recalculate content height after resize
-        setTimeout(function() {
-            try {
-                var body = webFrame.contentWindow.document.body;
-                var html = webFrame.contentWindow.document.documentElement;
-                
-                var height = Math.max(
-                    body.scrollHeight,
-                    body.offsetHeight,
-                    html.clientHeight,
-                    html.scrollHeight,
-                    html.offsetHeight
-                );
-                
-                webFrame.style.height = height + "px";
-            } catch(e) {
-                // Keep the viewport-based height if calculation fails
-            }
-        }, 300);
-    }
-}
+// Remove the problematic onload handler that tries to access cross-origin content
+// Instead, let the iframe handle its own scrolling
 
 // Image click handlers
 var imgs = document.getElementsByClassName("img");
 for(let img of imgs){
     img.onclick = function(){
         webModal.style.display = "block";
-        webFrame.src = this.getAttribute('data-href');
+        var href = this.getAttribute('data-href');
+        
+        // Add timestamp to prevent caching issues
+        if(href.includes('.pdf') || href.includes('html')){
+            href += (href.includes('?') ? '&' : '?') + 't=' + Date.now();
+        }
+        
+        webFrame.src = href;
         webCaptionText.innerHTML = this.alt;
+        
+        // Force iframe to use full height immediately
+        webFrame.style.height = "calc(100% - 60px)";
     }
 }
 
@@ -83,5 +48,12 @@ for(let img of imgs){
 closeBtn.addEventListener('click', function() {
     webModal.style.display = "none";
     webFrame.src = "";
-    webFrame.style.height = "calc(100% - 180px)"; // Reset height
+    webFrame.style.height = "calc(100% - 60px)";
+});
+
+// Handle window resize
+window.addEventListener('resize', function() {
+    if(webModal.style.display === "block"){
+        webFrame.style.height = "calc(100% - 60px)";
+    }
 });
