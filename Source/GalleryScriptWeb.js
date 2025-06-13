@@ -8,7 +8,7 @@ webModal.style.overflow = "hidden";
 
 // Configure iframe for full content display
 webFrame.style.position = "absolute";
-webFrame.style.top = "60px"; // Reduced space for close button
+webFrame.style.top = "80px"; // Reduced space for close button
 webFrame.style.left = "0";
 webFrame.style.width = "100%";
 webFrame.style.height = "calc(100% - 60px)"; // Use full available height
@@ -40,7 +40,7 @@ for(let img of imgs){
         webCaptionText.innerHTML = this.alt;
         
         // Force iframe to use full height immediately
-        webFrame.style.height = "calc(100% - 60px)";
+        webFrame.style.height = "calc(100% - 180px)";
     }
 }
 
