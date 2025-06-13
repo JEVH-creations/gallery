@@ -51,6 +51,14 @@
 			</div>
 <!--Logo Button End-->
 
+
+<!-- Loader -->
+			<div id="iframeLoader" class="iframe-loading hidden">
+			<div class="spinner"></div>
+			<div>Loading...</div>
+			</div>
+<!-- Loader End-->
+
 <!--Gallery Lightbox Start-->
 			<div class="DivLightbox">	
 			<iframe src="GalleryNull.html" name="GalleryFrame"
@@ -69,5 +77,35 @@
 </div>
 </div>
 		<script src="Source/P-Module T2.js"></script>
+		<script>
+			// Function to show loading
+			function showIframeLoading() {
+				document.getElementById('iframeLoader').classList.remove('hidden');
+			}
+
+			// Function to hide loading
+			function hideIframeLoading() {
+				document.getElementById('iframeLoader').classList.add('hidden');
+			}
+
+			// Modified iframe handling (add this to your existing GalleryScriptWeb.js logic)
+			function loadIframeWithLoading(iframe, src) {
+				showIframeLoading();
+    
+			iframe.onload = function() {
+				// Small delay to ensure content is rendered
+				setTimeout(hideIframeLoading, 500);
+			};
+    
+			iframe.onerror = function() {
+				hideIframeLoading();
+				// Optional: show error message
+				console.log('Failed to load iframe content');
+			};
+    
+			iframe.src = src;
+			}
+		</script>
+
 </body>
 </html>
