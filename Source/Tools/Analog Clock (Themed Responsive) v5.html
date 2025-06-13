@@ -45,6 +45,11 @@
             flex-shrink: 0;
         }
         
+        .header-line {
+            font-size: clamp(10px, 2.5vw, 14px);
+            line-height: 1.2;
+        }
+        
         .clock-container {
             position: relative;
             width: 100%;
@@ -64,7 +69,7 @@
             align-items: center;
         }
         
-        /* Clock Numbers */
+        /* Clock Numbers - Pure HTML/CSS */
         .clock-face {
             position: relative;
             width: 80%;
@@ -117,6 +122,7 @@
             background-color: var(--clock-color);
             border-radius: 5px;
             will-change: transform;
+            transition: transform 0.05s cubic-bezier(0.4, 2.3, 0.3, 1);
         }
         
         .hour-hand {
@@ -135,6 +141,7 @@
             width: 1px;
             height: 40%;
             margin-left: -0.5px;
+            transition: transform 0.1s cubic-bezier(0.4, 2.3, 0.3, 1);
         }
         
         .center-dot {
@@ -161,6 +168,7 @@
             flex-shrink: 0;
         }
         
+        /* Updated Timezone Select */
         select {
             padding: 8px 12px;
             border-radius: 5px;
@@ -170,6 +178,25 @@
             width: 100%;
             font-size: clamp(12px, 3vw, 14px);
             cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        select:hover {
+            background: var(--button-hover);
+        }
+        
+        /* Custom scrollbar */
+        select::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        select::-webkit-scrollbar-track {
+            background: var(--button-bg);
+        }
+        
+        select::-webkit-scrollbar-thumb {
+            background-color: var(--scrollbar-thumb);
+            border-radius: 3px;
         }
         
         .time-display {
@@ -196,7 +223,7 @@
             opacity: 0.8;
         }
 
-        /* Theme Selector */
+        /* Collapsible theme selector */
         .theme-selector {
             margin-bottom: 0px;
             width: 100%;
@@ -220,12 +247,30 @@
             font-size: 16px;
         }
 
+        .color-picker-toggle::after {
+            content: "";
+            display: inline-block;
+            width: 0;
+            height: 0;
+            border-left: 4px solid transparent;
+            border-right: 4px solid transparent;
+            border-top: 4px solid var(--text-color);
+            transition: transform 0.3s;
+            margin-left: 3px;
+        }
+
+        .color-picker-toggle.open::after {
+            transform: rotate(180deg);
+        }
+
         .theme-buttons {
             display: none;
             grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(2, 1fr);
             gap: 6px;
             padding: 8px;
             justify-items: center;
+            align-items: center;
             max-width: 200px;
             margin: 0 auto;
         }
@@ -240,10 +285,77 @@
             border-radius: 50%;
             cursor: pointer;
             border: 2px solid transparent;
+            transition: transform 0.2s;
+        }
+
+        .theme-btn:hover {
+            transform: scale(1.1);
         }
 
         .theme-btn.active {
             border-color: var(--text-color);
+            transform: scale(1.2);
+        }
+
+        /* Smooth transitions for all color-changing elements */
+        body, .hand, .center-dot, .number, select, .digital-time, 
+        .timezone-info, .date-info, .color-picker-toggle span, .header {
+            transition: 
+                color 0.6s ease,
+                background-color 0.6s ease,
+                border-color 0.6s ease;
+        }
+        
+        /* Smooth theme buttons */
+        .theme-btn {
+            transition: 
+                transform 0.2s ease,
+                border-color 0.3s ease;
+        }
+        
+        /* Scrollbar transition */
+        select::-webkit-scrollbar-thumb {
+            transition: background-color 0.4s ease;
+        }
+        
+        /* Media queries for very small containers */
+        @media (max-width: 300px) {
+            .clock-container {
+                max-width: 200px;
+            }
+            
+            .controls {
+                max-width: 200px;
+            }
+            
+            .theme-btn {
+                width: 20px;
+                height: 20px;
+            }
+            
+            .theme-buttons {
+                gap: 4px;
+                max-width: 160px;
+            }
+        }
+        
+        /* Ensure content doesn't overflow on short screens */
+        @media (max-height: 600px) {
+            .header-line {
+                font-size: clamp(8px, 2vw, 12px);
+            }
+            
+            .clock-container {
+                max-width: min(200px, 70vw);
+            }
+            
+            .controls {
+                max-width: min(200px, 70vw);
+            }
+            
+            .digital-time {
+                font-size: clamp(12px, 3vw, 16px);
+            }
         }
     </style>
 </head>
@@ -308,7 +420,71 @@
     </div>
 
     <script>
-        // DOM Elements
+        // ======================
+        // COLOR THEME DEFINITIONS
+        // ======================
+        const colors = {
+            white: { 
+                clock: '#fff', 
+                text: '#fff',
+                buttonBg: '#333',
+                buttonHover: '#444',
+                scrollbarThumb: '#555'
+            },
+            red: { 
+                clock: '#ff3333', 
+                text: '#ff3333',
+                buttonBg: '#331010',
+                buttonHover: '#441010',
+                scrollbarThumb: '#661010'
+            },
+            green: { 
+                clock: '#33ff33', 
+                text: '#33ff33',
+                buttonBg: '#103310',
+                buttonHover: '#104410',
+                scrollbarThumb: '#106610'
+            },
+            blue: { 
+                clock: '#3399ff', 
+                text: '#3399ff',
+                buttonBg: '#102033',
+                buttonHover: '#102844',
+                scrollbarThumb: '#103366'
+            },
+            orange: { 
+                clock: '#ff9933', 
+                text: '#ff9933',
+                buttonBg: '#332010',
+                buttonHover: '#442810',
+                scrollbarThumb: '#663810'
+            },
+            yellow: { 
+                clock: '#ffff33', 
+                text: '#ffff33',
+                buttonBg: '#333310',
+                buttonHover: '#444410',
+                scrollbarThumb: '#666610'
+            },
+            purple: { 
+                clock: '#cc33ff', 
+                text: '#cc33ff',
+                buttonBg: '#251033',
+                buttonHover: '#351044',
+                scrollbarThumb: '#551066'
+            },
+            pink: { 
+                clock: '#ff9ff5', 
+                text: '#ff9ff5',
+                buttonBg: '#33102e',
+                buttonHover: '#44103e',
+                scrollbarThumb: '#66105e'
+            }
+        };
+
+        // ======================
+        // DOM ELEMENT REFERENCES
+        // ======================
         const digitalTime = document.getElementById('digitalTime');
         const dateInfo = document.getElementById('dateInfo');
         const timezoneInfo = document.getElementById('timezoneInfo');
@@ -320,29 +496,11 @@
         const themeButtons = document.querySelector('.theme-buttons');
         const root = document.documentElement;
 
-        // Color Themes
-        const colors = {
-            white: { clock: '#fff', text: '#fff', buttonBg: '#333', buttonHover: '#444' },
-            red: { clock: '#ff3333', text: '#ff3333', buttonBg: '#331010', buttonHover: '#441010' },
-            green: { clock: '#33ff33', text: '#33ff33', buttonBg: '#103310', buttonHover: '#104410' },
-            blue: { clock: '#3399ff', text: '#3399ff', buttonBg: '#102033', buttonHover: '#102844' },
-            orange: { clock: '#ff9933', text: '#ff9933', buttonBg: '#332010', buttonHover: '#442810' },
-            yellow: { clock: '#ffff33', text: '#ffff33', buttonBg: '#333310', buttonHover: '#444410' },
-            purple: { clock: '#cc33ff', text: '#cc33ff', buttonBg: '#251033', buttonHover: '#351044' },
-            pink: { clock: '#ff9ff5', text: '#ff9ff5', buttonBg: '#33102e', buttonHover: '#44103e' }
-        };
-
-        // Initialize clock hands position
-        let previousRotation = {
-            seconds: 0,
-            minutes: 0,
-            hours: 0
-        };
-
-        // Timezone Functions
+        // ======================
+        // TIMEZONE FUNCTIONS
+        // ======================
         function populateTimezones() {
             const timezones = Intl.supportedValuesOf('timeZone');
-            timezoneSelect.innerHTML = '';
             timezones.forEach(tz => {
                 const option = document.createElement('option');
                 option.value = tz;
@@ -379,50 +537,72 @@
                 if (part.type === 'weekday') weekday = part.value;
                 if (part.type === 'month') month = part.value;
                 if (part.type === 'day') day = part.value;
+                if (part.type === 'year') year = part.value;
             });
             
-            return { hour, minute, second, weekday, month, day };
+            return { 
+                hour, 
+                minute, 
+                second,
+                weekday,
+                month,
+                day,
+                year
+            };
         }
 
-        // Clock Animation
+        // ======================
+        // CLOCK ANIMATION FUNCTIONS (SIMPLIFIED FROM V2)
+        // ======================
         function updateClock() {
             const selectedTimezone = timezoneSelect.value;
             const time = getTimeInTimezone(selectedTimezone);
             
-            // Update digital display
+            const options = {
+                timeZone: selectedTimezone,
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                timeZoneName: 'short'
+            };
+            const formatter = new Intl.DateTimeFormat('en-US', options);
+            const parts = formatter.formatToParts(new Date());
+            
+            let tzName = '';
+            parts.forEach(part => {
+                if (part.type === 'timeZoneName') tzName = part.value;
+            });
+            
             digitalTime.textContent = 
                 `${time.hour.toString().padStart(2, '0')}:` +
                 `${time.minute.toString().padStart(2, '0')}:` +
                 `${time.second.toString().padStart(2, '0')}`;
                 
             dateInfo.textContent = `${time.weekday}, ${time.month} ${time.day}`;
-            timezoneInfo.textContent = `${selectedTimezone}`;
+            timezoneInfo.textContent = `${selectedTimezone} (${tzName})`;
             
-            // Calculate angles
-            const targetSecond = time.second * 6;
-            const targetMinute = time.minute * 6 + (time.second / 10);
-            const targetHour = (time.hour % 12) * 30 + (time.minute / 2);
-
-            // Apply smooth rotation
-            secondHand.style.transform = `rotate(${targetSecond}deg)`;
-            minuteHand.style.transform = `rotate(${targetMinute}deg)`;
-            hourHand.style.transform = `rotate(${targetHour}deg)`;
+            // Calculate angles for analog clock (simplified from V2)
+            const secondAngle = time.second * 6;
+            const minuteAngle = time.minute * 6 + (time.second / 10);
+            const hourAngle = (time.hour % 12) * 30 + (time.minute / 2);
             
-            // Store current rotation
-            previousRotation = {
-                seconds: targetSecond,
-                minutes: targetMinute,
-                hours: targetHour
-            };
+            // Rotate hands
+            hourHand.style.transform = `rotate(${hourAngle}deg)`;
+            minuteHand.style.transform = `rotate(${minuteAngle}deg)`;
+            secondHand.style.transform = `rotate(${secondAngle}deg)`;
         }
 
-        // Theme Management
+        // ======================
+        // THEME MANAGEMENT
+        // ======================
         function applyTheme(color) {
             const theme = colors[color];
+            
             root.style.setProperty('--clock-color', theme.clock);
             root.style.setProperty('--text-color', theme.text);
             root.style.setProperty('--button-bg', theme.buttonBg);
             root.style.setProperty('--button-hover', theme.buttonHover);
+            root.style.setProperty('--scrollbar-thumb', theme.scrollbarThumb);
             
             document.querySelectorAll('.theme-btn').forEach(btn => {
                 btn.classList.remove('active');
@@ -432,59 +612,35 @@
             });
         }
 
-        // Initialize Clock
+        // ======================
+        // INITIALIZATION
+        // ======================
         function initializeClock() {
-            // Set initial positions without animation
-            hourHand.style.transition = 'none';
-            minuteHand.style.transition = 'none';
-            secondHand.style.transition = 'none';
-            
             populateTimezones();
             applyTheme('white');
-            
-            // Get initial time
-            const time = getTimeInTimezone(timezoneSelect.value);
-            const initialSecond = time.second * 6;
-            const initialMinute = time.minute * 6 + (time.second / 10);
-            const initialHour = (time.hour % 12) * 30 + (time.minute / 2);
-            
-            // Set initial positions
-            secondHand.style.transform = `rotate(${initialSecond}deg)`;
-            minuteHand.style.transform = `rotate(${initialMinute}deg)`;
-            hourHand.style.transform = `rotate(${initialHour}deg)`;
-            
-            // Store initial rotation
-            previousRotation = {
-                seconds: initialSecond,
-                minutes: initialMinute,
-                hours: initialHour
-            };
-            
-            // Re-enable transitions after a short delay
-            setTimeout(() => {
-                hourHand.style.transition = 'transform 0.05s linear';
-                minuteHand.style.transition = 'transform 0.05s linear';
-                secondHand.style.transition = 'transform 0.05s linear';
-            }, 50);
-            
-            // Start clock updates
             updateClock();
             setInterval(updateClock, 50);
         }
 
-        // Event Listeners
+        // ======================
+        // EVENT LISTENERS
+        // ======================
         colorPickerToggle.addEventListener('click', function() {
-            themeButtons.classList.toggle('show');
             this.classList.toggle('open');
+            themeButtons.classList.toggle('show');
         });
 
         document.querySelectorAll('.theme-btn').forEach(btn => {
-            btn.addEventListener('click', () => applyTheme(btn.dataset.color));
+            btn.addEventListener('click', () => {
+                applyTheme(btn.dataset.color);
+            });
         });
         
         timezoneSelect.addEventListener('change', updateClock);
 
-        // Start the clock
+        // ======================
+        // START THE CLOCK
+        // ======================
         initializeClock();
     </script>
 </body>
