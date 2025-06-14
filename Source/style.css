@@ -115,6 +115,7 @@ div.DivContent  {
 	transition: 0.3s;
 	border-radius: 50%;
 	border: 3px solid #7F7F7F;
+	background-color: #7F7F7F;
 }
 
 .img:hover
@@ -124,6 +125,7 @@ div.DivContent  {
 	transition: 0.3s;
 	border-radius: 10%;
 	border: 3px solid rgba(186, 22, 12, 1);
+	background-color: rgba(186, 22, 12, 1);
 }
 
 .modal {
