@@ -20,6 +20,193 @@
 		<meta name="keywords" content="JEVH, Artist, Illustrator, Art Commissions, Digital Art, Concept Art, Game Art, Character Design, Illustration Portfolio, Visual Arts, Graphic Design, Multidisciplinary Design, Painting, Drawing, Traditional Art, Digital Painting, Creative Art, Fantasy Art, Modding, Video Game Design">
 		<meta name="robots" content="index, follow">
 
+		<style>
+			/* Mobile-first responsive menu styles */
+			.menu-container {
+				position: fixed;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 60px; /* Mobile height */
+				background-color: rgba(0, 0, 0, 0);
+				z-index: 100;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				padding: 0 10px;
+				box-sizing: border-box;
+				transition: background-color 0.3s ease; /* Add transition */
+			}
+
+			.menu-container.active {
+				background-color: rgba(0, 0, 0, 0.8);
+			}
+
+			.dropdown {
+				position: relative;
+				display: inline-block;
+				z-index: 102;
+			}
+
+			.dropbtn {
+				background-color: transparent;
+				color: white;
+				padding: 8px 12px;
+				border: none;
+				cursor: pointer;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				width: 200px;
+			}
+
+			.dropbtn img {
+				max-height: 44px; /* Mobile menu image height */
+				width: auto;
+			}
+
+			.dropdown-content {
+				display: none;
+				position: absolute;
+				top: 100%;
+				left: 50%;
+				transform: translateX(-50%);
+				width: 200px;
+				background-color: rgba(186, 22, 12, 0.9);
+				min-width: 160px;
+				box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+				z-index: 101;
+				border-radius: 0 0 8px 8px;
+			}
+
+			.dropdown-content a {
+				color: White;
+				padding: 12px 16px;
+				text-decoration: none;
+				display: block;
+				position: relative;
+				font-size: 14px;
+				font-weight: bold;
+				border-bottom: 1px solid rgba(255,255,255,0.1);
+			}
+
+			.dropdown-content a:last-child {
+				border-bottom: none;
+			}
+
+			.dropdown-content a:hover {
+				background-color: rgba(186, 22, 12, 1);
+			}
+
+			.dropdown:hover .dropdown-content {
+				display: block;
+			}
+
+			.dropdown:hover .dropbtn {
+				background-color: rgba(186, 22, 12, 0.7);
+				border-radius: 8px 8px 0 0;
+			}
+
+			/* Content container adjustments */
+			#DivContainer {
+				display: flex;
+				flex-direction: column;
+				height: 100vh;
+				width: 100%;
+				position: relative;
+			}
+
+			.DivLightbox {
+				flex: 1;
+				margin-top: 60px; /* Mobile menu height */
+				margin-bottom: 80px; /* Mobile footer height */
+				position: relative;
+				z-index: 1;
+				padding: 10px;
+				box-sizing: border-box;
+			}
+
+			.DivLightbox iframe {
+				width: 100%;
+				height: 100%;
+				border: none;
+			}
+
+			.DivFooter {
+				position: fixed;
+				bottom: 0;
+				left: 0;
+				width: 100%;
+				height: 80px; /* Mobile footer height */
+				background-color: rgba(0, 0, 0, 0);
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				align-items: center;
+				padding: 10px;
+				box-sizing: border-box;
+				z-index: 99;
+				transition: background-color 0.3s ease; /* Add transition */
+			}
+
+			.DivFooter.active {
+				background-color: rgba(0, 0, 0, 0.8);
+			}
+
+			.DivFooter p {
+				margin: 2px 0;
+				font-size: 10px;
+				line-height: 1.2;
+			}
+
+			/* Desktop styles */
+			@media (min-width: 768px) {
+				.menu-container {
+					height: 89px; /* Maximum height for desktop */
+				}
+
+				.dropbtn img {
+					max-height: 73px; /* Desktop menu image height */
+				}
+
+				.dropbtn {
+					padding: 16px;
+					width: 220px;
+				}
+
+				.DivLightbox {
+					margin-top: 89px; /* Desktop menu height */
+					margin-bottom: 100px; /* Desktop footer height */
+					padding: 20px;
+				}
+
+				.DivFooter {
+					height: 100px; /* Desktop footer height */
+					padding: 15px;
+				}
+
+				.DivFooter p {
+					font-size: 12px;
+					margin: 3px 0;
+				}
+
+				.dropdown-content {
+					width: 220px;
+				}
+
+				.dropdown-content a {
+					font-size: 16px;
+					padding: 14px 18px;
+				}
+			}
+
+			/* Large desktop styles */
+			@media (min-width: 1200px) {
+				.DivLightbox {
+					padding: 30px;
+				}
+			}
+		</style>
 </head>
 
 <body>
@@ -36,54 +223,53 @@
 
 <div id="DivContainer">	
 
-<!--Logo Button Start-->
-			<div class="Dropdown">
- 				<button class="dropbtn"><img src="Source/JEVH_Menu.png"
-				onContextMenu="return false;" draggable="false"></button>
-				<div class="dropdown-content">
-				<a href="Gallery1.html" target="GalleryFrame">Art</a>
-				<a href="Gallery2.html" target="GalleryFrame">Gaming</a>
-				<a href="Gallery3.html" target="GalleryFrame">Visual Design</a>
-				<a href="Gallery4.html" target="GalleryFrame">Photography</a>
-				<a href="Gallery5.html" target="GalleryFrame">Palettes</a>
-				<a href="Gallery6.html" target="GalleryFrame">Tools</a>
-				<a href="Gallery7.html" target="GalleryFrame">Documents</a>
+<!--Mobile-First Menu Start-->
+			<div class="menu-container">
+				<div class="dropdown">
+					<button class="dropbtn">
+						<img src="Source/JEVH_Menu.png" onContextMenu="return false;" draggable="false">
+					</button>
+					<div class="dropdown-content">
+						<a href="Gallery1.html" target="GalleryFrame">Art</a>
+						<a href="Gallery2.html" target="GalleryFrame">Gaming</a>
+						<a href="Gallery3.html" target="GalleryFrame">Visual Design</a>
+						<a href="Gallery4.html" target="GalleryFrame">Photography</a>
+						<a href="Gallery5.html" target="GalleryFrame">Palettes</a>
+						<a href="Gallery6.html" target="GalleryFrame">Tools</a>
+						<a href="Gallery7.html" target="GalleryFrame">Documents</a>
+					</div>
 				</div>
 			</div>
-<!--Logo Button End-->
-
+<!--Mobile-First Menu End-->
 
 <!-- Loader -->
 			<div id="iframeLoader" class="iframe-loading hidden">
-			<div class="spinner"></div>
-			<div>Loading...</div>
+				<div class="spinner"></div>
+				<div>Loading...</div>
 			</div>
 <!-- Loader End-->
 
 <!--Gallery Lightbox Start-->
 			<div class="DivLightbox">	
-			<iframe src="GalleryNull.html" name="GalleryFrame"
-			width="90%" height="70%" style="border:none;" scrolling="no">
-			</iframe>
+				<iframe src="GalleryNull.html" name="GalleryFrame" scrolling="no">
+				</iframe>
 			</div>
 <!--Gallery Lightbox End-->
 
 			<div class="DivFooter">
-				<br />
 				<p>Characters and references used in fanart</p>
 				<p>and mods belong to their respective owners.</p>
-				<br />
 				<p>© JEVH.creations</p>
 			</div>
 </div>
 </div>
 		<script>
-			// Function to show loading
+		// Function to show loading
 			function showIframeLoading() {
 				document.getElementById('iframeLoader').classList.remove('hidden');
 			}
 
-			// Function to hide loading
+		// Function to hide loading
 			function hideIframeLoading() {
 				document.getElementById('iframeLoader').classList.add('hidden');
 			}
@@ -105,6 +291,56 @@
     
 			iframe.src = src;
 			}
+
+		// Menu and Footer Fade Script
+
+			document.addEventListener('DOMContentLoaded', function() {
+			const menuContainer = document.querySelector('.menu-container');
+			const footer = document.querySelector('.DivFooter');
+			const dropdown = document.querySelector('.dropdown');
+			let inactivityTimer;
+			const delayBeforeFade = 15000; // 15 seconds
+
+			function activateMenu() {
+				// Clear any existing timer
+				clearTimeout(inactivityTimer);
+            
+				// Make elements opaque
+				menuContainer.classList.add('active');
+				footer.classList.add('active');
+            
+				// Set timer to fade out after inactivity
+				inactivityTimer = setTimeout(deactivateMenu, delayBeforeFade);
+			}
+
+			function deactivateMenu() {
+				// Only deactivate if dropdown isn't being hovered
+				if (!dropdown.matches(':hover')) {
+					menuContainer.classList.remove('active');
+					footer.classList.remove('active');
+				}
+			}
+
+			// Track mouse movement on entire document
+			document.addEventListener('mousemove', function(e) {
+				// Don't trigger for tiny mouse movements (reduces unnecessary activations)
+				if (e.movementX > 2 || e.movementY > 2) {
+					activateMenu();
+					}
+			});
+
+			// Keep active when interacting with menu
+			dropdown.addEventListener('mouseenter', activateMenu);
+			dropdown.addEventListener('mouseleave', function() {
+				// Only deactivate if no recent activity
+				inactivityTimer = setTimeout(deactivateMenu, delayBeforeFade);
+			});
+
+			// Also activate on click/touch
+				document.addEventListener('click', activateMenu);
+				document.addEventListener('touchstart', activateMenu);
+			});
+
 		</script>
 		<script src="Source/background-rotation.js"></script>
 		<script src="Source/P-Module T2.js"></script>

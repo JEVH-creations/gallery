@@ -1,0 +1,112 @@
+<html>
+<head>
+		<title>JEVH.creations</title>
+		<link rel="stylesheet" href="Source\style.css" type="text/css" />
+
+		<link rel="shortcut icon" href="Source/favicon.ico">
+		<link rel="icon" type="image/png" href="Source/favicon-16x16.png" sizes="16x16" />
+		<link rel="icon" type="image/png" href="Source/favicon-32x32.png" sizes="32x32" />
+		<link rel="icon" type="image/png" href="Source/favicon-96x96.png" sizes="96x96" />
+		<link rel="icon" type="image/png" href="Source/favicon-128.png" sizes="128x128" />
+		<link rel="icon" type="image/png" href="Source/favicon-196x196.png" sizes="196x196" />
+		<link rel="apple-touch-icon" sizes="152x152" href="Source/apple-touch-icon-152x152.png">
+		<link rel="apple-touch-icon" sizes="167x167" href="Source/apple-touch-icon-167x167.png">
+		<link rel="apple-touch-icon" sizes="180x180" href="Source/apple-touch-icon-180x180.png">
+
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="description" content="JEVH.creations">
+		<meta name="author" content="JEVH">
+		<meta name="keywords" content="JEVH, Artist, Illustrator, Art Commissions, Digital Art, Concept Art, Game Art, Character Design, Illustration Portfolio, Visual Arts, Graphic Design, Multidisciplinary Design, Painting, Drawing, Traditional Art, Digital Painting, Creative Art, Fantasy Art, Modding, Video Game Design">
+		<meta name="robots" content="index, follow">
+
+</head>
+
+<body>
+<div class="DivBG">
+
+<div class="video-background">
+  <!-- Video with poster attribute -->
+  <video autoplay muted loop playsinline poster="Source/JEVHStars.jpg">
+    <source src="Source/JEVHStars.mp4" type="video/mp4">
+    <!-- Fallback image -->
+    <img class="poster-image" src="Source/JEVHStars.jpg" alt="Background">
+  </video>
+</div>
+
+<div id="DivContainer">	
+
+<!--Logo Button Start-->
+			<div class="Dropdown">
+ 				<button class="dropbtn"><img src="Source/JEVH_Menu.png"
+				onContextMenu="return false;" draggable="false"></button>
+				<div class="dropdown-content">
+				<a href="Gallery1.html" target="GalleryFrame">Art</a>
+				<a href="Gallery2.html" target="GalleryFrame">Gaming</a>
+				<a href="Gallery3.html" target="GalleryFrame">Visual Design</a>
+				<a href="Gallery4.html" target="GalleryFrame">Photography</a>
+				<a href="Gallery5.html" target="GalleryFrame">Palettes</a>
+				<a href="Gallery6.html" target="GalleryFrame">Tools</a>
+				<a href="Gallery7.html" target="GalleryFrame">Documents</a>
+				</div>
+			</div>
+<!--Logo Button End-->
+
+
+<!-- Loader -->
+			<div id="iframeLoader" class="iframe-loading hidden">
+			<div class="spinner"></div>
+			<div>Loading...</div>
+			</div>
+<!-- Loader End-->
+
+<!--Gallery Lightbox Start-->
+			<div class="DivLightbox">	
+			<iframe src="GalleryNull.html" name="GalleryFrame"
+			width="90%" height="70%" style="border:none;" scrolling="no">
+			</iframe>
+			</div>
+<!--Gallery Lightbox End-->
+
+			<div class="DivFooter">
+				<br />
+				<p>Characters and references used in fanart</p>
+				<p>and mods belong to their respective owners.</p>
+				<br />
+				<p>© JEVH.creations</p>
+			</div>
+</div>
+</div>
+		<script>
+			// Function to show loading
+			function showIframeLoading() {
+				document.getElementById('iframeLoader').classList.remove('hidden');
+			}
+
+			// Function to hide loading
+			function hideIframeLoading() {
+				document.getElementById('iframeLoader').classList.add('hidden');
+			}
+
+			// Modified iframe handling (add this to your existing GalleryScriptWeb.js logic)
+			function loadIframeWithLoading(iframe, src) {
+				showIframeLoading();
+    
+			iframe.onload = function() {
+				// Small delay to ensure content is rendered
+				setTimeout(hideIframeLoading, 500);
+			};
+    
+			iframe.onerror = function() {
+				hideIframeLoading();
+				// Optional: show error message
+				console.log('Failed to load iframe content');
+			};
+    
+			iframe.src = src;
+			}
+		</script>
+		<script src="Source/background-rotation.js"></script>
+		<script src="Source/P-Module T2.js"></script>
+</body>
+</html>
