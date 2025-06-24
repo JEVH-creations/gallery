@@ -5,7 +5,7 @@ function createCookieBanner() {
     const bannerHTML = `
         <div id="cookieBanner">
             <div class="cookie-text">
-                This site uses cookies to improve functionality and analyze traffic.
+                \u{1F36A} This site uses cookies to improve functionality and analyze traffic.
             </div>
             <div class="cookie-buttons">
                 <button class="cookie-btn decline" onclick="declineCookies()">Decline</button>
@@ -62,10 +62,10 @@ function hideBanner() {
 
 // Load Google Analytics only if accepted
 function loadGoogleAnalytics() {
-    // Replace G-SLL009BFDG with your actual GA Measurement ID
+    // Replace 00GTAGPORTION00 with your actual GA Measurement ID
     const script1 = document.createElement('script');
     script1.async = true;
-    script1.src = 'https://www.googletagmanager.com/gtag/js?id=G-SLL009BFDG';
+    script1.src = 'https://www.googletagmanager.com/gtag/js?id=00GTAGPORTION00';
     document.head.appendChild(script1);
 
     const script2 = document.createElement('script');
@@ -73,7 +73,7 @@ function loadGoogleAnalytics() {
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
-        gtag('config', 'G-SLL009BFDG', {
+        gtag('config', '00GTAGPORTION00', {
             'anonymize_ip': true,
             'allow_google_signals': false
         });
