@@ -4,7 +4,7 @@
     bottom: 0;
     left: 0;
     right: 0;
-    background-color: rgba(255, 79, 0, 0.95);
+    background-color: #ba160c;
     color: white;
     padding: 15px 20px;
     z-index: 9999;
@@ -13,7 +13,9 @@
     justify-content: space-between;
     flex-wrap: wrap;
     gap: 15px;
-    border-top: 2px solid #ffffff;
+    border-top: 2px solid white;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    font-weight: 500;
 }
 
 #cookieBanner.hidden {
@@ -23,19 +25,15 @@
 .cookie-text {
     flex: 1;
     font-size: 14px;
-    line-height: 1.4;
+    line-height: 1.5;
     min-width: 250px;
-    color: white;
-    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 500;
 }
 
 .cookie-text a {
-    color: white;
+    color: #04556a;
     text-decoration: underline;
-    font-weight: bold;
-    pointer-events: none;
-    cursor: default;
-    opacity: 0.7;
+    font-weight: 600;
 }
 
 .cookie-buttons {
@@ -45,29 +43,32 @@
 }
 
 .cookie-btn {
-    background-color: #000000;
-    color: white;
-    border: none;
+    background-color: white;
+    color: #ba160c;
+    border: 2px solid white;
     padding: 8px 16px;
     border-radius: 4px;
     cursor: pointer;
     font-size: 14px;
-    font-weight: bold;
-    transition: background-color 0.3s;
+    font-weight: 600;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    transition: all 0.3s ease;
 }
 
 .cookie-btn:hover {
-    background-color: #333333;
+    background-color: #f0f0f0;
+    transform: translateY(-1px);
 }
 
 .cookie-btn.decline {
     background-color: transparent;
-    border: 2px solid #000000;
-    color: #000000;
+    border: 2px solid #ccc;
+    color: #ccc;
 }
 
 .cookie-btn.decline:hover {
-    background-color: #000000;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: white;
     color: white;
 }
 
@@ -76,9 +77,16 @@
     #cookieBanner {
         flex-direction: column;
         text-align: center;
+        padding: 20px;
     }
     
     .cookie-text {
         min-width: auto;
+        font-size: 15px;
+    }
+    
+    .cookie-btn {
+        font-size: 15px;
+        padding: 10px 20px;
     }
 }

@@ -1,3 +1,23 @@
+// Cookie Consent Banner JavaScript
+
+// Create and inject the cookie banner HTML
+function createCookieBanner() {
+    const bannerHTML = `
+        <div id="cookieBanner">
+            <div class="cookie-text">
+                This site uses cookies to improve functionality and analyze traffic.
+            </div>
+            <div class="cookie-buttons">
+                <button class="cookie-btn decline" onclick="declineCookies()">Decline</button>
+                <button class="cookie-btn" onclick="acceptCookies()">Accept</button>
+            </div>
+        </div>
+    `;
+    
+    // Insert the banner at the end of the body
+    document.body.insertAdjacentHTML('beforeend', bannerHTML);
+}
+
 // Check if user has already made a choice
 function checkCookieConsent() {
     const consent = localStorage.getItem('cookieConsent');
@@ -24,46 +44,25 @@ function declineCookies() {
     hideBanner();
 }
 
-/* LEARN MORE FUNCTIONALITY - DISABLED
-// Show learn more modal/info
-function showLearnMore() {
-    document.getElementById('learnMoreModal').classList.remove('hidden');
-    // Could also redirect to privacy policy page
-    // window.open('/privacy-policy', '_blank');
-}
-
-// Hide learn more modal
-function hideLearnMore() {
-    document.getElementById('learnMoreModal').classList.add('hidden');
-}
-
-// Event listener for learn more button
-document.addEventListener('DOMContentLoaded', function() {
-    const learnMoreBtn = document.getElementById('learnMoreBtn');
-    if (learnMoreBtn) {
-        learnMoreBtn.addEventListener('click', showLearnMore);
-    }
-    
-    const closeModalBtn = document.getElementById('closeModal');
-    if (closeModalBtn) {
-        closeModalBtn.addEventListener('click', hideLearnMore);
-    }
-});
-*/
-
 // Show banner
 function showBanner() {
-    document.getElementById('cookieBanner').classList.remove('hidden');
+    const banner = document.getElementById('cookieBanner');
+    if (banner) {
+        banner.classList.remove('hidden');
+    }
 }
 
 // Hide banner
 function hideBanner() {
-    document.getElementById('cookieBanner').classList.add('hidden');
+    const banner = document.getElementById('cookieBanner');
+    if (banner) {
+        banner.classList.add('hidden');
+    }
 }
 
 // Load Google Analytics only if accepted
 function loadGoogleAnalytics() {
-    // Replace G-SLL009BFDG with your actual Google Analytics ID
+    // Replace G-SLL009BFDG with your actual GA Measurement ID
     const script1 = document.createElement('script');
     script1.async = true;
     script1.src = 'https://www.googletagmanager.com/gtag/js?id=G-SLL009BFDG';
@@ -82,5 +81,13 @@ function loadGoogleAnalytics() {
     document.head.appendChild(script2);
 }
 
-// Initialize on page load
-document.addEventListener('DOMContentLoaded', checkCookieConsent);
+// Initialize cookie banner when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    createCookieBanner();
+    checkCookieConsent();
+});
+
+// Make functions globally available
+window.acceptCookies = acceptCookies;
+window.declineCookies = declineCookies;
+window.showBanner = showBanner;
