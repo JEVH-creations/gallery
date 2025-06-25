@@ -1,0 +1,22 @@
+# Allow crawlers to access only the main index page
+User-agent: *
+
+# Disallow all gallery pages
+Disallow: /Gallery1.html
+Disallow: /Gallery2.html
+Disallow: /Gallery3.html
+Disallow: /Gallery4.html
+Disallow: /Gallery5.html
+Disallow: /Gallery6.html
+Disallow: /Gallery7.html
+Disallow: /GalleryNull.html
+
+# Disallow Source directory (optional - protects your assets)
+Disallow: /Source/
+
+# Allow the main page (this is implicit, but you can be explicit)
+Allow: /index.html
+Allow: /
+
+# Sitemap location (optional - only include if you still want a sitemap)
+Sitemap: https://jevh-creations.github.io/gallery/sitemap.xml
