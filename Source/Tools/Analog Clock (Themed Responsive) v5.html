@@ -271,12 +271,12 @@
             display: none;
             grid-template-columns: repeat(4, 1fr);
             grid-template-rows: repeat(2, 1fr);
-            gap: 4px; /* Reduced gap for theme buttons */
+            gap: 6px; /* Reduced gap for theme buttons */
             padding: 6px; /* Reduced padding */
             justify-items: center;
             align-items: center;
             /* Make theme buttons responsive only to horizontal size and perfectly centered */
-            max-width: min(200px, 50vw);
+            max-width: min(114px, 50vw);
             margin: 0 auto;
             justify-content: center; /* Center the grid tracks (columns) within the grid container */
         }
@@ -344,7 +344,7 @@
 
             .theme-buttons {
                 gap: 2px; /* Further reduced gap */
-                max-width: min(160px, 45vw); /* Adjusted to shrink only with horizontal size */
+                max-width: min(114px, 45vw); /* Adjusted to shrink only with horizontal size */
                 padding: 4px;
             }
 
@@ -402,7 +402,7 @@
             .theme-buttons {
                 gap: 3px; /* Reduced gap */
                 padding: 5px; /* Reduced padding */
-                max-width: min(180px, 48vw); /* Adjusted to shrink only with horizontal size */
+                max-width: min(114px, 48vw); /* Adjusted to shrink only with horizontal size */
             }
         }
 
@@ -455,7 +455,7 @@
     <div class="controls">
         <div class="theme-selector">
             <div class="color-picker-toggle">
-                <span>⚙︎</span>
+                <span>⚙&#xFE0E;</span>
             </div>
             <div class="theme-buttons">
                 <div class="theme-btn active" data-color="white" style="background: white;"></div>
