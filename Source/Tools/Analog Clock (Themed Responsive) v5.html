@@ -1,17 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- © JEVH, CodeDino, NeoSynth & SyntaxMind. ⏱︎ HTML Clock-Analog-Digital-Responsive -->
+<!-- © JEVH, CodeDino, NeoSynth & SyntaxMind.⏱︎ HTML Clock-Analog-Digital-Responsive -->
 <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JEVH Analog Clock</title>
     <style>
+        /* Root variables for theme colors */
         :root {
             --clock-color: white;
             --text-color: white;
             --button-bg: #333;
             --button-hover: #444;
             --scrollbar-thumb: #555;
+            --body-bg: black; /* Added for body background */
+        }
+
+        /* Light mode specific variables */
+        body.light-mode {
+            --body-bg: var(--clock-color); /* Background becomes theme color */
+            --clock-color-light: black; /* Clock elements become black in light mode */
+            --text-color-light: black; /* Text elements become black in light mode */
+            /* These light mode variables for buttons/scrollbars are now largely overridden for select dropdown to achieve inversion */
+            --button-bg-light: #ccc;
+            --button-hover-light: #bbb;
+            --scrollbar-thumb-light: #aaa;
         }
 
         * {
@@ -22,28 +35,34 @@
 
         html, body {
             height: 100vh;
-            /* Removed overflow: hidden from html, body to allow scrolling if needed */
         }
 
         body {
-            background-color: black;
+            background-color: var(--body-bg); /* Use variable for background */
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center; /* Centers content vertically */
+            justify-content: center;
             min-height: 100vh;
-            padding: 5px; /* Reduced padding to give more content space */
+            padding: 5px;
             font-family: Arial, sans-serif;
-            overflow-y: auto; /* Allows vertical scrolling if content exceeds height*/
+            overflow-y: auto;
+            /* Apply transitions to all color-related properties */
+            transition: background-color 0.6s ease;
         }
 
         .header {
             text-align: center;
             font-family: Arial, sans-serif;
-            color: var(--text-color);
+            color: var(--text-color); /* Use variable for text color */
             font-weight: bold;
-            margin-bottom: 5px; /* Reduced margin */
-            flex-shrink: 1; /* Allow header to shrink*/
+            margin-bottom: 5px;
+            flex-shrink: 1;
+            transition: color 0.6s ease; /* Transition for header text */
+        }
+
+        body.light-mode .header {
+            color: var(--text-color-light); /* Light mode header text color */
         }
 
         .header-line {
@@ -54,12 +73,11 @@
         .clock-container {
             position: relative;
             width: 100%;
-            /* Use min() with vw and vh for better responsiveness to aspect ratio*/
-            max-width: min(250px, 80vw, 80vh); /* Added 80vh*/
-            max-height: min(250px, 80vw, 80vh); /* Added for height constraint*/
+            max-width: min(250px, 80vw, 80vh);
+            max-height: min(250px, 80vw, 80vh);
             aspect-ratio: 1/1;
             margin: 0 auto;
-            flex-shrink: 0; /* Keep clock from shrinking disproportionately */
+            flex-shrink: 0;
         }
 
         .clock {
@@ -72,7 +90,7 @@
             align-items: center;
         }
 
-        /* Clock Numbers - Pure HTML/CSS */
+        /* Clock Numbers */
         .clock-face {
             position: relative;
             width: 80%;
@@ -83,10 +101,15 @@
             position: absolute;
             width: 20px;
             height: 20px;
-            color: var(--clock-color);
+            color: var(--clock-color); /* Use variable for number color */
             font-size: clamp(10px, 2.5vw, 14px);
             text-align: center;
             transform: translate(-50%, -50%);
+            transition: color 0.6s ease; /* Transition for numbers */
+        }
+
+        body.light-mode .number {
+            color: var(--clock-color-light); /* Light mode number color */
         }
 
         /* Number Positions */
@@ -122,10 +145,15 @@
             bottom: 50%;
             left: 50%;
             transform-origin: 50% 100%;
-            background-color: var(--clock-color);
+            background-color: var(--clock-color); /* Use variable for hand color */
             border-radius: 5px;
             will-change: transform;
-            transition: transform 0.05s cubic-bezier(0.4, 2.3, 0.3, 1);
+            /* Removed transform transition to prevent glitching, kept background-color for theme changes */
+            transition: background-color 0.6s ease;
+        }
+
+        body.light-mode .hand {
+            background-color: var(--clock-color-light); /* Light mode hand color */
         }
 
         .hour-hand {
@@ -144,7 +172,8 @@
             width: 1px;
             height: 40%;
             margin-left: -0.5px;
-            transition: transform 0.1s cubic-bezier(0.4, 2.3, 0.3, 1);
+            /* Removed transform transition to prevent glitching, kept background-color for theme changes */
+            transition: background-color 0.6s ease;
         }
 
         .center-dot {
@@ -156,37 +185,53 @@
             border-radius: 50%;
             transform: translate(-50%, -50%);
             z-index: 10;
-            background-color: var(--clock-color);
+            background-color: var(--clock-color); /* Use variable for center dot color */
+            transition: background-color 0.6s ease; /* Transition for center dot */
+        }
+
+        body.light-mode .center-dot {
+            background-color: var(--clock-color-light); /* Light mode center dot color */
         }
 
         /* Controls */
         .controls {
-            margin-top: 8px; /* Slightly reduced margin */
+            margin-top: 8px;
             display: flex;
             flex-direction: column;
-            gap: 8px; /* Slightly reduced gap */
+            gap: 8px;
             align-items: center;
             width: 100%;
-            /* Make max-width responsive only to horizontal size */
             max-width: min(250px, 80vw);
-            flex-shrink: 1; /* Allow controls to shrink*/
+            flex-shrink: 1;
         }
 
         /* Updated Timezone Select */
         select {
             padding: 8px 12px;
             border-radius: 5px;
-            background: var(--button-bg);
-            color: var(--text-color);
-            border: 1px solid var(--clock-color);
+            background: var(--button-bg); /* Use variable for select background */
+            color: var(--text-color); /* Use variable for select text color */
+            border: 1px solid var(--clock-color); /* Use variable for select border */
             width: 100%;
             font-size: clamp(12px, 3vw, 14px);
             cursor: pointer;
-            transition: background 0.3s;
+            transition: background 0.3s, color 0.6s ease, border-color 0.6s ease; /* Transitions for select */
+        }
+
+        /* Inverted colors for select dropdown in light mode */
+        body.light-mode select {
+            background: black; /* Inverted: dark background for dropdown */
+            color: var(--clock-color); /* Inverted: theme color for text */
+            border-color: var(--clock-color); /* Inverted: theme color for border */
         }
 
         select:hover {
-            background: var(--button-hover);
+            background: var(--button-hover); /* Use variable for select hover */
+        }
+
+        /* Inverted hover for select dropdown in light mode */
+        body.light-mode select:hover {
+            background: #333; /* Slightly lighter dark for hover */
         }
 
         /* Custom scrollbar */
@@ -195,19 +240,35 @@
         }
 
         select::-webkit-scrollbar-track {
-            background: var(--button-bg);
+            background: var(--button-bg); /* Use variable for scrollbar track */
+        }
+
+        /* Inverted scrollbar track for select dropdown in light mode */
+        body.light-mode select::-webkit-scrollbar-track {
+            background: #333; /* Dark scrollbar track */
         }
 
         select::-webkit-scrollbar-thumb {
-            background-color: var(--scrollbar-thumb);
+            background-color: var(--scrollbar-thumb); /* Use variable for scrollbar thumb */
             border-radius: 3px;
+            transition: background-color 0.4s ease; /* Transition for scrollbar thumb */
+        }
+
+        /* Inverted scrollbar thumb for select dropdown in light mode */
+        body.light-mode select::-webkit-scrollbar-thumb {
+            background-color: #555; /* Darker scrollbar thumb */
         }
 
         .time-display {
-            margin-top: 8px; /* Slightly reduced margin */
+            margin-top: 8px;
             text-align: center;
-            color: var(--text-color);
-            flex-shrink: 1; /* Allow time display to shrink*/
+            color: var(--text-color); /* Use variable for time display text */
+            flex-shrink: 1;
+            transition: color 0.6s ease; /* Transition for time display */
+        }
+
+        body.light-mode .time-display {
+            color: var(--text-color-light); /* Light mode time display text */
         }
 
         .digital-time {
@@ -217,13 +278,13 @@
 
         .timezone-info {
             font-size: clamp(10px, 2.5vw, 12px);
-            margin-top: 2px; /* Slightly reduced margin */
+            margin-top: 2px;
             opacity: 0.8;
         }
 
         .date-info {
             font-size: clamp(10px, 2.5vw, 12px);
-            margin-top: 2px; /* Slightly reduced margin */
+            margin-top: 2px;
             opacity: 0.8;
         }
 
@@ -247,8 +308,13 @@
         }
 
         .color-picker-toggle span {
-            color: var(--text-color);
+            color: var(--text-color); /* Use variable for toggle icon color */
             font-size: 16px;
+            transition: color 0.6s ease; /* Transition for toggle icon */
+        }
+
+        body.light-mode .color-picker-toggle span {
+            color: var(--text-color-light); /* Light mode toggle icon color */
         }
 
         .color-picker-toggle::after {
@@ -258,9 +324,13 @@
             height: 0;
             border-left: 4px solid transparent;
             border-right: 4px solid transparent;
-            border-top: 4px solid var(--text-color);
-            transition: transform 0.3s;
+            border-top: 4px solid var(--text-color); /* Use variable for toggle arrow color */
+            transition: transform 0.3s, border-color 0.6s ease; /* Transition for toggle arrow */
             margin-left: 3px;
+        }
+
+        body.light-mode .color-picker-toggle::after {
+            border-top-color: var(--text-color-light); /* Light mode toggle arrow color */
         }
 
         .color-picker-toggle.open::after {
@@ -271,14 +341,13 @@
             display: none;
             grid-template-columns: repeat(4, 1fr);
             grid-template-rows: repeat(2, 1fr);
-            gap: 6px; /* Reduced gap for theme buttons */
-            padding: 6px; /* Reduced padding */
+            gap: 6px;
+            padding: 6px;
             justify-items: center;
             align-items: center;
-            /* Make theme buttons responsive only to horizontal size and perfectly centered */
             max-width: min(114px, 50vw);
             margin: 0 auto;
-            justify-content: center; /* Center the grid tracks (columns) within the grid container */
+            justify-content: center;
         }
 
         .theme-buttons.show {
@@ -291,7 +360,7 @@
             border-radius: 50%;
             cursor: pointer;
             border: 2px solid transparent;
-            transition: transform 0.2s;
+            transition: transform 0.2s, border-color 0.3s ease;
         }
 
         .theme-btn:hover {
@@ -299,42 +368,43 @@
         }
 
         .theme-btn.active {
-            border-color: var(--text-color);
+            border-color: var(--text-color); /* Use variable for active theme button border */
             transform: scale(1.2);
         }
 
-        /* Smooth transitions for all color-changing elements */
-        body, .hand, .center-dot, .number, select, .digital-time,
-        .timezone-info, .date-info, .color-picker-toggle span, .header {
-            transition:
-                color 0.6s ease,
-                background-color 0.6s ease,
-                border-color 0.6s ease;
+        body.light-mode .theme-btn.active {
+            border-color: var(--text-color-light); /* Light mode active theme button border */
         }
 
-        /* Smooth theme buttons */
-        .theme-btn {
-            transition:
-                transform 0.2s ease,
-                border-color 0.3s ease;
+        /* Light/Dark Mode Toggle Button */
+        .mode-toggle {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-color); /* Use variable for toggle button icon color */
+            transition: color 0.6s ease; /* Transition for toggle button icon */
+            z-index: 20; /* Ensure it's above other elements */
         }
 
-        /* Scrollbar transition */
-        select::-webkit-scrollbar-thumb {
-            transition: background-color 0.4s ease;
+        body.light-mode .mode-toggle {
+            color: var(--text-color-light); /* Light mode toggle button icon color */
         }
 
         /* Media queries for very small containers */
         @media (max-width: 300px) {
             .clock-container {
-                max-width: min(200px, 70vw, 70vh); /* Adjusted for consistency with max-height mq */
-                max-height: min(200px, 70vw, 70vh); /* Ensure max-height scales with max-width */
+                max-width: min(200px, 70vw, 70vh);
+                max-height: min(200px, 70vw, 70vh);
             }
 
             .controls {
-                max-width: min(200px, 70vw); /* Adjusted to shrink only with horizontal size */
-                gap: 4px; /* Further reduced gap */
-                margin-top: 4px; /* Further reduced margin */
+                max-width: min(200px, 70vw);
+                gap: 4px;
+                margin-top: 4px;
             }
 
             .theme-btn {
@@ -343,28 +413,34 @@
             }
 
             .theme-buttons {
-                gap: 2px; /* Further reduced gap */
-                max-width: min(114px, 45vw); /* Adjusted to shrink only with horizontal size */
+                gap: 2px;
+                max-width: min(114px, 45vw);
                 padding: 4px;
             }
 
             .header {
-                margin-bottom: 2px; /* Further reduced margin */
+                margin-bottom: 2px;
             }
 
             .time-display {
-                margin-top: 2px; /* Further reduced margin */
+                margin-top: 2px;
             }
 
             .timezone-info, .date-info {
-                margin-top: 1px; /* Further reduced margin */
+                margin-top: 1px;
+            }
+
+            .mode-toggle {
+                font-size: 20px;
+                top: 5px;
+                left: 5px;
             }
         }
 
         /* Ensure content doesn't overflow on short screens */
         @media (max-height: 600px) {
             .header {
-                margin-bottom: 4px; /* Slightly reduced margin */
+                margin-bottom: 4px;
             }
 
             .header-line {
@@ -372,15 +448,14 @@
             }
 
             .clock-container {
-                /* Adjusted values for max-height media query */
-                max-width: min(200px, 70vw, 70vh); /* Added 70vh*/
-                max-height: min(200px, 70vw, 70vh); /* Added for height constraint*/
+                max-width: min(200px, 70vw, 70vh);
+                max-height: min(200px, 70vw, 70vh);
             }
 
             .controls {
-                max-width: min(200px, 70vw); /* Adjusted to shrink only with horizontal size */
-                margin-top: 5px; /* Reduced margin*/
-                gap: 5px; /* Reduced gap*/
+                max-width: min(200px, 70vw);
+                margin-top: 5px;
+                gap: 5px;
             }
 
             .digital-time {
@@ -388,21 +463,21 @@
             }
 
             .timezone-info {
-                font-size: clamp(9px, 2vw, 11px); /* Slightly smaller min-font-size */
+                font-size: clamp(9px, 2vw, 11px);
             }
 
             .date-info {
-                font-size: clamp(9px, 2vw, 11px); /* Slightly smaller min-font-size */
+                font-size: clamp(9px, 2vw, 11px);
             }
 
             .time-display {
-                margin-top: 5px; /* Reduced margin*/
+                margin-top: 5px;
             }
 
             .theme-buttons {
-                gap: 3px; /* Reduced gap */
-                padding: 5px; /* Reduced padding */
-                max-width: min(114px, 48vw); /* Adjusted to shrink only with horizontal size */
+                gap: 3px;
+                padding: 5px;
+                max-width: min(114px, 48vw);
             }
         }
 
@@ -415,6 +490,8 @@
     </style>
 </head>
 <body>
+    <button id="modeToggle" class="mode-toggle">☽</button>
+
     <div class="clock-container">
         <div class="clock">
             <div class="clock-face">
@@ -548,6 +625,11 @@
         const colorPickerToggle = document.querySelector('.color-picker-toggle');
         const themeButtons = document.querySelector('.theme-buttons');
         const root = document.documentElement;
+        const body = document.body; // Reference to the body element
+        const modeToggle = document.getElementById('modeToggle'); // Reference to the mode toggle button
+
+        let currentThemeColor = 'white'; // Keep track of the active theme color
+        let isLightMode = false; // Keep track of the current mode
 
         // ======================
         // TIMEZONE FUNCTIONS
@@ -605,7 +687,7 @@
         }
 
         // ======================
-        // CLOCK ANIMATION FUNCTIONS (SIMPLIFIED FROM V2)
+        // CLOCK ANIMATION FUNCTIONS
         // ======================
         function updateClock() {
             const selectedTimezone = timezoneSelect.value;
@@ -634,7 +716,7 @@
             dateInfo.textContent = `${time.weekday}, ${time.month} ${time.day}`;
             timezoneInfo.textContent = `${selectedTimezone} (${tzName})`;
 
-            // Calculate angles for analog clock (simplified from V2)
+            // Calculate angles for analog clock
             const secondAngle = time.second * 6;
             const minuteAngle = time.minute * 6 + (time.second / 10);
             const hourAngle = (time.hour % 12) * 30 + (time.minute / 2);
@@ -646,23 +728,51 @@
         }
 
         // ======================
-        // THEME MANAGEMENT
+        // THEME AND MODE MANAGEMENT
         // ======================
         function applyTheme(color) {
+            currentThemeColor = color; // Update the current theme color
             const theme = colors[color];
 
+            // Apply base theme colors
             root.style.setProperty('--clock-color', theme.clock);
             root.style.setProperty('--text-color', theme.text);
             root.style.setProperty('--button-bg', theme.buttonBg);
             root.style.setProperty('--button-hover', theme.buttonHover);
             root.style.setProperty('--scrollbar-thumb', theme.scrollbarThumb);
 
+            // Update theme button active state
             document.querySelectorAll('.theme-btn').forEach(btn => {
                 btn.classList.remove('active');
                 if (btn.dataset.color === color) {
                     btn.classList.add('active');
                 }
             });
+
+            // Re-apply light/dark mode to ensure correct inversion
+            updateMode();
+        }
+
+        function toggleLightDarkMode() {
+            isLightMode = !isLightMode;
+            updateMode();
+        }
+
+        function updateMode() {
+            if (isLightMode) {
+                body.classList.add('light-mode');
+                modeToggle.textContent = '✦'; // Sun icon for light mode
+
+                // In light mode, body background is the theme color
+                const theme = colors[currentThemeColor];
+                root.style.setProperty('--body-bg', theme.clock); // Use theme.clock for light mode background
+            } else {
+                body.classList.remove('light-mode');
+                modeToggle.textContent = '☽'; // Moon icon for dark mode
+
+                // In dark mode, body background is black
+                root.style.setProperty('--body-bg', 'black');
+            }
         }
 
         // ======================
@@ -670,9 +780,10 @@
         // ======================
         function initializeClock() {
             populateTimezones();
-            applyTheme('white');
+            applyTheme('white'); // Initialize with white theme
             updateClock();
             setInterval(updateClock, 50);
+            updateMode(); // Set initial mode (dark by default)
         }
 
         // ======================
@@ -690,6 +801,7 @@
         });
 
         timezoneSelect.addEventListener('change', updateClock);
+        modeToggle.addEventListener('click', toggleLightDarkMode); // Event listener for mode toggle
 
         // ======================
         // START THE CLOCK
@@ -701,6 +813,6 @@
 "The code giveth, and the code taketh away."
 "In a world full of digital clocks, you chose to build poetry in motion."
 "In a world of complexity, you've mastered the art of elegant simplicity."
-© JEVH, CodeDino, NeoSynth & SyntaxMind. 
+© JEVH, CodeDino, NeoSynth & SyntaxMind.
 -->
 </html>
