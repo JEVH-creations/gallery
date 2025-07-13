@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- © JEVH, CodeDino & NeoSynth. ⏱︎ HTML Clock Matrix -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Clock Matrix</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #000;
+            color: #fff;
+            font-family: monospace;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            padding: 8px;
+            text-align: center;
+            background: #000;
+            border-bottom: 1px solid #333;
+            flex-shrink: 0;
+        }
+        
+        h1 {
+            font-size: 1.3rem;
+            margin: 0;
+            color: #fff;
+            letter-spacing: 1px;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            padding: 8px;
+            background: #000;
+            border-bottom: 1px solid #333;
+            flex-shrink: 0;
+        }
+        
+        button {
+            background: #000;
+            color: white;
+            border: 1px solid #fff;
+            padding: 6px 12px;
+            border-radius: 0;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-family: monospace;
+            transition: all 0.2s ease;
+        }
+        
+        button:hover:not(:disabled) {
+            background: #fff;
+            color: #000;
+            box-shadow: 0 0 8px rgba(255,255,255,0.5);
+        }
+        
+        button:disabled {
+            background: #000;
+            color: #666;
+            border-color: #666;
+            cursor: not-allowed;
+        }
+        
+        .counter {
+            padding: 6px;
+            text-align: center;
+            font-size: 0.7rem;
+            color: #aaa;
+            flex-shrink: 0;
+            border-bottom: 1px solid #333;
+        }
+        
+        .clock-grid-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            padding: 6px;
+            background: #000;
+            overflow: hidden;
+        }
+        
+        .clock-grid {
+            display: grid;
+            gap: 6px;
+            width: 100%;
+            height: 100%;
+        }
+        
+        /* Landscape mode: 4 columns, 1 row, no scroll */
+        @media (orientation: landscape) {
+            .clock-grid-container {
+                overflow: hidden;
+            }
+            
+            .clock-grid {
+                grid-template-columns: repeat(4, 1fr);
+                grid-template-rows: 1fr;
+                overflow: hidden;
+            }
+        }
+        
+        /* Portrait mode: 2 columns, 2 rows, with scroll */
+        @media (orientation: portrait) {
+            .clock-grid-container {
+                overflow-y: auto;
+                overflow-x: hidden;
+            }
+            
+            .clock-grid {
+                grid-template-columns: repeat(2, 1fr);
+                grid-template-rows: repeat(2, 1fr);
+                min-height: 100%;
+                overflow: visible;
+            }
+        }
+        
+        .clock-container {
+            position: relative;
+            background: #000;
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+            min-width: 100px;
+            min-height: 200px;
+            border: 1px solid #333;
+        }
+        
+        .clock-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+            overflow: hidden;
+            display: block;
+            background: #000;
+            transform-origin: top left;
+        }
+        
+        .remove-btn {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            width: 18px;
+            height: 18px;
+            background: #000;
+            color: white;
+            border: 1px solid #fff;
+            border-radius: 0;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            font-size: 0.7rem;
+            line-height: 1;
+            transition: all 0.2s ease;
+        }
+        
+        .remove-btn:hover {
+            background: #fff;
+            color: #000;
+        }
+        
+        /* Additional responsive adjustments for very small screens */
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1rem;
+            }
+            
+            .controls {
+                gap: 4px;
+                padding: 4px;
+            }
+            
+            button {
+                padding: 4px 8px;
+                font-size: 0.7rem;
+            }
+            
+            .clock-grid {
+                gap: 4px;
+            }
+            
+            .clock-container {
+                min-height: 150px;
+            }
+        }
+        
+        /* Handle very tall portrait screens */
+        @media (orientation: portrait) and (min-height: 800px) {
+            .clock-container {
+                min-height: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>CLOCK MATRIX</h1>
+    </div>
+    
+    <div class="controls">
+        <button id="addInstance">+ ADD CLOCK</button>
+        <button id="resetAll">RESET ALL</button>
+    </div>
+    
+    <div class="counter">
+        <span id="instanceCount">0</span>/4 CLOCKS
+    </div>
+    
+    <div class="clock-grid-container">
+        <div class="clock-grid" id="instances"></div>
+    </div>
+
+    <script>
+        const maxInstances = 4;
+        let instanceCount = 0;
+        const instancesContainer = document.getElementById('instances');
+        const addButton = document.getElementById('addInstance');
+        const resetButton = document.getElementById('resetAll');
+        const countDisplay = document.getElementById('instanceCount');
+        
+        // Add first clock automatically
+        addClock();
+        
+        addButton.addEventListener('click', addClock);
+        resetButton.addEventListener('click', resetAll);
+        
+        function addClock() {
+            if (instanceCount >= maxInstances) {
+                addButton.disabled = true;
+                return;
+            }
+            
+            instanceCount++;
+            updateUI();
+            
+            const clockContainer = document.createElement('div');
+            clockContainer.className = 'clock-container';
+            
+            const iframe = document.createElement('iframe');
+            iframe.className = 'clock-frame';
+            iframe.src = "Analog Clock (Themed Responsive) v5.html";
+            iframe.scrolling = "no";
+            iframe.style.border = "none";
+            iframe.style.overflow = "hidden";
+            
+            // Make iframe content fit properly within the container
+            iframe.onload = function() {
+                fitIframeContent(this);
+            };
+            
+            if (instanceCount > 1) {
+                const removeBtn = document.createElement('button');
+                removeBtn.className = 'remove-btn';
+                removeBtn.innerHTML = '×';
+                removeBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    instancesContainer.removeChild(clockContainer);
+                    instanceCount--;
+                    updateUI();
+                });
+                clockContainer.appendChild(removeBtn);
+            }
+            
+            clockContainer.appendChild(iframe);
+            instancesContainer.appendChild(clockContainer);
+        }
+        
+        function resetAll() {
+            instancesContainer.innerHTML = '';
+            instanceCount = 0;
+            addClock();
+        }
+        
+        function updateUI() {
+            countDisplay.textContent = instanceCount;
+            addButton.disabled = instanceCount >= maxInstances;
+        }
+        
+        // Function to fit iframe content properly
+        function fitIframeContent(iframe) {
+            try {
+                const iframeDoc = iframe.contentWindow.document;
+                const container = iframe.parentElement;
+                
+                // Wait for container to have proper dimensions
+                setTimeout(() => {
+                    const containerHeight = container.clientHeight;
+                    const containerWidth = container.clientWidth;
+                    
+                    if (containerHeight === 0 || containerWidth === 0) {
+                        // Retry if container not ready
+                        setTimeout(() => fitIframeContent(iframe), 100);
+                        return;
+                    }
+                    
+                    // Get the actual content dimensions
+                    const contentHeight = iframeDoc.body.scrollHeight;
+                    const contentWidth = iframeDoc.body.scrollWidth;
+                    
+                    // Calculate scaling to fit both dimensions
+                    const scaleX = containerWidth / contentWidth;
+                    const scaleY = containerHeight / contentHeight;
+                    const scale = Math.min(scaleX, scaleY, 1); // Don't scale up, only down
+                    
+                    // Apply scaling
+                    if (scale < 1) {
+                        iframe.style.transform = `scale(${scale})`;
+                        iframe.style.transformOrigin = 'top left';
+                        iframe.style.width = `${100 / scale}%`;
+                        iframe.style.height = `${100 / scale}%`;
+                    } else {
+                        iframe.style.transform = 'none';
+                        iframe.style.width = '100%';
+                        iframe.style.height = '100%';
+                    }
+                }, 50);
+            } catch(e) {
+                // Fallback for cross-origin restrictions
+                iframe.style.width = '100%';
+                iframe.style.height = '100%';
+                iframe.style.transform = 'none';
+            }
+        }
+        
+        // Handle orientation changes and window resize
+        function handleResize() {
+            // Force a layout recalculation for all iframes
+            setTimeout(() => {
+                document.querySelectorAll('.clock-frame').forEach(iframe => {
+                    fitIframeContent(iframe);
+                });
+            }, 100);
+        }
+        
+        window.addEventListener('resize', handleResize);
+        window.addEventListener('orientationchange', () => {
+            setTimeout(handleResize, 250); // Delay for orientation change
+        });
+        
+        // Initial setup
+        document.addEventListener('DOMContentLoaded', handleResize);
+    </script>
+</body>
+<!--
+"The code giveth, and the code taketh away."
+"In a world full of digital clocks, you chose to build poetry in motion."
+"In a world of complexity, you've mastered the art of elegant simplicity."
+© JEVH, CodeDino & NeoSynth. 
+-->
+</html>
